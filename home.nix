@@ -6,10 +6,7 @@
   #   { path = ".gitconfig"; }
   # ];
 
-  home.file.".\\gitconfig".source = ./gitconfig;
-
   home.packages = with pkgs; [
-    pkgs.cowsay
     pkgs.direnv
     pkgs.zoxide
     pkgs.git
@@ -17,4 +14,5 @@
     pkgs.nil
   ];
 
+  home.file.".gitconfig".source = ./.gitconfig;
 }
