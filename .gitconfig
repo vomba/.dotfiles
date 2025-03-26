@@ -1,0 +1,9 @@
+[user]
+	email = hani.harzallah@elastisys.com
+	name = vomba
+	signingkey = 8D0433B853DB281D
+[commit]
+	gpgsign = true
+
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
