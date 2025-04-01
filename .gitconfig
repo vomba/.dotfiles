@@ -7,3 +7,6 @@
 
 [url "ssh://git@github.com/"]
     insteadOf = https://github.com/
+
+[diff "sopsdiffer"]
+    textconv = sops -d
