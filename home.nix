@@ -21,9 +21,14 @@
     pkgs.bash-language-server
     pkgs.clusterctl
     pkgs.openstackclient-full
+    pkgs.kubernetes-helm
+    pkgs.helmfile
+    pkgs.rbw
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
   home.file.".kube/kubie.yaml".source = ./kubie.yaml;
   home.file.".config/starship.toml".source = ./starship.toml;
+  home.file.".config/rbw/config.json".source=./rbw-config.json;
+  home.file.".config/ck8s-devbox/credentials-helper.bash".source=./credentials-helper.bash;
 }
