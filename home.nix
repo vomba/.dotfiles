@@ -1,11 +1,17 @@
 { pkgs, ... }:
 {
+  fonts.fontconfig.enable = true;
+
   programs.home-manager.enable = true;
 
   programs.zsh = {
     enable = true;
     dotDir = ".config/zsh";
+    oh-my-zsh.enable = true;
   };
+
+  programs.fzf.enable = true;
+  programs.bat.enable = true;
 
   home.packages = with pkgs; [
     pkgs.direnv
@@ -29,10 +35,15 @@
     pkgs.kubernetes-helm
     pkgs.helmfile
     pkgs.rbw
-    pkgs.zsh
     pkgs.kubecolor
     pkgs.kubectl
     pkgs.kubelogin-oidc
+    pkgs.eza
+    pkgs.awscli2
+    pkgs.azure-cli
+    pkgs.azure-storage-azcopy
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.helix
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
@@ -42,4 +53,5 @@
   home.file.".config/ck8s-devbox/credentials-helper.bash".source = ./credentials-helper.bash;
   home.file.".config/zsh/.zshrc".source = ./.zshrc;
   home.file.".config/zsh/.zshrc.d".source = ./.zshrc.d;
+  home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ./10-nix-fonts.conf;
 }

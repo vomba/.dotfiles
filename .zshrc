@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -30,7 +30,7 @@ ZSH_CUSTOM="${HOME}/.dotfiles/oh-my-zsh"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git fzf gh helm kubectl golang terraform aws ruby pip python docker zoxide)
+plugins=(git fzf gh helm kubectl golang terraform aws pip python docker zoxide eza azure)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -44,6 +44,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias cat=bat
 
 for rc_script in "${HOME}"/.config/zsh/.zshrc.d/*; do
   source "${rc_script}"

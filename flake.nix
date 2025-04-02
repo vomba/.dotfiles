@@ -10,13 +10,18 @@
   };
 
   outputs =
-    inputs@{ self, nixpkgs, ... }:
+    inputs@{
+      self,
+      nixpkgs,
+      ...
+    }:
     {
-
       homeConfigurations = {
-        # TODO: Modify "your.username" below to match your username
         "hani" = inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          # pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+          };
           modules = [
             ./home.nix
             {
@@ -29,7 +34,6 @@
           ];
         };
       };
-
       hani = self.homeConfigurations.hani.activationPackage;
       defaultPackage.x86_64-linux = self.hani;
     };
