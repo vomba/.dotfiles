@@ -7,12 +7,17 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixGL = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     inputs@{
       self,
       nixpkgs,
+      nixGL,
       ...
     }:
     {
@@ -21,6 +26,13 @@
           # pkgs = nixpkgs.legacyPackages.x86_64-linux;
           pkgs = import nixpkgs {
             system = "x86_64-linux";
+            config = {
+              allowUnfree = true;
+              allowUnfreePredictate = _: true;
+            };
+          };
+          extraSpecialArgs = {
+            inherit nixGL;
           };
           modules = [
             ./home.nix

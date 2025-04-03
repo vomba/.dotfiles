@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -7,11 +22,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1743360001,
-        "narHash": "sha256-HtpS/ZdgWXw0y+aFdORcX5RuBGTyz3WskThspNR70SM=",
+        "lastModified": 1743648554,
+        "narHash": "sha256-23JFd+zd2GamTTdnGuFVeIg8x8C3hLpQJRh/PGTORzo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "b6fd653ef8fbeccfd4958650757e91767a65506d",
+        "rev": "107352dde4ff3c01cb5a0b3fe17f5beef37215bc",
         "type": "github"
       },
       "original": {
@@ -20,13 +35,34 @@
         "type": "github"
       }
     },
+    "nixGL": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1713543440,
+        "narHash": "sha256-lnzZQYG0+EXl/6NkGpyIz+FEOc/DSEG57AP1VsdeNrM=",
+        "owner": "nix-community",
+        "repo": "nixGL",
+        "rev": "310f8e49a149e4c9ea52f1adf70cdc768ec53f8a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixGL",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1743259260,
-        "narHash": "sha256-ArWLUgRm1tKHiqlhnymyVqi5kLNCK5ghvm06mfCl4QY=",
+        "lastModified": 1743568003,
+        "narHash": "sha256-ZID5T65E8ruHqWRcdvZLsczWDOAWIE7om+vQOREwiX0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "eb0e0f21f15c559d2ac7633dc81d079d1caf5f5f",
+        "rev": "b7ba7f9f45c5cd0d8625e9e217c28f8eb6a19a76",
         "type": "github"
       },
       "original": {
@@ -39,6 +75,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "nixGL": "nixGL",
         "nixpkgs": "nixpkgs"
       }
     }

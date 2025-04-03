@@ -1,6 +1,18 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  nixGL,
+  config,
+  lib,
+  inputs,
+  ...
+}:
 {
   fonts.fontconfig.enable = true;
+
+  nixGL = {
+    packages = nixGL.packages;
+    defaultWrapper = "mesa";
+  };
 
   programs.home-manager.enable = true;
 
@@ -13,11 +25,32 @@
   programs.fzf.enable = true;
   programs.bat.enable = true;
 
+  programs.helix = {
+    enable = true;
+    languages = {
+      language = [
+        {
+          name = "nix";
+          file-types = [ "nix" ];
+          formatter = {
+            command = "nixfmt";
+          };
+        }
+      ];
+    };
+  };
+
+  programs.kitty = {
+    enable = true;
+    shellIntegration.enableZshIntegration = true;
+    package = (config.lib.nixGL.wrap pkgs.kitty);
+  };
+
   home.packages = with pkgs; [
     pkgs.direnv
     pkgs.zoxide
     pkgs.git
-    pkgs.nixfmt-tree
+    pkgs.nixfmt-rfc-style
     pkgs.nil
     pkgs.pre-commit
     pkgs.kubie
@@ -43,7 +76,6 @@
     pkgs.azure-cli
     pkgs.azure-storage-azcopy
     pkgs.nerd-fonts.jetbrains-mono
-    pkgs.helix
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
