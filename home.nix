@@ -76,6 +76,7 @@
     pkgs.azure-cli
     pkgs.azure-storage-azcopy
     pkgs.nerd-fonts.jetbrains-mono
+    pkgs.sonobuoy
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
