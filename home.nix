@@ -77,6 +77,8 @@
     pkgs.azure-storage-azcopy
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.sonobuoy
+    pkgs.yaml-language-server
+    pkgs.helm-ls
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
