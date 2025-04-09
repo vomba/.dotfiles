@@ -79,6 +79,8 @@
     pkgs.sonobuoy
     pkgs.yaml-language-server
     pkgs.helm-ls
+    pkgs.velero
+    pkgs.marksman
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
