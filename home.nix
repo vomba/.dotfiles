@@ -81,6 +81,8 @@
     pkgs.helm-ls
     pkgs.velero
     pkgs.marksman
+    pkgs.glow
+    pkgs.jq-lsp
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
