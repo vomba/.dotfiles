@@ -46,7 +46,7 @@
     package = (config.lib.nixGL.wrap pkgs.kitty);
   };
 
-  home.packages = with pkgs; [
+  home.packages = [
     pkgs.direnv
     pkgs.zoxide
     pkgs.git
