@@ -8,9 +8,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixGL = {
-      url = "github:nix-community/nixGL";
+      url = "github:bb010g/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
   };
 
   outputs =

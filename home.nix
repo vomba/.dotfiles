@@ -8,10 +8,17 @@
 }:
 {
   fonts.fontconfig.enable = true;
+  targets.genericLinux.enable = true;
+
+  xdg.configFile."environment.d/envvars.conf".text = ''
+    PATH="$HOME/.nix-profile/bin:$PATH"
+  '';
 
   nixGL = {
     packages = nixGL.packages;
     defaultWrapper = "mesa";
+    installScripts = [ "mesa" ];
+    vulkan.enable = false;
   };
 
   programs.home-manager.enable = true;
@@ -27,6 +34,7 @@
 
   programs.helix = {
     enable = true;
+    defaultEditor = true;
     languages = {
       language = [
         {
@@ -45,6 +53,10 @@
     shellIntegration.enableZshIntegration = true;
     package = (config.lib.nixGL.wrap pkgs.kitty);
   };
+
+  imports = [
+    ./hyprland.nix
+  ];
 
   home.packages = [
     pkgs.direnv
@@ -93,4 +105,6 @@
   home.file.".config/zsh/.zshrc".source = ./.zshrc;
   home.file.".config/zsh/.zshrc.d".source = ./.zshrc.d;
   home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ./10-nix-fonts.conf;
+
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 }

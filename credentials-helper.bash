@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CK8S_DEVBOX_MAJOR_VERSION=9
+# CK8S_DEVBOX_MAJOR_VERSION=10
 
 # Gets personal credentials for various cloud providers.
 # Requires the user to add how they want the credentials to be retrieved,
