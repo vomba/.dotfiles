@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-stable,
   nixGL,
   config,
   lib,
@@ -7,6 +8,7 @@
   ...
 }:
 {
+  programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
   targets.genericLinux.enable = true;
 
@@ -21,7 +23,10 @@
     vulkan.enable = false;
   };
 
-  programs.home-manager.enable = true;
+  imports = [
+    ./hyprland.nix
+    ./kanshi.nix
+  ];
 
   programs.zsh = {
     enable = true;
@@ -54,9 +59,13 @@
     package = (config.lib.nixGL.wrap pkgs.kitty);
   };
 
-  imports = [
-    ./hyprland.nix
-  ];
+  programs.chromium = {
+    enable = true;
+    package = config.lib.nixGL.wrap pkgs.chromium;
+    commandLineArgs = [
+      "--ozone-platform-hint=auto"
+    ];
+  };
 
   home.packages = [
     pkgs.direnv
@@ -78,7 +87,7 @@
     pkgs.clusterctl
     pkgs.openstackclient-full
     pkgs.kubernetes-helm
-    pkgs.helmfile
+    pkgs-stable.helmfile
     pkgs.rbw
     pkgs.kubecolor
     pkgs.kubectl
@@ -95,6 +104,16 @@
     pkgs.marksman
     pkgs.glow
     pkgs.jq-lsp
+    pkgs.tenv
+
+    pkgs.grim
+    pkgs.slurp
+    pkgs.swaybg
+    pkgs.wdisplays
+    pkgs.hyprland-qtutils
+    pkgs.hyprutils
+    pkgs.swaynotificationcenter
+    pkgs.obs-studio
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
@@ -106,5 +125,4 @@
   home.file.".config/zsh/.zshrc.d".source = ./.zshrc.d;
   home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ./10-nix-fonts.conf;
 
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
 }
