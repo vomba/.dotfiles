@@ -12,8 +12,6 @@ fi
 
 kubectl completion zsh 2> /dev/null >| "$ZSH_CACHE_DIR/completions/_kubectl" &|
 
-compdef kubecolor=kubectl
-
 # This command is used a LOT both below and in daily life
 alias k=kubecolor
 

@@ -105,6 +105,7 @@
     pkgs.glow
     pkgs.jq-lsp
     pkgs.tenv
+    (config.lib.nixGL.wrap pkgs.super-productivity)
 
     pkgs.grim
     pkgs.slurp

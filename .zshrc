@@ -46,6 +46,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias cat=bat
 
+compdef kubecolor=kubectl
+
 for rc_script in "${HOME}"/.config/zsh/.zshrc.d/*; do
   source "${rc_script}"
 done
