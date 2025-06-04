@@ -1,3 +1,0 @@
-export GOROOT='/usr/lib/go-1.22'
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin

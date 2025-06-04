@@ -67,6 +67,8 @@
     ];
   };
 
+  programs.go.enable = true;
+
   home.packages = [
     pkgs.direnv
     pkgs.zoxide
@@ -79,7 +81,6 @@
     pkgs.gh
     pkgs.sops
     pkgs.starship
-    pkgs.go
     pkgs.yq-go
     pkgs.jq
     pkgs.bitwarden-cli
@@ -105,8 +106,8 @@
     pkgs.glow
     pkgs.jq-lsp
     pkgs.tenv
-    (config.lib.nixGL.wrap pkgs.super-productivity)
-
+    pkgs.docker-slim
+       
     pkgs.grim
     pkgs.slurp
     pkgs.swaybg
@@ -123,6 +124,7 @@
   home.file.".config/rbw/config.json".source = ./rbw-config.json;
   home.file.".config/ck8s-devbox/credentials-helper.bash".source = ./credentials-helper.bash;
   home.file.".config/zsh/.zshrc".source = ./.zshrc;
+  home.file.".config/zsh/.zshrc.d".recursive = true;
   home.file.".config/zsh/.zshrc.d".source = ./.zshrc.d;
   home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ./10-nix-fonts.conf;
 
