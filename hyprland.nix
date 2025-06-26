@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-stable,
   config,
   ...
 }:
@@ -30,12 +31,24 @@
       pkgs.xdg-desktop-portal-wlr
       pkgs.xdg-desktop-portal-gtk
     ];
-    # configPackages = [ config.lib.nixGL.wrap pkgs.hyprland ];
+    config = {
+      common.default = [ "gtk" ];
+      hyprland.default = [
+        "gtk"
+        "hyprland"
+      ];
+    };
+    configPackages = [ config.wayland.windowManager.hyprland.package ];
+    xdgOpenUsePortal = true;
   };
+
+  # home.packages = [
+  #   pkgs.hyprland-protocols
+  # ];
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = config.lib.nixGL.wrap pkgs.hyprland;
+    package = config.lib.nixGL.wrap pkgs-stable.hyprland;
     systemd = {
       variables = [ "--all" ];
       enable = true;

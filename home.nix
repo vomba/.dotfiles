@@ -8,6 +8,11 @@
   ...
 }:
 {
+
+  home.username = "hani";
+  home.homeDirectory = "/home/hani";
+  home.stateVersion = "25.11";
+
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
   targets.genericLinux.enable = true;
@@ -67,6 +72,11 @@
     ];
   };
 
+  programs.obs-studio = {
+    enable = true;
+    package = config.lib.nixGL.wrap pkgs.obs-studio;
+  };
+
   programs.go.enable = true;
 
   home.packages = [
@@ -82,12 +92,12 @@
     pkgs.sops
     pkgs.starship
     pkgs.yq-go
-    pkgs.jq
+    pkgs-stable.jq
     pkgs.bitwarden-cli
     pkgs.bash-language-server
     pkgs.clusterctl
     pkgs.openstackclient-full
-    pkgs.kubernetes-helm
+    pkgs-stable.kubernetes-helm
     pkgs-stable.helmfile
     pkgs.rbw
     pkgs.kubecolor
@@ -107,7 +117,8 @@
     pkgs.jq-lsp
     pkgs.tenv
     pkgs.docker-slim
-       
+
+
     pkgs.grim
     pkgs.slurp
     pkgs.swaybg
@@ -115,7 +126,6 @@
     pkgs.hyprland-qtutils
     pkgs.hyprutils
     pkgs.swaynotificationcenter
-    pkgs.obs-studio
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
