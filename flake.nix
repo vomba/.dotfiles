@@ -10,7 +10,7 @@
     };
     nixGL = {
       url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -55,7 +55,7 @@
       # Useful stuff for managing modules between hosts
       # https://nixos-and-flakes.thiscute.world/nixos-with-flakes/modularize-the-configuration
       modules = [
-        nix-index-database.hmModules.nix-index
+        nix-index-database.homeModules.nix-index
         ./home.nix
       ];
     };

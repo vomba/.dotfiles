@@ -32,9 +32,9 @@
       pkgs.xdg-desktop-portal-gtk
     ];
     config = {
-      common.default = [ "gtk" ];
+      common.default = [ "wlr" ];
       hyprland.default = [
-        "gtk"
+        "wlr"
         "hyprland"
       ];
     };
