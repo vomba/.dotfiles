@@ -32,9 +32,10 @@
       pkgs.xdg-desktop-portal-gtk
     ];
     config = {
-      common.default = [ "wlr" ];
+      common.default = [ "gtk" ];
       hyprland.default = [
         "wlr"
+        "gtk"
         "hyprland"
       ];
     };
@@ -48,7 +49,8 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = config.lib.nixGL.wrap pkgs-stable.hyprland;
+    package = config.lib.nixGL.wrap pkgs.hyprland;
+
     systemd = {
       variables = [ "--all" ];
       enable = true;

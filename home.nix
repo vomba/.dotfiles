@@ -28,6 +28,7 @@
     vulkan.enable = false;
   };
 
+
   imports = [
     ./hyprland.nix
     ./kanshi.nix
