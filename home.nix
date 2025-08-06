@@ -28,7 +28,6 @@
     vulkan.enable = false;
   };
 
-
   imports = [
     ./hyprland.nix
     ./kanshi.nix
@@ -36,7 +35,7 @@
 
   programs.zsh = {
     enable = true;
-    dotDir = ".config/zsh";
+    dotDir = "/home/hani/.config/zsh";
     oh-my-zsh.enable = true;
   };
 
@@ -92,7 +91,7 @@
     pkgs.gh
     pkgs.sops
     pkgs.starship
-    pkgs.yq-go
+    pkgs-stable.yq-go
     pkgs-stable.jq
     pkgs.bitwarden-cli
     pkgs.bash-language-server
@@ -117,8 +116,8 @@
     pkgs.glow
     pkgs.jq-lsp
     pkgs.tenv
-    pkgs.docker-slim
-
+    pkgs.hugo
+    pkgs.nodejs_24
 
     pkgs.grim
     pkgs.slurp
