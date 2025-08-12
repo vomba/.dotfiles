@@ -120,6 +120,7 @@
     pkgs.nodejs_24
     pkgs.superhtml
     pkgs.nautilus
+    pkgs.upcloud-cli
 
     pkgs.grim
     pkgs.slurp
