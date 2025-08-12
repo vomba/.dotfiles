@@ -118,6 +118,8 @@
     pkgs.tenv
     pkgs.hugo
     pkgs.nodejs_24
+    pkgs.superhtml
+    pkgs.nautilus
 
     pkgs.grim
     pkgs.slurp
