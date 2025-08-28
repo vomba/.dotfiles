@@ -23,7 +23,7 @@
             position = "1920,360";
           }
           {
-              criteria = "*";
+            criteria = "*";
             position = "3840,0";
           }
         ];
@@ -38,19 +38,20 @@
           {
             criteria = "eDP-1";
             position = "0,960";
-            }
+          }
           {
-            criteria = "Dell Inc. DELL P2723QE HK15KT3";
-            position = "1920,0";
+            criteria = "Dell Inc. DELL P2723QE 9FLG904";
+            position = "5760,0";
           }
           {
             criteria = "Dell Inc. DELL P2721Q HQ53HF3";
-            position = "5760,0";
+            position = "1920,0";
           }
         ];
         profile.exec = [
-          "hyprctl dispatch moveworkspacetomonitor 2 'desc:Dell Inc. DELL P2723QE HK15KT3'"
-          "hyprctl dispatch moveworkspacetomonitor 3 'desc:Dell Inc. DELL P2721Q HQ53HF3'"
+          "hyprctl dispatch moveworkspacetomonitor 2 'desc:Dell Inc. DELL P2721Q HQ53HF3'"
+          "hyprctl dispatch moveworkspacetomonitor 3 'desc:Dell Inc. DELL P2723QE 9FLG904'"
+
         ];
       }
     ];

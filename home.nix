@@ -46,6 +46,11 @@
     enable = true;
     defaultEditor = true;
     languages = {
+      language-server.terraform-ls = {
+        command = "terraform-ls";
+        arg = [ "serve" ];
+      };
+
       language = [
         {
           name = "nix";
@@ -53,6 +58,16 @@
           formatter = {
             command = "nixfmt";
           };
+        }
+        {
+          name = "hcl";
+          language-servers = [ "terraform-ls" ];
+          language-id = "terraform";
+        }
+        {
+          name = "tfvars";
+          language-servers = [ "terraform-ls" ];
+          language-id = "terraform-vars";
         }
       ];
     };
@@ -105,7 +120,7 @@
     pkgs.kubelogin-oidc
     pkgs.eza
     pkgs.awscli2
-    pkgs.azure-cli
+    # pkgs.azure-cli
     pkgs.azure-storage-azcopy
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.sonobuoy
@@ -121,6 +136,9 @@
     pkgs.superhtml
     pkgs.nautilus
     pkgs.upcloud-cli
+    pkgs.vscode-json-languageserver
+    pkgs.terraform-ls
+    pkgs.cmctl
 
     pkgs.grim
     pkgs.slurp
