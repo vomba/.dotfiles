@@ -1,6 +1,7 @@
 {
   pkgs,
   pkgs-stable,
+  pkgs-25,
   nixGL,
   config,
   lib,
@@ -92,7 +93,16 @@
   #   package = config.lib.nixGL.wrap pkgs.obs-studio;
   # };
 
-  programs.go.enable = true;
+  programs.go = {
+    enable = true;
+    goPath = "go";
+    goPrivate = [
+      "github.com/elastisys"
+    ];
+    packages = {
+      "github.com/elastisys/releaser" = builtins.fetchGit "https://github.com/elastisys/releaser/";
+    };
+  };
 
   home.packages = [
     pkgs.direnv
@@ -120,7 +130,7 @@
     pkgs.kubelogin-oidc
     pkgs.eza
     pkgs.awscli2
-    # pkgs.azure-cli
+    pkgs-25.azure-cli
     pkgs.azure-storage-azcopy
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.sonobuoy
@@ -139,6 +149,9 @@
     pkgs.vscode-json-languageserver
     pkgs.terraform-ls
     pkgs.cmctl
+    pkgs.socat
+
+    pkgs-stable.nwg-displays
 
     pkgs.grim
     pkgs.slurp

@@ -40,12 +40,13 @@
             position = "0,960";
           }
           {
-            criteria = "Dell Inc. DELL P2723QE 9FLG904";
-            position = "5760,0";
-          }
-          {
             criteria = "Dell Inc. DELL P2721Q HQ53HF3";
             position = "1920,0";
+          }
+
+          {
+            criteria = "Dell Inc. DELL P2723QE 9FLG904";
+            position = "5760,0";
           }
         ];
         profile.exec = [
