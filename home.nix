@@ -33,6 +33,7 @@
     ./hyprland.nix
     ./kanshi.nix
     ./zsh.nix
+    ./git.nix
   ];
 
   programs.fzf.enable = true;
@@ -104,7 +105,7 @@
   home.packages = [
     pkgs.direnv
     pkgs.zoxide
-    pkgs.git
+    # pkgs.git
     pkgs.nixfmt-rfc-style
     pkgs.nil
     pkgs.pre-commit
@@ -156,7 +157,7 @@
     pkgs.hyprutils
   ];
 
-  home.file.".gitconfig".source = ./.gitconfig;
+  # home.file.".gitconfig".source = ./.gitconfig;
   home.file.".kube/kubie.yaml".source = ./kubie.yaml;
   home.file.".config/starship.toml".source = ./starship.toml;
   home.file.".config/rbw/config.json".source = ./rbw-config.json;
