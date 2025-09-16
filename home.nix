@@ -32,13 +32,8 @@
   imports = [
     ./hyprland.nix
     ./kanshi.nix
+    ./zsh.nix
   ];
-
-  programs.zsh = {
-    enable = true;
-    dotDir = "/home/hani/.config/zsh";
-    oh-my-zsh.enable = true;
-  };
 
   programs.fzf.enable = true;
   programs.bat.enable = true;
@@ -95,10 +90,12 @@
 
   programs.go = {
     enable = true;
-    goPath = "go";
-    goPrivate = [
-      "github.com/elastisys"
-    ];
+    env = {
+      # GOPATH = "go";
+      GOPRIVATE = [
+        "github.com/elastisys"
+      ];
+    };
     packages = {
       "github.com/elastisys/releaser" = builtins.fetchGit "https://github.com/elastisys/releaser/";
     };
@@ -151,15 +148,12 @@
     pkgs.cmctl
     pkgs.socat
 
-    pkgs-stable.nwg-displays
-
     pkgs.grim
     pkgs.slurp
     pkgs.swaybg
     pkgs.wdisplays
     pkgs.hyprland-qtutils
     pkgs.hyprutils
-    pkgs.swaynotificationcenter
   ];
 
   home.file.".gitconfig".source = ./.gitconfig;
@@ -167,9 +161,6 @@
   home.file.".config/starship.toml".source = ./starship.toml;
   home.file.".config/rbw/config.json".source = ./rbw-config.json;
   home.file.".config/ck8s-devbox/credentials-helper.bash".source = ./credentials-helper.bash;
-  home.file.".config/zsh/.zshrc".source = ./.zshrc;
-  home.file.".config/zsh/.zshrc.d".recursive = true;
-  home.file.".config/zsh/.zshrc.d".source = ./.zshrc.d;
   home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ./10-nix-fonts.conf;
 
 }
