@@ -146,11 +146,6 @@
         float_switch_override_focus = 2;
       };
 
-      gestures = {
-        workspace_swipe = true;
-        workspace_swipe_use_r = true;
-      };
-
       binds = {
         allow_workspace_cycles = true;
       };

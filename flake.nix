@@ -17,21 +17,19 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    firefox-addons = {
-      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nur.url = "github:nix-community/nur";
   };
 
   outputs =
     {
-      firefox-addons,
+
       home-manager,
       nix-index-database,
       nixGL,
       nixpkgs-stable,
       nixpkgs,
       nixpkgs-25,
+      nur,
       ...
     }:
     let
@@ -61,7 +59,7 @@
           inherit pkgs-stable;
           inherit pkgs-25;
           inherit nixGL;
-          inherit firefox-addons;
+          inherit nur;
         };
         # Useful stuff for managing modules between hosts
         # https://nixos-and-flakes.thiscute.world/nixos-with-flakes/modularize-the-configuration

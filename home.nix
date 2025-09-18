@@ -6,6 +6,7 @@
   config,
   lib,
   inputs,
+  nur,
   ...
 }:
 {
@@ -29,11 +30,21 @@
     vulkan.enable = false;
   };
 
+  nixpkgs = {
+    overlays = [
+      nur.overlays.default
+    ];
+    config = {
+      allowUnfree = true;
+    };
+  };
+
   imports = [
     ./hyprland.nix
     ./kanshi.nix
     ./zsh.nix
     ./git.nix
+    ./firefox.nix
   ];
 
   programs.fzf.enable = true;
