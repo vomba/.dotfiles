@@ -102,21 +102,18 @@
 
   programs.go = {
     enable = true;
+    telemetry.mode = "off";
     env = {
-      # GOPATH = "go";
+      GOPATH = "${config.home.homeDirectory}/.go";
       GOPRIVATE = [
         "github.com/elastisys"
       ];
-    };
-    packages = {
-      "github.com/elastisys/releaser" = builtins.fetchGit "https://github.com/elastisys/releaser/";
     };
   };
 
   home.packages = [
     pkgs.direnv
     pkgs.zoxide
-    # pkgs.git
     pkgs.nixfmt-rfc-style
     pkgs.nil
     pkgs.pre-commit

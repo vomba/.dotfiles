@@ -11,6 +11,8 @@
       cat = "bat";
     };
     initContent = ''
+      export GOPATH=$HOME/.go
+      export PATH=$PATH:$GOPATH/bin
       compdef kubecolor=kubectl
       eval "$(starship init zsh)"
     '';
