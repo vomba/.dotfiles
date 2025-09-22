@@ -47,7 +47,10 @@
     ./firefox.nix
   ];
 
-  programs.fzf.enable = true;
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    };
   programs.bat.enable = true;
 
   programs.helix = {
@@ -126,7 +129,7 @@
     pkgs-stable.jq
     pkgs.bitwarden-cli
     pkgs.bash-language-server
-    pkgs.clusterctl
+    pkgs-25.clusterctl
     pkgs.openstackclient-full
     pkgs-stable.kubernetes-helm
     pkgs-stable.helmfile
