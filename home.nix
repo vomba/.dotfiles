@@ -50,18 +50,27 @@
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-    };
+  };
   programs.bat.enable = true;
 
   programs.helix = {
     enable = true;
     defaultEditor = true;
     languages = {
-      language-server.terraform-ls = {
-        command = "terraform-ls";
-        arg = [ "serve" ];
-      };
+      language-server = {
+        terraform-ls = {
+          command = "terraform-ls";
+          arg = [ "serve" ];
 
+        };
+        mpls = {
+          command = "mpls";
+          args = [
+            "--dark-mode"
+            "--enable-emoji"
+          ];
+        };
+      };
       language = [
         {
           name = "nix";
@@ -79,6 +88,13 @@
           name = "tfvars";
           language-servers = [ "terraform-ls" ];
           language-id = "terraform-vars";
+        }
+        {
+          name = "markdown";
+          language-servers = [
+            "marksman"
+            "mpls"
+          ];
         }
       ];
     };
@@ -135,10 +151,10 @@
     pkgs-stable.helmfile
     pkgs.rbw
     pkgs.kubecolor
-    pkgs.kubectl
+    pkgs-25.kubectl
     pkgs.kubelogin-oidc
     pkgs.eza
-    pkgs.awscli2
+    pkgs-25.awscli2
     pkgs-25.azure-cli
     pkgs.azure-storage-azcopy
     pkgs.nerd-fonts.jetbrains-mono
@@ -159,6 +175,8 @@
     pkgs.terraform-ls
     pkgs.cmctl
     pkgs.socat
+    pkgs.mpls
+    pkgs.slack
 
     pkgs.grim
     pkgs.slurp
