@@ -177,6 +177,8 @@
     pkgs.socat
     pkgs.mpls
     pkgs.slack
+    pkgs.tabiew
+    pkgs.cidr
 
     pkgs.grim
     pkgs.slurp

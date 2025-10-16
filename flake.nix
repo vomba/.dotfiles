@@ -33,13 +33,17 @@
       ...
     }:
     let
+      overlays =  [
+        (import ./overlays/default.nix)
+      ];
       system = "x86_64-linux";
       pkgsConfig = {
         allowUnfree = true;
         allowUnfreePredicate = _: true;
+        inherit overlays;
       };
       pkgs = import nixpkgs {
-        inherit system;
+        inherit system overlays;
         config = pkgsConfig;
       };
       pkgs-stable = import nixpkgs-stable {
