@@ -1,4 +1,5 @@
 {
+  # home.packages = with pkgs; [ lsp-ai ];
   programs.helix = {
     enable = true;
     defaultEditor = true;
@@ -16,6 +17,31 @@
             "--enable-emoji"
           ];
         };
+        # lsp-ai = {
+        #   command = "lsp-ai";
+        #   config = {
+        #     memory = {
+        #       file_store = {};
+        #     };
+        #     models = {
+        #       model1 = {
+        #         type = "gemini";
+        #         completions_endpoint = "https://generativelanguage.googleapis.com/v1beta/models/";
+        #         chat_endpoint = "https://generativelanguage.googleapis.com/v1beta/models/";
+        #         model = "gemini-1.5-pro-latest";
+        #         auth_token_env_var_name = "GEMINI_API_KEY";
+        #       };
+        #     };
+        #     chat = [
+        #       {
+        #         trigger = "!C";
+        #         action_display_name = "Chat";
+        #         model = "model1";
+        #         parameters = { contents = []; };
+        #       }
+        #     ];
+        #   };
+        # };
       };
       language = [
         {
@@ -45,4 +71,7 @@
       ];
     };
   };
+  # home.sessionVariables = {
+  #   GEMINI_API_KEY = "your-api-key-here";
+  # };
 }
