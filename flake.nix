@@ -33,8 +33,9 @@
       ...
     }:
     let
-      overlays =  [
+      overlays = [
         (import ./overlays/default.nix)
+        (import ./overlays/pinned.nix { inherit pkgs-stable pkgs-25; })
       ];
       system = "x86_64-linux";
       pkgsConfig = {
@@ -42,28 +43,24 @@
         allowUnfreePredicate = _: true;
         inherit overlays;
       };
-      pkgs = import nixpkgs {
-        inherit system overlays;
-        config = pkgsConfig;
-      };
-      pkgs-stable = import nixpkgs-stable {
-        inherit system;
-        config = pkgsConfig;
-      };
-      pkgs-25 = import nixpkgs-25 {
-        inherit system;
-        config = pkgsConfig;
-      };
+      mkPkgs =
+        nixpkgs:
+        import nixpkgs {
+          inherit system overlays;
+          config = pkgsConfig;
+        };
+      pkgs = mkPkgs nixpkgs;
+      pkgs-stable = mkPkgs nixpkgs-stable;
+      pkgs-25 = mkPkgs nixpkgs-25;
 
     in
     {
       homeConfigurations."hani" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
-          inherit pkgs-stable;
-          inherit pkgs-25;
-          inherit nixGL;
-          inherit nur;
+          inherit
+            nur
+            ;
         };
         # Useful stuff for managing modules between hosts
         # https://nixos-and-flakes.thiscute.world/nixos-with-flakes/modularize-the-configuration
