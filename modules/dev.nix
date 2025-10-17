@@ -1,5 +1,5 @@
 {
-  pkgs, pkgs-stable, config, ...
+  pkgs, pkgs-stable, pkgs-25, config, ...
 }: {
 
   programs.go = {
