@@ -40,159 +40,27 @@
   };
 
   imports = [
-    ./hyprland.nix
-    ./kanshi.nix
-    ./zsh.nix
-    ./git.nix
-    ./firefox.nix
+    ./modules/hyprland.nix
+    ./modules/kanshi.nix
+    ./modules/zsh.nix
+    ./modules/git.nix
+    ./modules/firefox.nix
+    ./modules/editors.nix
+    ./modules/shell.nix
+    ./modules/dev.nix
+    ./modules/kubernetes.nix
+    ./modules/gui.nix
   ];
 
-  programs.fzf = {
+  programs.gemini-cli = {
     enable = true;
-    enableZshIntegration = true;
+    # settings = {
+    #   tools = {
+    #     sandbox = "docker";
+    #   };
+    # };
   };
-  programs.bat.enable = true;
-
-  programs.helix = {
-    enable = true;
-    defaultEditor = true;
-    languages = {
-      language-server = {
-        terraform-ls = {
-          command = "terraform-ls";
-          arg = [ "serve" ];
-
-        };
-        mpls = {
-          command = "mpls";
-          args = [
-            "--dark-mode"
-            "--enable-emoji"
-          ];
-        };
-      };
-      language = [
-        {
-          name = "nix";
-          file-types = [ "nix" ];
-          formatter = {
-            command = "nixfmt";
-          };
-        }
-        {
-          name = "hcl";
-          language-servers = [ "terraform-ls" ];
-          language-id = "terraform";
-        }
-        {
-          name = "tfvars";
-          language-servers = [ "terraform-ls" ];
-          language-id = "terraform-vars";
-        }
-        {
-          name = "markdown";
-          language-servers = [
-            "marksman"
-            "mpls"
-          ];
-        }
-      ];
-    };
-  };
-
-  programs.kitty = {
-    enable = true;
-    shellIntegration.enableZshIntegration = true;
-    package = (config.lib.nixGL.wrap pkgs.kitty);
-  };
-
-  programs.chromium = {
-    enable = true;
-    package = config.lib.nixGL.wrap pkgs.chromium;
-    commandLineArgs = [
-      "--ozone-platform-hint=auto"
-    ];
-  };
-
-  # programs.obs-studio = {
-  #   enable = true;
-  #   package = config.lib.nixGL.wrap pkgs.obs-studio;
-  # };
-
-  programs.go = {
-    enable = true;
-    telemetry.mode = "off";
-    env = {
-      GOPATH = "${config.home.homeDirectory}/.go";
-      GOPRIVATE = [
-        "github.com/elastisys"
-      ];
-    };
-  };
-
-  home.packages = [
-    pkgs.direnv
-    pkgs.zoxide
-    pkgs.nixfmt-rfc-style
-    pkgs.nil
-    pkgs.pre-commit
-    pkgs.kubie
-    pkgs.kind
-    pkgs.gh
-    pkgs.sops
-    pkgs.starship
-    pkgs-stable.yq-go
-    pkgs-stable.jq
-    pkgs.bitwarden-cli
-    pkgs.bash-language-server
-    pkgs-25.clusterctl
-    pkgs.openstackclient-full
-    pkgs-stable.kubernetes-helm
-    pkgs-stable.helmfile
-    pkgs.rbw
-    pkgs.kubecolor
-    pkgs-25.kubectl
-    pkgs.kubelogin-oidc
-    pkgs.eza
-    pkgs-25.awscli2
-    pkgs-25.azure-cli
-    pkgs.azure-storage-azcopy
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.sonobuoy
-    pkgs.yaml-language-server
-    pkgs.helm-ls
-    pkgs.velero
-    pkgs.marksman
-    pkgs.glow
-    pkgs.jq-lsp
-    pkgs.tenv
-    pkgs.hugo
-    pkgs.nodejs_24
-    pkgs.superhtml
-    pkgs.nautilus
-    pkgs.upcloud-cli
-    pkgs.vscode-json-languageserver
-    pkgs.terraform-ls
-    pkgs.cmctl
-    pkgs.socat
-    pkgs.mpls
-    pkgs.slack
-    pkgs.tabiew
-    pkgs.cidr
-
-    pkgs.grim
-    pkgs.slurp
-    pkgs.swaybg
-    pkgs.wdisplays
-    pkgs.hyprland-qtutils
-    pkgs.hyprutils
-  ];
 
   # home.file.".gitconfig".source = ./.gitconfig;
-  home.file.".kube/kubie.yaml".source = ./kubie.yaml;
-  home.file.".config/starship.toml".source = ./starship.toml;
-  home.file.".config/rbw/config.json".source = ./rbw-config.json;
-  home.file.".config/ck8s-devbox/credentials-helper.bash".source = ./credentials-helper.bash;
-  home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ./10-nix-fonts.conf;
 
 }
