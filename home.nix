@@ -1,5 +1,8 @@
 {
   pkgs,
+  pkgs-stable,
+  pkgs-25,
+  nixGL,
   config,
   lib,
   inputs,
@@ -19,6 +22,13 @@
   xdg.configFile."environment.d/envvars.conf".text = ''
     PATH="$HOME/.nix-profile/bin:$PATH"
   '';
+
+  nixGL = {
+    packages = nixGL.packages;
+    defaultWrapper = "mesa";
+    installScripts = [ "mesa" ];
+    vulkan.enable = false;
+  };
 
   nixpkgs = {
     overlays = [
@@ -40,7 +50,6 @@
     ./modules/dev.nix
     ./modules/kubernetes.nix
     ./modules/gui.nix
-    ./modules/nixgl.nix
   ];
 
   programs.gemini-cli = {
