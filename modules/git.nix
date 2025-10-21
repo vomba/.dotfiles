@@ -3,14 +3,16 @@
 
   programs.git = {
     enable = true;
-    userEmail = "hani.harzallah@elastisys.com";
-    userName = "vomba";
     signing = {
       key = "8D0433B853DB281D";
       signByDefault = true;
       format = "openpgp";
     };
-    extraConfig = {
+    settings = {
+      user = {
+        name = "vomba";
+        email = "hani.harzallah@elastisys.com";
+      };
       url = {
         "ssh://git@github.com/" = {
           insteadOf = "https://github.com/";
