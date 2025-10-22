@@ -45,6 +45,7 @@
     pkgs.socat
     pkgs.mpls
     pkgs.cidr
+    pkgs.act
   ];
 
   home.file.".config/rbw/config.json".source = ../rbw-config.json;
