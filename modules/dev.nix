@@ -46,6 +46,7 @@
     pkgs.mpls
     pkgs.cidr
     pkgs.act
+    pkgs.yubikey-manager
   ];
 
   home.file.".config/rbw/config.json".source = ../rbw-config.json;
