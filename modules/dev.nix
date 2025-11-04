@@ -1,6 +1,11 @@
 {
-  pkgs, pkgs-stable, pkgs-25, config, ...
-}: {
+  pkgs,
+  pkgs-stable,
+  pkgs-25,
+  config,
+  ...
+}:
+{
 
   programs.go = {
     enable = true;

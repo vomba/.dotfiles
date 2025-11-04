@@ -2,6 +2,17 @@
   programs.helix = {
     enable = true;
     defaultEditor = true;
+    # settings = {
+    #   keys.normal = {
+    #     space.f = [
+    #       ":sh rm -f /tmp/yazi-choice"
+    #       ":sh yazi --chooser-file=/tmp/yazi-choice"
+    #       ":open %sh{cat /tmp/yazi-choice}"
+    #       ":redraw"
+    #     ];
+
+    #   };
+    # };
     languages = {
       language-server = {
         terraform-ls = {

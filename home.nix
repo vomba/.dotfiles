@@ -50,6 +50,7 @@
     ./modules/dev.nix
     ./modules/kubernetes.nix
     ./modules/gui.nix
+    ./modules/yazi.nix
   ];
 
   programs.gemini-cli = {

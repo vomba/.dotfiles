@@ -1,6 +1,10 @@
 {
-  pkgs, pkgs-stable, pkgs-25, ...
-}: {
+  pkgs,
+  pkgs-stable,
+  pkgs-25,
+  ...
+}:
+{
 
   home.packages = [
     pkgs.kubie
@@ -13,6 +17,7 @@
     pkgs.kubelogin-oidc
     pkgs.sonobuoy
     pkgs.velero
+    pkgs.popeye
   ];
 
   home.file.".kube/kubie.yaml".source = ../kubie.yaml;
