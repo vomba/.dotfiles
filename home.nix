@@ -23,7 +23,7 @@
     PATH="$HOME/.nix-profile/bin:$PATH"
   '';
 
-  nixGL = {
+  targets.genericLinux.nixGL = {
     packages = nixGL.packages;
     defaultWrapper = "mesa";
     installScripts = [ "mesa" ];

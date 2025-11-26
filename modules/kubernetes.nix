@@ -18,6 +18,7 @@
     pkgs.sonobuoy
     pkgs.velero
     pkgs.popeye
+    pkgs.krew
   ];
 
   home.file.".kube/kubie.yaml".source = ../kubie.yaml;

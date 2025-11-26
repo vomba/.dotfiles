@@ -13,6 +13,8 @@
     initContent = ''
       export GOPATH=$HOME/.go
       export PATH=$PATH:$GOPATH/bin
+      export KREW_ROOT=$HOME/.krew
+      export PATH="$KREW_ROOT/bin:$PATH"
       export GOOGLE_CLOUD_PROJECT=elastisys-vertex-poc
       compdef kubecolor=kubectl
       eval "$(starship init zsh)"
