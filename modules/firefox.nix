@@ -7,7 +7,7 @@
 {
   programs.firefox = {
     enable = true;
-    package = config.lib.nixGL.wrap pkgs.firefox-devedition;
+    package = if pkgs.stdenv.isLinux then config.lib.nixGL.wrap pkgs.firefox-devedition else pkgs.firefox-devedition;
     profiles = {
       dev-edition-default = {
         id = 0;
