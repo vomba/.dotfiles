@@ -18,6 +18,19 @@
     };
   };
 
+  programs.opencode = {
+    enable = true;
+    settings = {
+      provider = {
+        google = {
+          models = {
+          gemini-3-pro-preview = {};
+        };
+        };
+      };
+    };
+  };
+
   home.packages = [
     pkgs.direnv
     pkgs.nixfmt-rfc-style
