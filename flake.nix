@@ -22,10 +22,13 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nur.url = "github:nix-community/nur";
-  };
+nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };  
+};
 
-  outputs = { self, nixpkgs, home-manager, nix-darwin, nur, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, nixpkgs-25, home-manager, nix-darwin, nur, ... }@inputs:
     let
       sharedOverlays = [ (import ./overlays/default.nix) nur.overlays.default ];
       pkgsConfig = {
@@ -72,13 +75,19 @@
       };
 
       darwinConfigurations."Mac" = nix-darwin.lib.darwinSystem {
-        system = darwin-system;
+       
+	system = darwin-system;
         specialArgs = {
+	pkgs = import inputs.nixpkgs { system = darwin-system; config = pkgsConfig; overlays = sharedOverlays; };
+
           pkgs-stable = import inputs.nixpkgs-stable { system = darwin-system; config = pkgsConfig; overlays = sharedOverlays; };
           pkgs-25 = import inputs.nixpkgs-25 { system = darwin-system; config = pkgsConfig; overlays = sharedOverlays; };
           nur = nur;
         };
-        modules = [ ./darwin.nix ];
+        modules = [ 
+		./darwin.nix 
+home-manager.darwinModules.home-manager
+];
       };
     };
 }

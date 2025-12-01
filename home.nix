@@ -10,8 +10,8 @@
 }:
 {
 
-  home.username = "hani";
-  home.homeDirectory = if pkgs.stdenv.isLinux then "/home/hani" else "/Users/hani";
+  home.username = if pkgs.stdenv.isLinux then "hani" else "vomba";
+  home.homeDirectory = if pkgs.stdenv.isLinux then "/home/hani" else "/Users/vomba";
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
@@ -31,6 +31,7 @@
     ./modules/kubernetes.nix
     ./modules/gui.nix
     ./modules/yazi.nix
+    ./modules/gpg.nix
   ];
 
   programs.gemini-cli = {
