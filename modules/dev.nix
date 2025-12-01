@@ -24,7 +24,7 @@
       provider = {
         google = {
           models = {
-          gemini-3-pro-preview = {};
+          "gemini-2.5-pro" = {};
         };
         };
       };

@@ -4,7 +4,8 @@
   pkgs-25,
   lib,
   ...
-}: {
+}:
+{
   # Common configuration for all Mac systems
   #
   # To make this file specific to a certain machine, you can use
@@ -16,16 +17,14 @@
 
   # Set environment variables.
   environment.variables = {
-    EDITOR = "nvim";
+    EDITOR = "hx";
   };
-
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
 
-      ids.gids.nixbld = 350;
-
+  ids.gids.nixbld = 350;
 
   # The platform comes with a lot of packages pre-installed, so we don't need to install them again.
   # See https://github.com/NixOS/nixpkgs/blob/nixos-unstable/nixos/modules/services/system/darwin-init.nix

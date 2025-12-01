@@ -1,4 +1,4 @@
-{
+  {
   pkgs,
   pkgs-stable,
   pkgs-25,
