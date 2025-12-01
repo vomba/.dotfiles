@@ -5,11 +5,11 @@
 }:
 {
   programs.gpg = {
-    enable = true;
+    enable = if pkgs.stdenv.isLinux then false else true;
   };
 
   services.gpg-agent = {
-    enable = true;
+      enable = if pkgs.stdenv.isLinux then false else true;
 
   };
 }
