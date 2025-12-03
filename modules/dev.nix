@@ -24,8 +24,8 @@
       provider = {
         google = {
           models = {
-          "gemini-2.5-pro" = {};
-        };
+            "gemini-2.5-pro" = { };
+          };
         };
       };
     };
@@ -65,7 +65,15 @@
     pkgs.cidr
     pkgs.act
     pkgs.yubikey-manager
-  ];
+  ]
+  ++ (
+    if pkgs.stdenv.isLinux then
+      [
+        pkgs.pwsh
+      ]
+    else
+      [ ]
+  );
 
   home.file.".config/rbw/config.json".source = ../rbw-config.json;
   home.file.".config/ck8s-devbox/credentials-helper.bash".source = ../credentials-helper.bash;
