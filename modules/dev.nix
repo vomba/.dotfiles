@@ -65,6 +65,8 @@
     pkgs.cidr
     pkgs.act
     pkgs.yubikey-manager
+    pkgs.gopls
+    pkgs.delve
   ]
   ++ (
     if pkgs.stdenv.isLinux then
