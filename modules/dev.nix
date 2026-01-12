@@ -33,7 +33,7 @@
 
   home.packages = [
     pkgs.direnv
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
     pkgs.nil
     pkgs.pre-commit
     pkgs.gh
@@ -71,7 +71,7 @@
   ++ (
     if pkgs.stdenv.isLinux then
       [
-        pkgs.pwsh
+        pkgs.powershell
       ]
     else
       [ ]
