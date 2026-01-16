@@ -19,6 +19,7 @@
     pkgs.velero
     pkgs.popeye
     pkgs.krew
+    pkgs.crossplane-cli
   ];
 
   home.file.".kube/kubie.yaml".source = ../kubie.yaml;
