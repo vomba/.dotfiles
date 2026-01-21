@@ -9,7 +9,7 @@
   home.packages = [
     pkgs.kubie
     pkgs.kind
-    pkgs-25.clusterctl
+    # pkgs-25.clusterctl
     pkgs-stable.kubernetes-helm
     pkgs-stable.helmfile
     pkgs.kubecolor
