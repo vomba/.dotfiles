@@ -2,15 +2,15 @@
   description = "Home Manager and Nix-Darwin configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-25.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-25.url = "github:nixos/nixpkgs/nixos-25.11";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-darwin = {
-      url = "github:lnl7/nix-darwin";
+      url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
@@ -41,7 +41,7 @@
     }@inputs:
     let
       sharedOverlays = [
-        (import ./overlays/default.nix)
+        (import ./overlays/default.nix { inherit inputs; })
         nur.overlays.default
       ];
       pkgsConfig = {

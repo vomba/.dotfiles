@@ -1,17 +1,17 @@
 {
   config,
   pkgs,
-  pkgs-25,
+  lib,
   ...
 }:
 {
   programs.firefox = {
     enable = true;
-    package = if pkgs.stdenv.isLinux then config.lib.nixGL.wrap pkgs.firefox-devedition else pkgs.firefox-devedition;
+    package = if pkgs.stdenv.isLinux then config.lib.nixGL.wrap pkgs.firefox else pkgs.firefox;
     profiles = {
-      dev-edition-default = {
+      default = {
         id = 0;
-        name = "dev-edition-default";
+        name = "default";
         isDefault = true;
         extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
           ublock-origin

@@ -7,6 +7,10 @@
 }:
 {
 
+  services.podman = {
+    enable = if pkgs.stdenv.isLinux then false else true;
+  };
+
   programs.go = {
     enable = true;
     telemetry.mode = "off";
@@ -18,39 +22,32 @@
     };
   };
 
-  services.ollama = {
-    enable = if pkgs.stdenv.isLinux then false else true;
-    environmentVariables = {
-      OLLAMA_CONTEXT_LENGTH = "64000";
-      OLLAMA_FLASH_ATTENTION = "1";
-      OLLAMA_KEEP_ALIVE = "60m";
-    };
-  };
-
   programs.opencode = {
     enable = if pkgs.stdenv.isLinux then false else true;
     settings = {
       provider = {
+        mistral = {
+          npm = "@ai-sdk/openai-compatible";
+          name = "Mistral AI";
+          options = {
+            baseURL = "https://api.mistral.ai/v1";
+
+          };
+        };
         google = {
           models = {
             "gemini-2.5-pro" = { };
           };
         };
-        ollama = {
+        lmstudio = {
           npm = "@ai-sdk/openai-compatible";
-          name = "Ollama local";
+          name = "LM Studio (local)";
           options = {
-            baseURL = "http://localhost:11434/v1";
+            baseURL = "http://localhost:1234/v1";
           };
           models = {
-            "ministral-3:3b" = {
-              name = "ministral-3";
-            };
-            "qwen2.5-coder" = {
-              name = "qwen-coder";
-            };
-            "qwen2.5" = {
-              name = "qwen";
+            "essentialai/rnj-1" = {
+              name = "rnj1";
             };
           };
         };
@@ -59,6 +56,7 @@
   };
 
   home.packages = [
+    pkgs-stable.lmstudio
     pkgs.direnv
     pkgs.nixfmt
     pkgs.nil
