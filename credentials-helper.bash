@@ -109,8 +109,8 @@ case "${cloud_provider}" in
     exoscale)
         # Get credentials for exoscale
         # Make sure that your function gets the correct project credentials based on ${project_name}
-        EXOSCALE_KEY="$(pass exoscale/"${project_name}"/key)"
-        EXOSCALE_SECRET="$(pass exoscale/"${project_name}"/secret)"
+        EXOSCALE_KEY="$(rbw get exso --field=username)"
+        EXOSCALE_SECRET="$(rbw get exso --field=password)"
         echo "{\"id\": \"${EXOSCALE_KEY}\", \"secret\": \"${EXOSCALE_SECRET}\"}"
         ;;
     *)
