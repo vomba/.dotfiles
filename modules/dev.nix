@@ -7,10 +7,6 @@
 }:
 {
 
-  services.podman = {
-    enable = if pkgs.stdenv.isLinux then false else true;
-  };
-
   programs.go = {
     enable = true;
     telemetry.mode = "off";

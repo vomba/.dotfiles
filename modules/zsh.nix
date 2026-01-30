@@ -10,7 +10,6 @@
     shellAliases = {
       cat = "bat";
       yq4 = "yq";
-      docker = "podman";
     };
     initContent = ''
       export GOPATH=$HOME/.go
