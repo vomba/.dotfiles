@@ -17,10 +17,6 @@
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
 
-  xdg.configFile."environment.d/envvars.conf".text = ''
-    PATH="$HOME/.nix-profile/bin:$PATH"
-  '';
-
   imports = [
     ./modules/zsh.nix
     ./modules/git.nix
@@ -32,6 +28,10 @@
     ./modules/gui.nix
     ./modules/yazi.nix
     ./modules/gpg.nix
+    ./modules/packages.nix
+    ./modules/cloud.nix
+    ./modules/lsp.nix
+    ./modules/ai.nix
   ];
 
   programs.gemini-cli = {

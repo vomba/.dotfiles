@@ -6,13 +6,29 @@
     enable = true;
     enableZshIntegration = true;
   };
-  programs.bat.enable = true;
 
-  home.packages = [
-    pkgs.zoxide
-    pkgs.starship
-    pkgs.eza
-  ];
+  programs.bat = {
+    enable = true;
+    # config = { ... }; # Add themes or config here if needed
+  };
 
-  home.file.".config/starship.toml".source = ../starship.toml;
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    options = [ "--cmd cd" ]; # Replace cd with zoxide
+  };
+
+  programs.eza = {
+    enable = true;
+    enableZshIntegration = true;
+    git = true;
+    icons = "auto";
+  };
+
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+    # Load settings from the existing toml file
+    settings = builtins.fromTOML (builtins.readFile ../starship.toml);
+  };
 }

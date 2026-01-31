@@ -13,7 +13,6 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
     nixGL = {
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,26 +48,24 @@
         allowUnfreePredicate = _: true;
       };
 
-      # Linux configuration
-      linux-system = "x86_64-linux";
-      linux-pkgs = import nixpkgs {
-        system = linux-system;
-        config = pkgsConfig;
-        overlays = sharedOverlays;
-      };
-      linux-pkgs-stable = import inputs.nixpkgs-stable {
-        system = linux-system;
-        config = pkgsConfig;
-        overlays = sharedOverlays;
-      };
-      linux-pkgs-25 = import inputs.nixpkgs-25 {
-        system = linux-system;
+      # Helper to instantiate nixpkgs with our config and overlays
+      mkPkgs = system: pkgSource: import pkgSource {
+        inherit system;
         config = pkgsConfig;
         overlays = sharedOverlays;
       };
 
+      # Linux configuration
+      linux-system = "x86_64-linux";
+      linux-pkgs        = mkPkgs linux-system nixpkgs;
+      linux-pkgs-stable = mkPkgs linux-system inputs.nixpkgs-stable;
+      linux-pkgs-25     = mkPkgs linux-system inputs.nixpkgs-25;
+
       # macOS configuration
       darwin-system = "aarch64-darwin";
+      darwin-pkgs        = mkPkgs darwin-system nixpkgs;
+      darwin-pkgs-stable = mkPkgs darwin-system inputs.nixpkgs-stable;
+      darwin-pkgs-25     = mkPkgs darwin-system inputs.nixpkgs-25;
 
     in
     {
@@ -90,23 +87,10 @@
       darwinConfigurations."Mac" = nix-darwin.lib.darwinSystem {
 
         system = darwin-system;
+        pkgs = darwin-pkgs;
         specialArgs = {
-          pkgs = import inputs.nixpkgs {
-            system = darwin-system;
-            config = pkgsConfig;
-            overlays = sharedOverlays;
-          };
-
-          pkgs-stable = import inputs.nixpkgs-stable {
-            system = darwin-system;
-            config = pkgsConfig;
-            overlays = sharedOverlays;
-          };
-          pkgs-25 = import inputs.nixpkgs-25 {
-            system = darwin-system;
-            config = pkgsConfig;
-            overlays = sharedOverlays;
-          };
+          pkgs-stable = darwin-pkgs-stable;
+          pkgs-25 = darwin-pkgs-25;
           nur = nur;
         };
         modules = [

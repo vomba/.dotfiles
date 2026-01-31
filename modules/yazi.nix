@@ -1,6 +1,8 @@
+{ pkgs, ... }:
 {
-  pkgs, ...
-}:
-{
-  home.packages = [ pkgs.yazi ];
+  programs.yazi = {
+    enable = true;
+    enableZshIntegration = true;
+    # settings = { ... }; # Add configuration here later if needed
+  };
 }

@@ -20,7 +20,7 @@
       };
       diff = {
         "sopsdiffer" = {
-          textconv = "sopd -d";
+          textconv = "sops -d";
         };
       };
     };

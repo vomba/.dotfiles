@@ -4,6 +4,17 @@
   ...
 }:
 {
+  home.sessionVariables = {
+    GOPATH = "${config.home.homeDirectory}/.go";
+    KREW_ROOT = "${config.home.homeDirectory}/.krew";
+    GOOGLE_CLOUD_PROJECT = "elastisys-vertex-poc";
+  };
+
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.go/bin"
+    "${config.home.homeDirectory}/.krew/bin"
+  ];
+
   programs.zsh = {
     enable = true;
     dotDir = "${config.home.homeDirectory}/.config/zsh";
@@ -12,18 +23,12 @@
       yq4 = "yq";
     };
     initContent = ''
-      export GOPATH=$HOME/.go
-      export PATH=$PATH:$GOPATH/bin
-      export KREW_ROOT=$HOME/.krew
-      export PATH="$KREW_ROOT/bin:$PATH"
-      export GOOGLE_CLOUD_PROJECT=elastisys-vertex-poc
       compdef kubecolor=kubectl
-      eval "$(starship init zsh)"
     '';
     oh-my-zsh = {
       enable = true;
       theme = "robbyrussell";
-      custom = "$HOME/.dotfiles/oh-my-zsh";
+      custom = "${config.home.homeDirectory}/.dotfiles/oh-my-zsh";
       plugins = [
         "git"
         "fzf"
