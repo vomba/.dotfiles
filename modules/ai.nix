@@ -32,7 +32,14 @@
     };
   };
 
-  home.packages = [
-    pkgs-stable.lmstudio
-  ];
+  home.packages = []
+  ++ (
+    if pkgs.stdenv.isDarwin then
+      [
+        pkgs-stable.lmstudio
+      ]
+    else
+      [ ]
+  );
+
 }
