@@ -1,7 +1,7 @@
 { inputs }:
-self: super:
-{
+self: super: {
   cidr = super.callPackage ./cidr.nix { };
+  helmfile = super.callPackage ./helmfile.nix { };
 
   # Pin Swift to 5.8 from stable
   swift = inputs.nixpkgs-stable.legacyPackages.${self.system}.swift;
@@ -10,7 +10,7 @@ self: super:
 
   # Pin Dotnet to stable versions
   dotnet-sdk = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnet-sdk;
-  
+
   # Patch dotnetCorePackages to include missing attributes from unstable
   dotnetCorePackages = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnetCorePackages // {
     sdk_9_0_1xx-bin = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnet-sdk;
@@ -20,4 +20,8 @@ self: super:
 
   # Pin Marksman to stable to avoid unstable dotnet dependency issues
   marksman = inputs.nixpkgs-stable.legacyPackages.${self.system}.marksman;
+
+
+  
 }
+

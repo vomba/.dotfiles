@@ -11,7 +11,7 @@
     pkgs.kind
     # pkgs-25.clusterctl
     pkgs-stable.kubernetes-helm
-    pkgs-stable.helmfile
+    pkgs.helmfile
     pkgs.kubecolor
     pkgs-25.kubectl
     pkgs.kubelogin-oidc
