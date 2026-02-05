@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
 
   programs.git = {
@@ -25,4 +25,8 @@
       };
     };
   };
+
+  home.packages = [
+    pkgs.lazygit
+  ];
 }
