@@ -46,11 +46,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1769978395,
         "narHash": "sha256-gj1yP3spUb1vGtaF5qPhshd2j0cg4xf51pklDsIm19Q=",
         "owner": "nix-community",
         "repo": "home-manager",
         "rev": "984708c34d3495a518e6ab6b8633469bbca2f77a",
+=======
+        "lastModified": 1769952507,
+        "narHash": "sha256-eNTfxT3v8b7s1dqswgposi5Y1CUMoOUhQKiy29QY25U=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "b59376563943ce163b2553aeb63d0c170967d74e",
+>>>>>>> fc46c1b (add mistral vibe)
         "type": "github"
       },
       "original": {
@@ -122,11 +130,19 @@
     },
     "nixpkgs": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1770019141,
         "narHash": "sha256-VKS4ZLNx4PNrABoB0L8KUpc1fE7CLpQXQs985tGfaCU=",
         "owner": "nixos",
         "repo": "nixpkgs",
         "rev": "cb369ef2efd432b3cdf8622b0ffc0a97a02f3137",
+=======
+        "lastModified": 1769789167,
+        "narHash": "sha256-kKB3bqYJU5nzYeIROI82Ef9VtTbu4uA3YydSk/Bioa8=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "62c8382960464ceb98ea593cb8321a2cf8f9e3e5",
+>>>>>>> fc46c1b (add mistral vibe)
         "type": "github"
       },
       "original": {
@@ -138,11 +154,19 @@
     },
     "nixpkgs-25": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1770056022,
         "narHash": "sha256-yvCz+Qmci1bVucXEyac3TdoSPMtjqVJmVy5wro6j/70=",
         "owner": "nixos",
         "repo": "nixpkgs",
         "rev": "d04d8548aed39902419f14a8537006426dc1e4fa",
+=======
+        "lastModified": 1769741972,
+        "narHash": "sha256-RxSg1EioTWNpoLaykiT1UQKTo/K0PPdLqCyQgNjNqWs=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "63590ac958a8af30ebd52c7a0309d8c52a94dd77",
+>>>>>>> fc46c1b (add mistral vibe)
         "type": "github"
       },
       "original": {
@@ -176,11 +200,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1770125189,
         "narHash": "sha256-boDXS39FRXDhrQZoK9CvsogApXnLM8UR1qvevawKN/g=",
         "owner": "nix-community",
         "repo": "NUR",
         "rev": "6a5c8df1342ff2ba9f9c1a9a3ebd99393faafb54",
+=======
+        "lastModified": 1769968490,
+        "narHash": "sha256-z2fbTh8x8mRGCnnGgbdSk9ZzpCHrysET+tj0idpseTw=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "83d89a5b2a41452e2084bdde6e0a7c254f21f10d",
+>>>>>>> fc46c1b (add mistral vibe)
         "type": "github"
       },
       "original": {

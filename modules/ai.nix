@@ -23,8 +23,11 @@
             baseURL = "http://localhost:1234/v1";
           };
           models = {
-            "essentialai/rnj-1" = {
-              name = "rnj1";
+            "jan-v3-4b-base-instruct" = {
+              name = "jan";
+            };
+            "ministral-3-3b-reasoning-2512" = {
+              name = "ministral 3 reason";
             };
           };
         };
@@ -32,14 +35,16 @@
     };
   };
 
-  home.packages = []
-  ++ (
-    if pkgs.stdenv.isDarwin then
-      [
-        pkgs-stable.lmstudio
-      ]
-    else
-      [ ]
-  );
+  home.packages =
+    [ ]
+    ++ (
+      if pkgs.stdenv.isDarwin then
+        [
+          pkgs-stable.lmstudio
+          pkgs.mistral-vibe
+        ]
+      else
+        [ ]
+    );
 
 }
