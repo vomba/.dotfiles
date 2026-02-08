@@ -9,7 +9,8 @@
     pkgs.azure-storage-azcopy
 
     # OpenStack / UpCloud
-    pkgs.openstackclient-full
+    pkgs-25.openstackclient-full
+    pkgs.openstack-tui
     pkgs.upcloud-cli
 
     # Terraform / OpenTofu

@@ -1,7 +1,7 @@
 { inputs }:
 self: super: {
   cidr = super.callPackage ./cidr.nix { };
-  helmfile = super.callPackage ./helmfile.nix { };
+  helmfile = inputs.nixpkgs-helmfile.legacyPackages.${self.system}.helmfile;
 
   # Pin Swift to 5.8 from stable
   swift = inputs.nixpkgs-stable.legacyPackages.${self.system}.swift;
@@ -21,7 +21,7 @@ self: super: {
   # Pin Marksman to stable to avoid unstable dotnet dependency issues
   marksman = inputs.nixpkgs-stable.legacyPackages.${self.system}.marksman;
 
-
+  openstack-tui = super.callPackage ./openstack-tui.nix { };
   
 }
 
