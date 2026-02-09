@@ -9,9 +9,8 @@
     pkgs.glow
     pkgs.act
     pkgs.hugo
-    pkgs.superhtml
     pkgs.socat
-    
+
     # Secrets / Security
     pkgs.sops
     pkgs.bitwarden-cli

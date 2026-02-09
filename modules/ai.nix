@@ -41,7 +41,6 @@
       if pkgs.stdenv.isDarwin then
         [
           pkgs-stable.lmstudio
-          pkgs.mistral-vibe
         ]
       else
         [ ]
