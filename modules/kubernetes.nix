@@ -20,8 +20,8 @@
     pkgs.popeye
     pkgs.krew
     pkgs.crossplane-cli
-    pkgs.python313Packages.python-cinderclient
-    ];
+    pkgs.kubectl-view-secret
+  ];
 
   home.file.".kube/kubie.yaml".source = ../kubie.yaml;
 }
