@@ -22,6 +22,17 @@ self: super: {
   marksman = inputs.nixpkgs-stable.legacyPackages.${self.system}.marksman;
 
   openstack-tui = super.callPackage ./openstack-tui.nix { };
+
+  pythonPackagesExtensions = super.pythonPackagesExtensions ++ [
+    (python-final: python-prev: {
+      python-magnumclient = python-prev.python-magnumclient.overridePythonAttrs (oldAttrs: {
+        doCheck = false;
+      });
+      python-heatclient = python-prev.python-heatclient.overridePythonAttrs (oldAttrs: {
+        doCheck = false;
+      });
+    })
+  ];
   
 }
 

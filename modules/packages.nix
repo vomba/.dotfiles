@@ -19,6 +19,7 @@
 
     # Runtimes
     pkgs.nodejs_24
+    pkgs.ruby
   ]
   ++ (
     if pkgs.stdenv.isLinux then

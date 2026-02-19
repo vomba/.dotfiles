@@ -9,7 +9,7 @@
     pkgs.azure-storage-azcopy
 
     # OpenStack / UpCloud
-    # pkgs-25.openstackclient-full
+    pkgs.openstackclient-full
     pkgs.openstack-tui
     pkgs.upcloud-cli
 
