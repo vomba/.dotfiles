@@ -95,8 +95,8 @@ case "${cloud_provider}" in
         ;;
     elastx)
         # Get credentials for elastx
-        OS_USERNAME="$(rbw get elastx --field=username)"
-        OS_PASSWORD="$(rbw get elastx --field=password)"
+        OS_USERNAME="$(rbw get ops.elastx.cloud --field=username)"
+        OS_PASSWORD="$(rbw get ops.elastx.cloud --field=password)"
         echo "{\"id\": \"${OS_USERNAME}\", \"secret\": \"${OS_PASSWORD}\"}"
         ;;
     aws)
