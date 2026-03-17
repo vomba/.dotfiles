@@ -10,10 +10,10 @@
     pkgs.kubie
     pkgs.kind
     # pkgs-25.clusterctl
-    pkgs-stable.kubernetes-helm
+    pkgs.kubernetes-helm
     pkgs.helmfile
     pkgs.kubecolor
-    pkgs-25.kubectl
+    pkgs.kubectl
     pkgs.kubelogin-oidc
     pkgs.sonobuoy
     pkgs.velero

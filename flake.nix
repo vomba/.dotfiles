@@ -25,7 +25,6 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs-helmfile.url = "github:nixos/nixpkgs/3e2cf88148e732abc1d259286123e06a9d8c964a";
   };
 
   outputs =
@@ -50,23 +49,25 @@
       };
 
       # Helper to instantiate nixpkgs with our config and overlays
-      mkPkgs = system: pkgSource: import pkgSource {
-        inherit system;
-        config = pkgsConfig;
-        overlays = sharedOverlays;
-      };
+      mkPkgs =
+        system: pkgSource:
+        import pkgSource {
+          inherit system;
+          config = pkgsConfig;
+          overlays = sharedOverlays;
+        };
 
       # Linux configuration
       linux-system = "x86_64-linux";
-      linux-pkgs        = mkPkgs linux-system nixpkgs;
+      linux-pkgs = mkPkgs linux-system nixpkgs;
       linux-pkgs-stable = mkPkgs linux-system inputs.nixpkgs-stable;
-      linux-pkgs-25     = mkPkgs linux-system inputs.nixpkgs-25;
+      linux-pkgs-25 = mkPkgs linux-system inputs.nixpkgs-25;
 
       # macOS configuration
       darwin-system = "aarch64-darwin";
-      darwin-pkgs        = mkPkgs darwin-system nixpkgs;
+      darwin-pkgs = mkPkgs darwin-system nixpkgs;
       darwin-pkgs-stable = mkPkgs darwin-system inputs.nixpkgs-stable;
-      darwin-pkgs-25     = mkPkgs darwin-system inputs.nixpkgs-25;
+      darwin-pkgs-25 = mkPkgs darwin-system inputs.nixpkgs-25;
 
     in
     {
