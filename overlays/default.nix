@@ -23,6 +23,7 @@ self: super: {
   openstack-tui = super.callPackage ./openstack-tui.nix { };
 
   kubernetes-helm = import ./helm.nix { inherit super; };
+  helmfile = import ./helmfile.nix { inherit super; };
 
   pythonPackagesExtensions = super.pythonPackagesExtensions ++ [
     (python-final: python-prev: {

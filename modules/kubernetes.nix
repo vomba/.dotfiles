@@ -10,7 +10,12 @@
     pkgs.kubie
     pkgs.kind
     # pkgs-25.clusterctl
-    pkgs.kubernetes-helm
+    (pkgs.kubernetes-helm.withPlugins (p: [
+      p.helm-diff
+      p.helm-secrets
+      p.helm-secrets-getter
+      p.helm-secrets-post-renderer
+    ]))
     pkgs.helmfile
     pkgs.kubecolor
     pkgs.kubectl
