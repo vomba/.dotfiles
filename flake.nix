@@ -25,6 +25,10 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    everything-claude-code = {
+      url = "github:affaan-m/everything-claude-code";
+      flake = false;
+    };
   };
 
   outputs =
@@ -78,6 +82,7 @@
           pkgs-25 = linux-pkgs-25;
           nur = nur;
           nixGL = inputs.nixGL;
+          inherit inputs;
         };
         modules = [
           inputs.nix-index-database.homeModules.nix-index
@@ -94,6 +99,7 @@
           pkgs-stable = darwin-pkgs-stable;
           pkgs-25 = darwin-pkgs-25;
           nur = nur;
+          inherit inputs;
         };
         modules = [
           ./darwin.nix

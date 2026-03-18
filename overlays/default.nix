@@ -33,6 +33,9 @@ self: super: {
       python-heatclient = python-prev.python-heatclient.overridePythonAttrs (oldAttrs: {
         doCheck = false;
       });
+      dogpile-cache = python-prev.dogpile-cache.overridePythonAttrs (oldAttrs: {
+        doCheck = false;
+      });
     })
   ];
   

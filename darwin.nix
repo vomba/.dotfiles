@@ -3,6 +3,7 @@
   pkgs-stable,
   pkgs-25,
   lib,
+  inputs,
   ...
 }:
 {
@@ -75,6 +76,7 @@
       # You can pass any extra arguments to your home-manager modules
       inherit pkgs-stable;
       inherit pkgs-25;
+      inherit inputs;
     };
     users.vomba = import ./home.nix;
   };
