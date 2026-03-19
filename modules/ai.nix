@@ -71,6 +71,14 @@ in
     source = "${eccRepo}/contexts";
     force = true;
   };
+  home.file.".config/opencode/prompts/agents" = {
+    source = "${eccRepo}/.opencode/prompts/agents";
+    force = true;
+  };
+    home.file.".config/opencode/commands" = {
+    source = "${eccRepo}/.opencode/commands";
+    force = true;
+  };
   home.file.".config/opencode/AGENTS.md" = {
     source = "${eccRepo}/AGENTS.md";
     force = true;
