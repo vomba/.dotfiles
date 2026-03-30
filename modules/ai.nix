@@ -12,26 +12,52 @@ let
   homeDir = config.home.homeDirectory;
   configDir = "${homeDir}/.config/opencode";
 
-  # Override model names and resolve paths in the plugin's configuration
+  reasoningModel = "opencode-go/glm-5";
+  codeModel = "opencode-go/minimax-2.7";
+
+  reasoningAgents = [
+    "architect"
+    "planner"
+    "code-reviewer"
+    "security-reviewer"
+    "database-reviewer"
+    "go-reviewer"
+    "tdd-guide"
+  ];
+
+  codeAgents = [
+    "build"
+    "build-error-resolver"
+    "refactor-cleaner"
+    "e2e-runner"
+    "doc-updater"
+    "go-build-resolver"
+  ];
+
+  getModelForAgent = agentName:
+    if lib.elem agentName reasoningAgents then reasoningModel
+    else if lib.elem agentName codeAgents then codeModel
+    else reasoningModel;
+
   processConfig =
-    value:
+    agentName: value:
     if lib.isAttrs value then
       lib.mapAttrs (
         name: val:
         if name == "model" || name == "small_model" then
-          "opencode-go/kimi-k2.5"
+          getModelForAgent agentName
         else if lib.isString val then
           lib.replaceStrings [ "{file:" ] [ "{file:${configDir}/" ] val
         else
-          processConfig val
+          processConfig agentName val
       ) value
     else if lib.isList value then
-      map (v: processConfig v) value
+      map (v: processConfig agentName v) value
     else
       value;
 
-  mergedAgents = processConfig (eccConfig.agent or { });
-  mergedCommands = processConfig (eccConfig.command or { });
+  mergedAgents = lib.mapAttrs (name: config: processConfig name config) (eccConfig.agent or { });
+  mergedCommands = processConfig "command" (eccConfig.command or { });
   mergedInstructions = map (path: "${configDir}/${path}") (eccConfig.instructions or [ ]);
 
 in
@@ -39,8 +65,8 @@ in
   programs.opencode = {
     enable = true;
     settings = {
-      model = "opencode-go/kimi-k2.5";
-      small_model = "opencode-go/kimi-k2.5";
+      model = codeModel;
+      small_model = reasoningModel;
       default_agent = eccConfig.default_agent or "build";
       instructions = mergedInstructions;
       plugin = [ "${configDir}/.opencode/plugins" ];
@@ -48,6 +74,7 @@ in
       command = mergedCommands;
     };
   };
+  
 
   # Everything Claude Code (ECC) plugin configuration
   home.file.".config/opencode/.opencode" = {
