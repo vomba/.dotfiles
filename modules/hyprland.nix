@@ -1,7 +1,26 @@
+# Hyprland configuration for Nix on Ubuntu (nixGL)
+#
+# Prerequisites:
+# 1. Install Nix package manager on Ubuntu
+# 2. Install nixGL: nix-channel --add https://github.com/guibou/nixGL/archive/main.tar.gz nixgl && nix-channel --update
+# 3. Install nixGL.auto: nix-env -iA nixgl.auto -f '<nixpkgs>'
+# 4. Install swaylock via apt (NOT nix - PAM issues): sudo apt install swaylock
+# 5. For portals to work on Ubuntu, create ~/.config/xdg-desktop-portal/portals.conf:
+#    [preferred]
+#    default=wlr;gtk
+#    org.freedesktop.impl.portal.FileChooser=gtk
+#
+# Note: This config disables systemd integration since we're on Ubuntu, not NixOS
+# Applications like waybar need to be started manually in exec-once
+#
+# IMPORTANT: This config uses xdg-desktop-portal-wlr (not hyprland portal) and
+# requires swaylock to be installed via apt at /usr/bin/swaylock
+
 {
   pkgs,
   pkgs-stable,
   config,
+  lib,
   ...
 }:
 {
@@ -25,35 +44,41 @@
     };
   };
 
+  # Portal configuration for Ubuntu
+  # Note: Using xdg-desktop-portal-wlr (available on Ubuntu) instead of
+  # xdg-desktop-portal-hyprland which may not be available on older Ubuntu versions
+  # For portals to work, create ~/.config/xdg-desktop-portal/portals.conf:
+  #   [preferred]
+  #   default=wlr;gtk
+  #   org.freedesktop.impl.portal.FileChooser=gtk
   xdg.portal = {
     enable = true;
     extraPortals = [
-      pkgs.xdg-desktop-portal-wlr
       pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-wlr
     ];
-    config = {
-      common.default = [ "gtk" ];
-      hyprland.default = [
-        "wlr"
-        "gtk"
-        "hyprland"
-      ];
-    };
-    configPackages = [ config.wayland.windowManager.hyprland.package ];
-    xdgOpenUsePortal = true;
+    configPackages = [ pkgs.xdg-desktop-portal-wlr ];
   };
 
-  # home.packages = [
-  #   pkgs.hyprland-protocols
-  # ];
+  # Additional packages for Ubuntu compatibility
+  # Note: swaylock is installed via apt (apt install swaylock) because the Nix version
+  # has issues with PAM authentication on Ubuntu. See hypridle config below which
+  # uses /usr/bin/swaylock path.
+  # Note: hyprland is already installed by wayland.windowManager.hyprland module
+  home.packages = with pkgs; [
+    xdg-desktop-portal-wlr # Using wlr instead of hyprland portal for Ubuntu compatibility
+    hypridle
+  ];
 
   wayland.windowManager.hyprland = {
     enable = true;
     package = config.lib.nixGL.wrap pkgs.hyprland;
 
+    # Disable systemd integration on Ubuntu (not NixOS)
+    # Ubuntu manages sessions differently
     systemd = {
+      enable = false;
       variables = [ "--all" ];
-      enable = true;
     };
     settings = {
 
@@ -67,6 +92,7 @@
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+        "QT_QPA_PLATFORMTHEME,gtk2"
         # Java application fixes
         "_JAVA_AWT_WM_NONREPARENTING,1"
         # Hardware rendering
@@ -75,14 +101,22 @@
         "MOZ_WEBRENDER,1"
         # Chrome based apps
         "ELECTRON_OZONE_PLATFORM_HINT,auto"
+        # Required for Ubuntu (non-NixOS) for Electron/Ozone apps
+        "NIXOS_OZONE_WL,1"
+        # Additional Ubuntu-specific fixes
+        "LIBVA_DRIVER_NAME,nvidia"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        "WLR_NO_HARDWARE_CURSORS,1"
       ];
 
       exec-once = [
-        # "waybar" # Start waybar when Hyprland starts
+        # Start waybar manually since systemd integration is disabled
+        "waybar"
         "nm-applet --indicator" # Network Manager applet
         "blueman-applet" # Bluetooth applet
-        # Compatibility with Gnome applications
-        "dbus-update-activation-environment --systemd --all"
+        # Import environment for DBus and applications
+        "dbus-update-activation-environment --all"
         "gnome-keyring-daemon --start --components=secrets"
         "kanshi"
       ];
@@ -104,6 +138,19 @@
         "col.active_border" = "rgb(5e81ac)";
         "col.inactive_border" = "rgb(2e3440)";
         resize_on_border = true;
+        hover_icon_on_border = true;
+        allow_tearing = false;
+        # New: Gaps between workspaces
+        gaps_workspaces = 0;
+        # New: Focus fallback behavior
+        no_focus_fallback = false;
+
+        # New: Snap feature for floating windows (optional)
+        snap = {
+          enabled = false;
+          window_gap = 10;
+          monitor_gap = 10;
+        };
       };
 
       dwindle = {
@@ -114,20 +161,32 @@
       misc = {
         disable_splash_rendering = true;
         force_default_wallpaper = 1;
+        mouse_move_enables_dpms = true;
+        key_press_enables_dpms = true;
       };
 
       decoration = {
         rounding = 1;
+        # New: Controls corner curve (1.0=triangle, 2.0=circle, 4.0=squircle)
+        rounding_power = 2.0;
+
         blur = {
           enabled = false;
           size = 0;
           passes = 0;
         };
+
         shadow = {
           range = 12;
           render_power = 2;
           color = "rgb(101010)";
         };
+
+        dim_inactive = false;
+      };
+
+      render = {
+        direct_scanout = false;
       };
 
       input = {
@@ -140,7 +199,9 @@
         touchpad = {
           natural_scroll = true;
           disable_while_typing = true;
-          drag_lock = true;
+          # drag_lock is now an int: 0=disabled, 1=enabled with timeout, 2=sticky
+          drag_lock = 1;
+          tap-to-click = true;
         };
         sensitivity = 0;
         float_switch_override_focus = 2;
@@ -156,7 +217,7 @@
           terminal = "kitty";
           menu = "fuzzel";
           file_explorer = "nautilus";
-          lock_screen = "swaylock";
+          lock_screen = "/usr/bin/swaylock"; # apt-installed swaylock
           screenshot_dir = "$HOME/Pictures/Screenshots";
         in
         [
@@ -238,11 +299,38 @@
         ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
         ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       ];
+
+      # Window rules - new syntax for latest Hyprland
+      # Format: windowrule = effect value, match:criteria
+      # Note: Regex anchors ^ and $ are not needed - matching is already regex-based
+      windowrule = [
+        # Float dialogs and popups
+        "float on, match:class pavucontrol"
+        "float on, match:class nm-connection-editor"
+        "float on, match:class blueman-manager"
+        "float on, match:class imv"
+        "float on, match:class mpv"
+        "size 800 600, match:class pavucontrol"
+        "size 800 600, match:class nm-connection-editor"
+
+        # Make Firefox PiP float and stay on top
+        "float on, match:title Picture-in-Picture"
+        "pin on, match:title Picture-in-Picture"
+
+        # Steam fixes
+        "float on, match:class steam, match:title Steam - News"
+
+        # Ignore idle inhibit for certain windows
+        "idle_inhibit focus, match:class mpv"
+        "idle_inhibit focus, match:class firefox, match:title .*YouTube.*"
+      ];
     };
   };
 
-  # Swaylock configuration (1.7.2)
-  # Note: Lock screens are really tricky to install outside OS native, swaylock usually exists
+  # Swaylock configuration
+  # NOTE: swaylock must be installed via apt: sudo apt install swaylock
+  # The Nix version has PAM authentication issues on Ubuntu.
+  # Config is applied to /usr/bin/swaylock (apt-installed version)
   xdg.configFile."swaylock/config".text = ''
     ignore-empty-password
     show-failed-attempts
@@ -273,28 +361,39 @@
     text-wrong-color=3b4252ff
   '';
 
-  # Hypridle
+  # Hypridle - idle management daemon
+  # NOTE: Using /usr/bin/swaylock which must be installed via apt (sudo apt install swaylock)
+  # The Nix version of swaylock has PAM authentication issues on Ubuntu.
   services.hypridle = {
     enable = true;
     settings = {
       general = {
-        lock_cmd = "hyprctl dispatch exec swaylock"; # logout triggered
-        after_sleep_cmd = "hyprctl dispatch dpms on"; # screen on
-        before_sleep_cmd = "hyprctl dispatch exec swaylock"; # lock lid close
+        lock_cmd = "/usr/bin/swaylock"; # lock screen command (apt-installed)
+        unlock_cmd = ""; # unlock command (optional)
+        before_sleep_cmd = "/usr/bin/swaylock"; # lock before sleep
+        after_sleep_cmd = "hyprctl dispatch dpms on"; # turn on screen after sleep
+        ignore_dbus_inhibit = false;
+        ignore_systemd_inhibit = false;
       };
       listener = [
         {
-          timeout = 1200;
-          on-timeout = "hyprctl dispatch dpms off"; # screen off
-          on-resume = "hyprctl dispatch dpms on"; # screen on
+          timeout = 300; # 5 minutes
+          on-timeout = "/usr/bin/swaylock"; # lock screen after timeout
+        }
+        {
+          timeout = 600; # 10 minutes
+          on-timeout = "hyprctl dispatch dpms off"; # turn off screen
+          on-resume = "hyprctl dispatch dpms on"; # turn on screen on resume
         }
       ];
     };
   };
 
+  # Waybar - disabled systemd since we're on Ubuntu
+  # Waybar is started manually in Hyprland exec-once
   programs.waybar = {
     enable = true;
-    systemd.enable = true;
+    systemd.enable = false;
     style = ''
       * {
           font-family: JetBrains Mono Nerd Font;
@@ -629,4 +728,42 @@
     };
   };
 
+  # ============================================================================
+  # UBUNTU-SPECIFIC NOTES AND SETUP INSTRUCTIONS
+  # ============================================================================
+  #
+  # To launch Hyprland on Ubuntu, use a wrapper script or add to ~/.bashrc/.zshrc:
+  #
+  #   alias hyprland-nix='nixGLIntel hyprland'
+  #   # or for NVIDIA:
+  #   # alias hyprland-nix='nixGLNvidia hyprland'
+  #
+  # If launching from a TTY (Ctrl+Alt+F3):
+  #   nixGLIntel hyprland
+  #
+  # If launching from a display manager (GDM, SDDM, etc.), create:
+  #   ~/.local/share/wayland-sessions/hyprland-nix.desktop
+  #
+  # With contents:
+  #   [Desktop Entry]
+  #   Name=Hyprland (Nix)
+  #   Comment=Hyprland compositor (Nix package)
+  #   Exec=/home/USERNAME/.nix-profile/bin/nixGLIntel /home/USERNAME/.nix-profile/bin/hyprland
+  #   Type=Application
+  #
+  # IMPORTANT: Make sure to replace USERNAME with your actual username!
+  #
+  # REQUIRED UBUNTU PACKAGES (install via apt):
+  #   sudo apt install swaylock xdg-desktop-portal-wlr
+  #
+  # PORTAL CONFIGURATION:
+  #   Create ~/.config/xdg-desktop-portal/portals.conf:
+  #   [preferred]
+  #   default=wlr;gtk
+  #   org.freedesktop.impl.portal.FileChooser=gtk
+  #
+  # NOTE: swaylock MUST be installed via apt (not nix) due to PAM authentication issues.
+  # This config uses /usr/bin/swaylock for all lock commands.
+  #
+  # ============================================================================
 }
