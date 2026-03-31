@@ -12,14 +12,14 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: DeterminateSystems/determinate-nix-action@main
       - name: Update flake inputs
         run: nix flake update
       - name: Check for overlay updates
         run: ./scripts/check-updates.py
       - name: Upload flake.lock
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: flake-lock
           path: flake.lock
@@ -31,8 +31,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: flake-lock
       - uses: DeterminateSystems/determinate-nix-action@main
@@ -47,8 +47,8 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
         with:
           name: flake-lock
       - uses: DeterminateSystems/determinate-nix-action@main
