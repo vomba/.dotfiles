@@ -13,7 +13,7 @@ let
   configDir = "${homeDir}/.config/opencode";
 
   reasoningModel = "opencode-go/glm-5";
-  codeModel = "opencode-go/minimax-2.7";
+  codeModel = "opencode-go/minimax-m2.7";
 
   reasoningAgents = [
     "architect"
