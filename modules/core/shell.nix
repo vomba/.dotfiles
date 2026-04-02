@@ -1,6 +1,8 @@
 {
-  pkgs, ...
-}: {
+  pkgs,
+  ...
+}:
+{
 
   programs.fzf = {
     enable = true;
@@ -29,6 +31,6 @@
     enable = true;
     enableZshIntegration = true;
     # Load settings from the existing toml file
-    settings = builtins.fromTOML (builtins.readFile ../starship.toml);
+    settings = builtins.fromTOML (builtins.readFile ../../starship.toml);
   };
 }

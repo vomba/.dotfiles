@@ -36,7 +36,7 @@ in
     pkgs.kubectl-view-secret
   ];
 
-  home.file.".kube/kubie.yaml".source = ../kubie.yaml;
+  home.file.".kube/kubie.yaml".source = ../../kubie.yaml;
 
   # Helm v4 uses XDG directories for plugin detection, but helmfile uses
   # the Helm library which doesn't respect HELM_PLUGINS env var.

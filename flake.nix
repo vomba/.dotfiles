@@ -29,6 +29,10 @@
       url = "github:affaan-m/everything-claude-code";
       flake = false;
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -40,6 +44,7 @@
       home-manager,
       nix-darwin,
       nur,
+      sops-nix,
       ...
     }@inputs:
     let

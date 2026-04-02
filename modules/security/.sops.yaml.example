@@ -1,0 +1,32 @@
+# SOPS Configuration for secrets management
+#
+# This file defines how secrets are encrypted.
+# Edit this file to add your GPG key fingerprint or age recipient.
+#
+# To find your GPG key fingerprint:
+#   gpg --list-secret-keys
+#
+# To generate a new GPG key:
+#   gpg --full-generate-key  # Choose RSA 4096
+#
+# To add an age key (alternative to GPG):
+#   nix run nixpkgs#age -- --generate
+#
+
+creation_rules:
+  # Personal secrets - replace with your GPG key fingerprint
+  - path_regex: personal/.*
+    pgp: >-
+      YOUR_GPG_KEY_FINGERPRINT_HERE
+    encrypted_suffix: password
+
+  # Work secrets - replace with work GPG key
+  - path_regex: work/.*
+    pgp: >-
+      YOUR_WORK_GPG_KEY_FINGERPRINT_HERE
+    encrypted_suffix: password
+
+  # Fallback rule for any unencrypted values
+  - path_regex: .*
+    pgp: >-
+      YOUR_GPG_KEY_FINGERPRINT_HERE

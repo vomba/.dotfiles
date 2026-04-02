@@ -1,0 +1,20 @@
+# SOPS Configuration
+# GPG key fingerprint: 8FDE75DE84A1FDE050B966F28D0433B853DB281D
+
+creation_rules:
+  # Linux secrets
+  - path_regex: secrets/linux/.*
+    pgp: >-
+      8FDE75DE84A1FDE050B966F28D0433B853DB281D
+    encrypted_suffix: password
+
+  # macOS secrets
+  - path_regex: secrets/darwin/.*
+    pgp: >-
+      8FDE75DE84A1FDE050B966F28D0433B853DB281D
+    encrypted_suffix: password
+
+  # Fallback
+  - path_regex: .*
+    pgp: >-
+      8FDE75DE84A1FDE050B966F28D0433B853DB281D

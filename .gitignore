@@ -1,0 +1,84 @@
+# Nix build artifacts
+result
+result-*
+*.drv
+
+# Nix shell and development
+.nix-defexpr
+.nix-shell/
+
+#.direnv
+.direnv/
+*.envrc
+
+# Secrets and credentials
+# NOTE: .sops.yaml is safe to commit (only contains config, not secrets)
+# NOTE: secrets/secrets.yaml.age is safe to commit (encrypted with GPG)
+
+# First, un-ignore what we WANT to commit
+!.sops.yaml
+!secrets/
+!secrets/secrets.yaml.age
+
+# Then ignore unencrypted secrets
+*.sops.yaml.gpg
+secrets/secrets.yaml
+credentials.json
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+id_ecdsa*
+
+# Password manager configs (use templates)
+rbw-config.json
+.rbw/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+*.log
+
+# Cloud provider credentials (use environment variables)
+*.config
+kubeconfig*
+*.gcloud*
+*.aws/credentials
+azure*.json
+
+# Build outputs
+clusters.json
+*.tar.gz
+
+# Downloaded fonts
+fonts/
+
+# Local overlays
+overlays/local/
+
+# GitHub Actions (if storing secrets in repo)
+.github/workflows/secrets/
+
+# Terraform state (if using)
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Ansible
+*.retry
+
+# Temporary test files
+test-config.*
+debug-*.nix
