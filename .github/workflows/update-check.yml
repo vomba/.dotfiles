@@ -16,13 +16,38 @@ jobs:
       - uses: DeterminateSystems/determinate-nix-action@main
       - name: Update flake inputs
         run: nix flake update
-      - name: Check for overlay updates
-        run: ./scripts/check-updates.py
+      - name: Check and apply overlay updates
+        id: overlay-update
+        run: |
+          if ./scripts/check-updates.py --apply --yes; then
+            echo "overlay_updates=true" >> $GITHUB_OUTPUT
+          else
+            echo "overlay_updates=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Commit overlay updates
+        if: steps.overlay-update.outputs.overlay_updates == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add overlays/
+          CHANGED_FILES=$(git diff --cached --name-only)
+          if echo "$CHANGED_FILES" | grep -qvE '^overlays/[^/]+\.nix$'; then
+            echo "ERROR: Modified files outside overlays/"
+            echo "$CHANGED_FILES"
+            exit 1
+          fi
+          git diff --cached --stat
+          git commit -m "chore: update overlay package versions"
       - name: Upload flake.lock
         uses: actions/upload-artifact@v7
         with:
           name: flake-lock
           path: flake.lock
+      - name: Upload overlays
+        uses: actions/upload-artifact@v7
+        with:
+          name: overlays
+          path: overlays/
 
   build-linux:
     needs: update-lockfile
@@ -35,6 +60,11 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: flake-lock
+          path: .
+      - uses: actions/download-artifact@v8
+        with:
+          name: overlays
+          path: overlays
       - uses: DeterminateSystems/determinate-nix-action@main
       - uses: determinateSystems/magic-nix-cache-action@main
       - name: Build Linux Home Manager Configuration
@@ -51,6 +81,11 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: flake-lock
+          path: .
+      - uses: actions/download-artifact@v8
+        with:
+          name: overlays
+          path: overlays
       - uses: DeterminateSystems/determinate-nix-action@main
         with:
           determinate: false
