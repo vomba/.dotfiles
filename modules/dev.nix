@@ -17,5 +17,7 @@
 
   home.packages = [
     pkgs.pre-commit
+    pkgs.skopeo
+    pkgs.parallel-full
   ];
 }
