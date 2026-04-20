@@ -3,7 +3,7 @@
   home.packages = [
     # Nix
     pkgs.nixfmt
-    pkgs.nil
+    pkgs.nixd
 
     # Bash
     pkgs.bash-language-server

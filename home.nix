@@ -6,6 +6,7 @@
   lib,
   inputs,
   nur,
+  obsidian-plugins,
   ...
 }:
 {

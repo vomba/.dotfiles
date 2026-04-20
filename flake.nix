@@ -26,8 +26,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     everything-claude-code = {
-      url = "github:affaan-m/everything-claude-code";
+      url = "github:affaan-m/everything-claude-code/v1.10.0";
       flake = false;
+    };
+    obsidian-plugins = {
+      url = "github:unazikx/obsidian-plugins-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -46,6 +50,7 @@
       sharedOverlays = [
         (import ./overlays/default.nix { inherit inputs; })
         nur.overlays.default
+        inputs.obsidian-plugins.overlays.default
       ];
       pkgsConfig = {
         allowUnfree = true;
@@ -82,6 +87,7 @@
           pkgs-25 = linux-pkgs-25;
           nur = nur;
           nixGL = inputs.nixGL;
+          obsidian-plugins = inputs.obsidian-plugins;
           inherit inputs;
         };
         modules = [
