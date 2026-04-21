@@ -1,0 +1,11 @@
+{
+  "baseFontSize": 16,
+  "baseFontSizeAction": true,
+  "nativeMenus": true,
+  "translucency": false,
+  "accentColor": "",
+  "theme": "obsidian",
+  "interfaceFontSize": 16,
+  "textFontFamily": "JetBrains Mono Nerd Font",
+  "monospaceFontFamily": "JetBrains Mono Nerd Font"
+}

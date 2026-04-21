@@ -1,0 +1,32 @@
+{
+  "globalQuery": "",
+  "globalFilter": "",
+  "removeGlobalFilter": false,
+  "setTaskStatus": true,
+  "useFilenameAsScheduled": false,
+  "filenameAsScheduledFormat": "YYYY-MM-DD",
+  "autoSchedulingInRelationTo": "created",
+  "autoSchedulingWhenCompleting": true,
+  "autoSchedulingWhenRescheduling": true,
+  "autoSchedulingRescheduledFromOverdueToFuture": true,
+  "strictSettingsValidation": false,
+  "hideTree": false,
+  "hideBacklinks": false,
+  "hideEditButton": false,
+  "hideUrgency": false,
+  "hidePriority": false,
+  "hideCreatedDate": false,
+  "hideStartDate": false,
+  "hideScheduledDate": false,
+  "hideDueDate": false,
+  "hideDoneDate": false,
+  "hideRecurrenceRule": false,
+  "hideOnCompletion": false,
+  "shortMode": false,
+  "explainFilter": false,
+  "includeGlobalQueryInCSV": true,
+  "debugSettings": {
+    "ignoreSortInstructions": false,
+    "showTaskId": false
+  }
+}

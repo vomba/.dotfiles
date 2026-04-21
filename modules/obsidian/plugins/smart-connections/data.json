@@ -1,0 +1,10 @@
+{
+  "smart-connections-folder": ".smart-env",
+  "exclude-folders": [
+    "06 - Archive",
+    "Templates"
+  ],
+  "exclude-files": [],
+  "min-text-length": 50,
+  "max-text-length": 8000
+}

@@ -33,6 +33,7 @@
     ./modules/cloud.nix
     ./modules/lsp.nix
     ./modules/ai.nix
+    ./modules/obsidian.nix
   ];
 
   programs.gemini-cli = {

@@ -91,6 +91,7 @@ let
     "api-design"
     "strategic-compact"
     "eval-harness"
+    "obsidian-brain"
   ];
 
   # Instructions with absolute paths (opencode resolves these)
@@ -108,6 +109,7 @@ let
     "${configDir}/skills/api-design/SKILL.md"
     "${configDir}/skills/strategic-compact/SKILL.md"
     "${configDir}/skills/eval-harness/SKILL.md"
+    "${configDir}/skills/obsidian-brain/SKILL.md"
   ];
 
   # Build the complete home.file attrset — all entries merged together
@@ -141,10 +143,19 @@ let
       force = true;
     };
   }
-  // lib.genAttrs (map (s: ".config/opencode/skills/${s}") neededSkills) (path: {
-    source = "${eccRepo}/skills/${lib.last (lib.splitString "/" path)}";
-    force = true;
-  });
+  //
+    lib.genAttrs
+      (map (s: ".config/opencode/skills/${s}") (lib.filter (s: s != "obsidian-brain") neededSkills))
+      (path: {
+        source = "${eccRepo}/skills/${lib.last (lib.splitString "/" path)}";
+        force = true;
+      })
+  // {
+    ".config/opencode/skills/obsidian-brain" = {
+      source = ./obsidian/skills/obsidian-brain;
+      force = true;
+    };
+  };
 
 in
 {

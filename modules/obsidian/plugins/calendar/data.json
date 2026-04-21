@@ -1,0 +1,10 @@
+{
+  "weekStart": "sunday",
+  "selectedCalendar": "none",
+  "reminderUseSystem": false,
+  "showWeekNumber": true,
+  "customWeekendColor": false,
+  "weekendColor": "#5e81ac",
+  "customDefaultColor": false,
+  "defaultColor": "#4c566a"
+}
