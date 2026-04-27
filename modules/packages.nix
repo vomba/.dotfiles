@@ -18,7 +18,7 @@
     pkgs.yubikey-manager
 
     # Runtimes
-    pkgs.nodejs_24
+    pkgs.nodejs_25
     pkgs.ruby
   ]
   ++ (

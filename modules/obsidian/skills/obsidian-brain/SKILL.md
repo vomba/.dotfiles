@@ -156,12 +156,24 @@ When opencode is asked to work with the vault, it automatically loads this skill
 1. Create note in `05 - Wiki/` using the Wiki Page template
 2. Include aliases for discoverability
 3. Link to related notes with `[[wikilinks]]`
-
 ### Summarize Recent Notes (via OpenCode)
 1. List recent files in `00 - Daily/`
 2. Read content and extract key points
 3. Create summary note in `01 - Weekly/`
 
+### Task-as-a-Note Workflow (2026)
+For complex tasks that require more than a single line:
+1. Create a note in `00 - Daily/tasks/` or tag it `#task`.
+2. Use properties like `status`, `priority`, and `due`.
+3. Link the task note in your Daily Note under "Today's Tasks".
+
+### Canvas Strategic Mapping
+When planning projects:
+1. Create a `.canvas` file in `02 - Projects/`.
+2. Use the "Add Card" feature via REST API to have opencode map out dependencies.
+3. Link related research notes from `03 - Resources/` directly on the board.
+
+## Error Handling
 ### Auto-Tag Notes (via OpenCode)
 1. Find notes missing tags
 2. Read content and suggest relevant tags

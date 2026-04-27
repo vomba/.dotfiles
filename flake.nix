@@ -3,8 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/24.11";
-    nixpkgs-25.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/25.11";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -30,7 +29,7 @@
       flake = false;
     };
     obsidian-plugins = {
-      url = "github:unazikx/obsidian-plugins-nix";
+      url = "github:vomba/obsidian-plugins-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -40,7 +39,6 @@
       self,
       nixpkgs,
       nixpkgs-stable,
-      nixpkgs-25,
       home-manager,
       nix-darwin,
       nur,
@@ -70,13 +68,11 @@
       linux-system = "x86_64-linux";
       linux-pkgs = mkPkgs linux-system nixpkgs;
       linux-pkgs-stable = mkPkgs linux-system inputs.nixpkgs-stable;
-      linux-pkgs-25 = mkPkgs linux-system inputs.nixpkgs-25;
 
       # macOS configuration
       darwin-system = "aarch64-darwin";
       darwin-pkgs = mkPkgs darwin-system nixpkgs;
       darwin-pkgs-stable = mkPkgs darwin-system inputs.nixpkgs-stable;
-      darwin-pkgs-25 = mkPkgs darwin-system inputs.nixpkgs-25;
 
     in
     {
@@ -84,7 +80,6 @@
         pkgs = linux-pkgs;
         extraSpecialArgs = {
           pkgs-stable = linux-pkgs-stable;
-          pkgs-25 = linux-pkgs-25;
           nur = nur;
           nixGL = inputs.nixGL;
           obsidian-plugins = inputs.obsidian-plugins;
@@ -103,7 +98,6 @@
         pkgs = darwin-pkgs;
         specialArgs = {
           pkgs-stable = darwin-pkgs-stable;
-          pkgs-25 = darwin-pkgs-25;
           nur = nur;
           inherit inputs;
         };

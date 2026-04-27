@@ -1,11 +1,11 @@
-{ pkgs, pkgs-stable, pkgs-25, ... }:
+{ pkgs, pkgs-stable, ... }:
 {
   home.packages = [
     # AWS
-    pkgs-25.awscli2
+    pkgs-stable.awscli2
 
     # Azure
-    pkgs-25.azure-cli
+    pkgs-stable.azure-cli
     pkgs.azure-storage-azcopy
 
     # OpenStack / UpCloud

@@ -181,6 +181,6 @@ in
 
   # ── Packages ─────────────────────────────────────────────────────
   home.packages = [
-    pkgs.nodejs_24
+    pkgs.nodejs_25
   ];
 }

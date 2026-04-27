@@ -1,7 +1,6 @@
 {
   pkgs,
   pkgs-stable,
-  pkgs-25,
   lib,
   inputs,
   ...
@@ -75,8 +74,8 @@
     extraSpecialArgs = {
       # You can pass any extra arguments to your home-manager modules
       inherit pkgs-stable;
-      inherit pkgs-25;
       inherit inputs;
+      obsidian-plugins = inputs.obsidian-plugins;
     };
     users.vomba = import ./home.nix;
   };

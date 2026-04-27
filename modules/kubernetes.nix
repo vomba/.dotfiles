@@ -1,7 +1,6 @@
 {
   pkgs,
   pkgs-stable,
-  pkgs-25,
   lib,
   ...
 }:
@@ -22,7 +21,7 @@ in
   home.packages = [
     pkgs.kubie
     pkgs.kind
-    # pkgs-25.clusterctl
+    # pkgs-stable.clusterctl
     helmWithPlugins
     pkgs.helmfile
     pkgs.kubecolor

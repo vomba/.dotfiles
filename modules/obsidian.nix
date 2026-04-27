@@ -17,9 +17,9 @@ let
       pkg = templater-obsidian;
       settings = {
         template_folder = "Templates";
-        trigger_on_file_creation = false;
+        trigger_on_file_creation = true;
         auto_jump_to_cursor = false;
-        enable_system_commands = false;
+        enable_system_commands = true;
         timeout = 5;
         startup_templates = [ ];
         enabled_templates_hotkeys = [ ];
@@ -60,6 +60,8 @@ let
         taskCompleteSettings = "";
       };
     }
+    { pkg = tasknotes; }
+    { pkg = omnisearch; }
     { pkg = tag-wrangler; }
     { pkg = quickadd; }
     {
@@ -156,7 +158,6 @@ in
             "outgoing-link"
             "tag-pane"
             "page-preview"
-            "templates"
             "note-composer"
             "command-palette"
             "editor-status"
@@ -164,6 +165,14 @@ in
             "outline"
             "word-count"
             "file-recovery"
+            {
+              name = "templates";
+              enable = false;
+            }
+            {
+              name = "daily-notes";
+              enable = false;
+            }
           ];
 
           communityPlugins = communityPluginsList;

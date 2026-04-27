@@ -3,7 +3,7 @@
 let
   helm = super.kubernetes-helm.overrideAttrs (oldAttrs: rec {
     pname = "kubernetes-helm";
-    version = "4.1.3";
+    version = "4.1.4";
 
     src = super.fetchFromGitHub {
       owner = "helm";
@@ -72,35 +72,35 @@ let
     # Override helm-secrets to use the latest version split into 3 plugins for helm 4
     helm-secrets = buildHelmPlugin rec {
       pluginName = "helm-secrets";
-      version = "4.7.5";
+      version = "4.7.6";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-${version}.tgz";
-        hash = "sha256-DP5Qs0D+LJWdKz/23NtAXTX9mwiiSr7HqGjTPqtglJk=";
+        hash = "sha256-lUOn04ZpA3G+afvA5dZNpag5a6uztEzTdUb7/scQ9T4=";
       };
     };
 
     helm-secrets-getter = buildHelmPlugin rec {
       pluginName = "helm-secrets-getter";
-      version = "4.7.5";
+      version = "4.7.6";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-getter-${version}.tgz";
-        hash = "sha256-Ul/FHm5eXamDfR1RCvLvxDxqK576kwN5TTWzzwy84p8=";
+        hash = "sha256-hzFceXUlVQmU4nVhm86KbnlzjQhpJXC54+ar0i9u4Oc=";
       };
     };
 
     helm-secrets-post-renderer = buildHelmPlugin rec {
       pluginName = "helm-secrets-post-renderer";
-      version = "4.7.5";
+      version = "4.7.6";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-post-renderer-${version}.tgz";
-        hash = "sha256-BH4UkzFgDjLU8a/GHrP/SbVk+6YSQuLowTr81kEER44=";
+        hash = "sha256-Jyx73Cuibp/qgtRsMG8DwifKfPwrcvQSQgcuMzQAbKY=";
       };
     };
 
     # Example of a fully custom plugin from a repo using the helper function:
     # my-custom-plugin = buildHelmPlugin {
     #   pluginName = "my-custom-plugin";
-    #   version = "1.0.0";
+    #   version = "4.1.4";
     #   src = super.fetchFromGitHub {
     #     owner = "example";
     #     repo = "my-custom-plugin";
