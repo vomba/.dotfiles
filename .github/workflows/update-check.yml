@@ -15,7 +15,10 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
-      - uses: DeterminateSystems/determinate-nix-action@main
+      - uses: cachix/install-nix-action@v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
       - name: Update flake inputs
         run: nix flake update
       - name: Check and apply overlay updates
@@ -78,10 +81,12 @@ jobs:
         with:
           name: overlays
           path: overlays
-      - uses: DeterminateSystems/determinate-nix-action@main
-      - uses: determinateSystems/magic-nix-cache-action@main
+      - uses: cachix/install-nix-action@v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
       - name: Build Linux Home Manager Configuration
-        run: nix build .#homeConfigurations.hani.activationPackage
+        run: nix build .#homeConfigurations.hani.activationPackage --no-link
 
   build-macos:
     needs: update-lockfile
@@ -99,12 +104,12 @@ jobs:
         with:
           name: overlays
           path: overlays
-      - uses: DeterminateSystems/determinate-nix-action@main
+      - uses: cachix/install-nix-action@v30
         with:
-          determinate: false
-      - uses: determinateSystems/magic-nix-cache-action@main
+          extra_nix_config: |
+            experimental-features = nix-command flakes
       - name: Build macOS Darwin Configuration
-        run: nix build .#darwinConfigurations.Mac.system
+        run: nix build .#darwinConfigurations.Mac.system --no-link
 
   push-updates:
     needs: [build-linux, build-macos]
