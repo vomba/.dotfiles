@@ -20,9 +20,14 @@ jobs:
         id: overlay-update
         run: |
           if ./scripts/check-updates.py --apply --yes; then
-            echo "overlay_updates=true" >> $GITHUB_OUTPUT
-          else
             echo "overlay_updates=false" >> $GITHUB_OUTPUT
+          else
+            RET=$?
+            if [ $RET -eq 1 ]; then
+              echo "overlay_updates=true" >> $GITHUB_OUTPUT
+            else
+              exit $RET
+            fi
           fi
       - name: Commit overlay updates
         if: steps.overlay-update.outputs.overlay_updates == 'true'
@@ -30,10 +35,13 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add overlays/
-          CHANGED_FILES=$(git diff --cached --name-only)
-          if echo "$CHANGED_FILES" | grep -qvE '^overlays/[^/]+\.nix$'; then
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          if git diff --cached --name-only | grep -qvE '^overlays/[^/]+\.nix$'; then
             echo "ERROR: Modified files outside overlays/"
-            echo "$CHANGED_FILES"
+            git diff --cached --name-only
             exit 1
           fi
           git diff --cached --stat
