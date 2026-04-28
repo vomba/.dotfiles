@@ -94,7 +94,6 @@
 
       darwinConfigurations."Mac" = nix-darwin.lib.darwinSystem {
 
-        system = darwin-system;
         pkgs = darwin-pkgs;
         specialArgs = {
           pkgs-stable = darwin-pkgs-stable;
@@ -102,6 +101,7 @@
           inherit inputs;
         };
         modules = [
+          { nixpkgs.hostPlatform = darwin-system; }
           ./darwin.nix
           home-manager.darwinModules.home-manager
         ];

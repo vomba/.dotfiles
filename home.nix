@@ -12,7 +12,12 @@
 
   home.username = if pkgs.stdenv.isLinux then "hani" else "vomba";
   home.homeDirectory = if pkgs.stdenv.isLinux then "/home/hani" else "/Users/vomba";
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
+
+  # Silence evaluation warnings for default changes in newer stateVersions
+  gtk.gtk4.theme = config.gtk.theme;
+  programs.firefox.configPath = ".mozilla/firefox";
+  programs.yazi.shellWrapperName = "yy";
 
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
