@@ -9,7 +9,7 @@ let
       owner = "helm";
       repo = "helm";
       rev = "v${version}";
-      hash = "sha256-9a8Tuv3VtGeQXZTEf/xo+u6+OpQYLrJNYIFzO2/iiZs=";
+      hash = "sha256-q5s/d351Vcs9s2nhwr6nzwJYOnsn/CmrU6cGDFaHDcg=";
     };
 
     proxyVendor = true;
