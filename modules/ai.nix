@@ -13,8 +13,8 @@ let
 
   # Model assignments — mirrors upstream's intentional routing
   # Upstream uses opus for reviewers, sonnet for builders
-  reasoningModel = "opencode-go/glm-5.1";
-  codeModel = "opencode-go/qwen3.6-plus";
+  reasoningModel = "opencode-go/deepseek-v4-pro";
+  codeModel = "opencode-go/deepseek-v4-flash";
 
   # Agent model map — reviewers use reasoning model, builders use code model
   agentModels = {
