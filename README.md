@@ -20,10 +20,10 @@ modules/
 │       ├── settings.nix # Env, keybinds, decoration, input, window rules
 │       └── waybar.nix  # Waybar style + modules
 ├── dev/
-│   ├── dev.nix        # Go, pre-commit, skopeo
-│   ├── cloud.nix      # AWS, Azure, Terraform, OpenStack
-│   ├── kubernetes.nix # kubectl, helm, krew, kind
-│   ├── lsp.nix        # LSP servers (nixd, gopls, terraform-ls, etc.)
+│   ├── dev.nix        # Go, pre-commit, skopeo, parallel
+│   ├── cloud.nix      # AWS, Azure, OpenStack, Terraform/OpenTofu
+│   ├── kubernetes.nix # kubectl, helm, helmfile, kind, velero, krew, kubie, popeye, crossplane, OIDC
+│   ├── lsp.nix        # LSP servers (nixd, gopls, terraform-ls, nix-tree, typos-lsp, etc.)
 │   └── ai.nix         # OpenCode + Everything Claude Code upstream
 ├── shell/
 │   ├── zsh.nix        # Zsh, oh-my-zsh, aliases, env vars
@@ -80,18 +80,18 @@ All flags default to `true`. Flags are grouped by domain:
 
 | Option | Controls |
 |--------|----------|
-| `dotfiles.desktop.enable` | GUI apps, kanshi |
-| `dotfiles.desktop.hyprland.enable` | Hyprland WM, waybar, hypridle |
-| `dotfiles.dev.enable` | Go, pre-commit |
-| `dotfiles.dev.kubernetes.enable` | kubectl, helm, kind |
-| `dotfiles.dev.cloud.enable` | AWS, Azure, Terraform |
-| `dotfiles.dev.lsp.enable` | LSP servers |
-| `dotfiles.dev.ai.enable` | OpenCode, ECC |
-| `dotfiles.shell.enable` | fzf, bat, zoxide, eza, starship |
+| `dotfiles.desktop.enable` | Kitty, Chromium, font config, kanshi |
+| `dotfiles.desktop.hyprland.enable` | Hyprland WM, waybar, hypridle, fuzzel |
+| `dotfiles.dev.enable` | Go, pre-commit, skopeo |
+| `dotfiles.dev.kubernetes.enable` | kubectl, helm, helmfile, kind, velero, krew |
+| `dotfiles.dev.cloud.enable` | AWS, Azure, OpenStack, Terraform/OpenTofu |
+| `dotfiles.dev.lsp.enable` | LSP servers (nixd, gopls, terraform-ls, etc.) |
+| `dotfiles.dev.ai.enable` | OpenCode + Everything Claude Code |
+| `dotfiles.shell.enable` | fzf, bat, zoxide, eza, fd, starship |
 | `dotfiles.shell.zsh.enable` | Zsh config |
 | `dotfiles.shell.git.enable` | Git config |
 | `dotfiles.shell.gpg.enable` | GPG agent |
-| `dotfiles.apps.enable` | Misc packages (direnv, sops, etc.) |
+| `dotfiles.apps.enable` | Misc packages (direnv, sops, gh, etc.) |
 | `dotfiles.apps.firefox.enable` | Firefox |
 | `dotfiles.apps.editors.enable` | Helix |
 | `dotfiles.apps.yazi.enable` | Yazi |
@@ -162,9 +162,9 @@ Reference in other modules via `config.sops.secrets.my-key.path`.
 
 ### CI Pipeline
 `.github/workflows/ci.yml` runs on every push/PR to main:
-1. **nixfmt** — format check on all `.nix` files
+1. **nixfmt** — format check (uses `find` for cross-platform compat — macOS bash 3.x lacks `globstar`)
 2. **nix flake check** — evaluation validation
-3. **shellcheck** — lint all `.sh` scripts
+3. **shellcheck** — lint all `.sh` scripts (via `nix run nixpkgs#shellcheck` — macOS runners don't have it pre-installed)
 4. **Build** — Linux (home-manager) + macOS (nix-darwin) configurations
 
 `.github/workflows/update-check.yml` runs daily:
@@ -173,6 +173,7 @@ Reference in other modules via `config.sops.secrets.my-key.path`.
 3. Pushes commits back to main if updates found
 
 Builds are cached via Cachix (`vomba.cachix.org`). PRs pull from cache; pushes to main also push to cache.
+Action versions: `cachix/install-nix-action@v31`, `cachix/cachix-action@v17` (auto-bumped by Dependabot).
 
 ### Pre-Commit Hooks
 Hook management via [pre-commit](https://pre-commit.com):
@@ -194,6 +195,11 @@ Hooks configured in `.pre-commit-config.yaml`:
 | check-added-large-files | Block oversized commits |
 | gitleaks | Detect hardcoded secrets |
 | nixfmt | Auto-format Nix files |
+
+### Nix GC Configuration
+- **Linux (home-manager)**: `nix.gc.dates = "weekly"` — `dates` attr supported in home-manager
+- **macOS (nix-darwin)**: `nix.gc.interval = { Weekday = 0; Hour = 0; Minute = 0; }` — `nix.gc.dates` removed from nix-darwin; use `interval` instead
+- Both share the same `options = "--delete-older-than 30d"` and `nix.settings` for store health
 
 ### Updating Dependencies
 - **Flake inputs**: `nix flake update`

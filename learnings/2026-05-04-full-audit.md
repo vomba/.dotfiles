@@ -9,7 +9,8 @@
 
 ### Pattern: Recursive CI globs for Nix modules
 - **Context**: `modules/*.nix` only matches direct children
-- **Fix**: Use `shopt -s globstar; nixfmt --check modules/**/*.nix` to match all nesting levels
+- **Initial fix**: `shopt -s globstar; nixfmt --check modules/**/*.nix`
+- **Final fix**: Use `$(find modules -name '*.nix')` instead — macOS bash 3.x doesn't support `shopt -s globstar`
 - **Why it matters**: `modules/dev/ai.nix`, `modules/shell/zsh.nix`, etc. were all unchecked
 
 ### Pattern: GPG + age dual-key sops setup
@@ -72,8 +73,8 @@
 ```json
 {
   "trigger": "running nixfmt in CI on nested modules",
-  "action": "use shopt -s globstar and modules/**/*.nix — plain modules/*.nix misses all subdirectory files",
-  "confidence": 0.95,
+  "action": "use '$(find modules -name \"*.nix\")' instead of modules/**/*.nix — macOS bash 3.x doesn't support globstar. See INSTINCTS.md for the canonical pattern.",
+  "confidence": 0.98,
   "source": "session-extraction",
   "timestamp": "2026-05-04T12:00:00Z"
 }

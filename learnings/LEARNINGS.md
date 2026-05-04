@@ -6,7 +6,7 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 
 ### Binary Cache Setup
 - Add Cachix + nix-community cache to both `home.nix` and `darwin.nix`
-- Wire `cachix/cachix-action@v15` into CI after `install-nix-action`
+- Wire `cachix/cachix-action@v17` into CI after `install-nix-action` (auto-bumped by Dependabot)
 - Skip push on PRs: `skipPush: ${{ github.event_name == 'pull_request' }}`
 - Requires `nix.package = pkgs.nix` when using `nix.settings` in home-manager
 
@@ -77,6 +77,7 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
   ```yaml
   run: nix run nixpkgs#nixfmt -- --check flake.nix home.nix linux.nix darwin.nix $(find modules -name '*.nix') overlays/*.nix
   ```
+- This was an iterative discovery: first `modules/*.nix` (missed nested), then `modules/**/*.nix` via `globstar` (macOS bash 3.x broke), finally `$(find modules -name '*.nix')` (cross-platform)
 
 ### Shellcheck
 - Add `shellcheck scripts/*.sh` as a CI step

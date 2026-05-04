@@ -8,7 +8,7 @@ Actionable patterns extracted from session learnings. These fire automatically w
 - **Action**: Set `nix.package = lib.mkIf pkgs.stdenv.isLinux pkgs.nix` — on macOS, nix-darwin propagates its own `nix.package` into home-manager; setting it unconditionally causes a duplicate definition error
 
 ### When adding binary caches
-- **Action**: Add substituters + trusted-public-keys to both `home.nix` and `darwin.nix`, wire `cachix/cachix-action@v15` into CI after `install-nix-action`, skip push on PRs
+- **Action**: Add substituters + trusted-public-keys to both `home.nix` and `darwin.nix`, wire `cachix/cachix-action@v17` (or latest bumped by Dependabot) into CI after `install-nix-action`, skip push on PRs
 
 ### When wrapping GUI apps with nixGL
 - **Action**: Guard both `enable` and `package` with `pkgs.stdenv.isLinux` — nixGL evaluates on macOS even if `enable = false`
