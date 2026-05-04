@@ -100,116 +100,118 @@ let
   obsidianPkg = if pkgs.stdenv.isLinux then config.lib.nixGL.wrap pkgs.obsidian else pkgs.obsidian;
 in
 {
-  home.activation.createObsidianVaultDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p '${vaultDir}'
-  '';
+  config = lib.mkIf config.dotfiles.apps.obsidian.enable {
+    home.activation.createObsidianVaultDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p '${vaultDir}'
+    '';
 
-  # QuickAdd needs a writable data.json (not a symlink to the Nix store)
-  # because it runs migrations on startup. Copy instead of symlink.
-  home.activation.setupQuickAddData = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p '${vaultDir}/.obsidian/plugins/quickadd'
-    cp -f '${./plugins/quickadd/data.json}' '${vaultDir}/.obsidian/plugins/quickadd/data.json'
-  '';
+    # QuickAdd needs a writable data.json (not a symlink to the Nix store)
+    # because it runs migrations on startup. Copy instead of symlink.
+    home.activation.setupQuickAddData = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p '${vaultDir}/.obsidian/plugins/quickadd'
+      cp -f '${./plugins/quickadd/data.json}' '${vaultDir}/.obsidian/plugins/quickadd/data.json'
+    '';
 
-  programs.obsidian = {
-    enable = true;
-    package = obsidianPkg;
+    programs.obsidian = {
+      enable = true;
+      package = obsidianPkg;
 
-    vaults = {
-      vault = {
-        target = ".vault";
-        settings = {
-          app = {
-            vimMode = false;
-            showFrontmatter = true;
-            defaultViewMode = "source";
-            strictLineBreaks = false;
-            spellcheck = true;
-            spellcheckLanguages = null;
-            livePreview = true;
-            readableLineLength = true;
-            newFileLocation = "folder";
-            newFileFolderPath = "00 - Daily";
-            attachmentFolderPath = "04 - Snippets/attachments";
-            showLineNumber = true;
-            foldHeading = true;
-            foldIndent = true;
-            useTab = false;
-            tabSize = 2;
-            theme = "obsidian";
-          };
+      vaults = {
+        vault = {
+          target = ".vault";
+          settings = {
+            app = {
+              vimMode = false;
+              showFrontmatter = true;
+              defaultViewMode = "source";
+              strictLineBreaks = false;
+              spellcheck = true;
+              spellcheckLanguages = null;
+              livePreview = true;
+              readableLineLength = true;
+              newFileLocation = "folder";
+              newFileFolderPath = "00 - Daily";
+              attachmentFolderPath = "04 - Snippets/attachments";
+              showLineNumber = true;
+              foldHeading = true;
+              foldIndent = true;
+              useTab = false;
+              tabSize = 2;
+              theme = "obsidian";
+            };
 
-          appearance = {
-            theme = "";
-            enabledCssSnippets = [ ];
-            baseFontSize = 16;
-            monospaceFontFamily = "";
-            textFontFamily = "";
-            nativeMenus = false;
-            accentColor = "#7c3aed";
-          };
+            appearance = {
+              theme = "";
+              enabledCssSnippets = [ ];
+              baseFontSize = 16;
+              monospaceFontFamily = "";
+              textFontFamily = "";
+              nativeMenus = false;
+              accentColor = "#7c3aed";
+            };
 
-          corePlugins = [
-            "file-explorer"
-            "global-search"
-            "switcher"
-            "graph"
-            "backlink"
-            "outgoing-link"
-            "tag-pane"
-            "page-preview"
-            "note-composer"
-            "command-palette"
-            "editor-status"
-            "markdown-importer"
-            "outline"
-            "word-count"
-            "file-recovery"
-            {
-              name = "templates";
-              enable = false;
-            }
-            {
-              name = "daily-notes";
-              enable = false;
-            }
-          ];
-
-          communityPlugins = communityPluginsList;
-
-          hotkeys = {
-            "templater-obsidian:insert-templater" = [
+            corePlugins = [
+              "file-explorer"
+              "global-search"
+              "switcher"
+              "graph"
+              "backlink"
+              "outgoing-link"
+              "tag-pane"
+              "page-preview"
+              "note-composer"
+              "command-palette"
+              "editor-status"
+              "markdown-importer"
+              "outline"
+              "word-count"
+              "file-recovery"
               {
-                modifiers = [ "Mod" ];
-                key = "T";
+                name = "templates";
+                enable = false;
+              }
+              {
+                name = "daily-notes";
+                enable = false;
               }
             ];
-          };
 
-          extraFiles = {
-            "Templates" = {
-              source = ./templates;
+            communityPlugins = communityPluginsList;
+
+            hotkeys = {
+              "templater-obsidian:insert-templater" = [
+                {
+                  modifiers = [ "Mod" ];
+                  key = "T";
+                }
+              ];
             };
-            "00 - Daily" = {
-              source = ./vault-dirs/00-daily;
-            };
-            "01 - Weekly" = {
-              source = ./vault-dirs/01-weekly;
-            };
-            "02 - Projects" = {
-              source = ./vault-dirs/02-projects;
-            };
-            "03 - Resources" = {
-              source = ./vault-dirs/03-resources;
-            };
-            "04 - Snippets" = {
-              source = ./vault-dirs/04-snippets;
-            };
-            "05 - Wiki" = {
-              source = ./vault-dirs/05-wiki;
-            };
-            "06 - Archive" = {
-              source = ./vault-dirs/06-archive;
+
+            extraFiles = {
+              "Templates" = {
+                source = ./templates;
+              };
+              "00 - Daily" = {
+                source = ./vault-dirs/00-daily;
+              };
+              "01 - Weekly" = {
+                source = ./vault-dirs/01-weekly;
+              };
+              "02 - Projects" = {
+                source = ./vault-dirs/02-projects;
+              };
+              "03 - Resources" = {
+                source = ./vault-dirs/03-resources;
+              };
+              "04 - Snippets" = {
+                source = ./vault-dirs/04-snippets;
+              };
+              "05 - Wiki" = {
+                source = ./vault-dirs/05-wiki;
+              };
+              "06 - Archive" = {
+                source = ./vault-dirs/06-archive;
+              };
             };
           };
         };

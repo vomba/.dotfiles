@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }:
 let
@@ -12,7 +13,7 @@ let
   screenshot_dir = "$HOME/Pictures/Screenshots";
 in
 {
-  wayland.windowManager.hyprland.settings = {
+  wayland.windowManager.hyprland.settings = lib.mkIf config.dotfiles.desktop.hyprland.enable {
 
     env = [
       "GDK_BACKEND,wayland,x11,*"

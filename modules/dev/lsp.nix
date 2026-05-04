@@ -1,32 +1,40 @@
-{ pkgs, pkgs-stable, ... }:
 {
-  home.packages = [
-    # Nix
-    pkgs.nixfmt
-    pkgs.nixd
+  pkgs,
+  pkgs-stable,
+  config,
+  lib,
+  ...
+}:
+{
+  config = lib.mkIf config.dotfiles.dev.lsp.enable {
+    home.packages = [
+      # Nix
+      pkgs.nixfmt
+      pkgs.nixd
 
-    # Bash
-    pkgs.bash-language-server
-    pkgs.shellcheck
+      # Bash
+      pkgs.bash-language-server
+      pkgs.shellcheck
 
-    # Web / Config
-    pkgs.yaml-language-server
-    pkgs.vscode-json-languageserver
-    pkgs-stable.jq # Required for jq-lsp often, but lsp is separate
-    pkgs.jq-lsp
+      # Web / Config
+      pkgs.yaml-language-server
+      pkgs.vscode-json-languageserver
+      pkgs-stable.jq # Required for jq-lsp often, but lsp is separate
+      pkgs.jq-lsp
 
-    # Markdown
-    pkgs.marksman
-    pkgs.mpls
+      # Markdown
+      pkgs.marksman
+      pkgs.mpls
 
-    # Terraform
-    pkgs.terraform-ls
+      # Terraform
+      pkgs.terraform-ls
 
-    # Helm
-    pkgs.helm-ls
+      # Helm
+      pkgs.helm-ls
 
-    # Go
-    pkgs.gopls
-    pkgs.delve # Debugger, often goes with LSP
-  ];
+      # Go
+      pkgs.gopls
+      pkgs.delve # Debugger, often goes with LSP
+    ];
+  };
 }

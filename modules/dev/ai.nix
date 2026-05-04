@@ -159,28 +159,30 @@ let
 
 in
 {
-  # ── OpenCode declarative config ──────────────────────────────────
-  programs.opencode = {
-    enable = true;
-    settings = {
-      model = codeModel;
-      small_model = reasoningModel;
-      default_agent = "build";
-      instructions = mergedInstructions;
-      plugin = [ "${configDir}/.opencode/plugins" ];
-      agent = mergedAgents;
-      command = mergedCommands;
-      permission = {
-        "mcp_*" = "ask";
+  config = lib.mkIf config.dotfiles.dev.ai.enable {
+    # ── OpenCode declarative config ──────────────────────────────────
+    programs.opencode = {
+      enable = true;
+      settings = {
+        model = codeModel;
+        small_model = reasoningModel;
+        default_agent = "build";
+        instructions = mergedInstructions;
+        plugin = [ "${configDir}/.opencode/plugins" ];
+        agent = mergedAgents;
+        command = mergedCommands;
+        permission = {
+          "mcp_*" = "ask";
+        };
       };
     };
+
+    # ── File symlinks (skills, plugin, docs, rules) ──────────────────
+    home.file = homeFiles;
+
+    # ── Packages ─────────────────────────────────────────────────────
+    home.packages = [
+      pkgs.nodejs_25
+    ];
   };
-
-  # ── File symlinks (skills, plugin, docs, rules) ──────────────────
-  home.file = homeFiles;
-
-  # ── Packages ─────────────────────────────────────────────────────
-  home.packages = [
-    pkgs.nodejs_25
-  ];
 }

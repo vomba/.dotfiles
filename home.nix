@@ -23,6 +23,7 @@
   fonts.fontconfig.enable = true;
 
   imports = [
+    ./modules/options.nix
     ./modules/shell/zsh.nix
     ./modules/shell/git.nix
     ./modules/apps/firefox.nix

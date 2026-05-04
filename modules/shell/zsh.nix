@@ -1,50 +1,53 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }:
 {
-  home.sessionVariables = {
-    GOPATH = "${config.home.homeDirectory}/.go";
-    KREW_ROOT = "${config.home.homeDirectory}/.krew";
-    GOOGLE_CLOUD_PROJECT = "elastisys-vertex-poc";
-  };
-
-  home.sessionPath = [
-    "${config.home.homeDirectory}/.go/bin"
-    "${config.home.homeDirectory}/.krew/bin"
-  ];
-
-  programs.zsh = {
-    enable = true;
-    dotDir = "${config.home.homeDirectory}/.config/zsh";
-    shellAliases = {
-      cat = "bat";
-      yq4 = "yq";
+  config = lib.mkIf config.dotfiles.shell.zsh.enable {
+    home.sessionVariables = {
+      GOPATH = "${config.home.homeDirectory}/.go";
+      KREW_ROOT = "${config.home.homeDirectory}/.krew";
+      GOOGLE_CLOUD_PROJECT = "elastisys-vertex-poc";
     };
-    initContent = ''
-      compdef kubecolor=kubectl
-    '';
-    oh-my-zsh = {
+
+    home.sessionPath = [
+      "${config.home.homeDirectory}/.go/bin"
+      "${config.home.homeDirectory}/.krew/bin"
+    ];
+
+    programs.zsh = {
       enable = true;
-      theme = "robbyrussell";
-      custom = "${config.home.homeDirectory}/.dotfiles/oh-my-zsh";
-      plugins = [
-        "git"
-        "fzf"
-        "gh"
-        "helm"
-        "zsh-kubecolor"
-        "golang"
-        "terraform"
-        "aws"
-        "pip"
-        "python"
-        "docker"
-        "zoxide"
-        "eza"
-        "azure"
-      ];
+      dotDir = "${config.home.homeDirectory}/.config/zsh";
+      shellAliases = {
+        cat = "bat";
+        yq4 = "yq";
+      };
+      initContent = ''
+        compdef kubecolor=kubectl
+      '';
+      oh-my-zsh = {
+        enable = true;
+        theme = "robbyrussell";
+        custom = "${config.home.homeDirectory}/.dotfiles/oh-my-zsh";
+        plugins = [
+          "git"
+          "fzf"
+          "gh"
+          "helm"
+          "zsh-kubecolor"
+          "golang"
+          "terraform"
+          "aws"
+          "pip"
+          "python"
+          "docker"
+          "zoxide"
+          "eza"
+          "azure"
+        ];
+      };
     };
   };
 }
