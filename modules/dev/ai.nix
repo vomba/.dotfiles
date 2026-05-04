@@ -98,6 +98,7 @@ let
   mergedInstructions = [
     "${configDir}/AGENTS.md"
     "${configDir}/CONTRIBUTING.md"
+    "${configDir}/nix-rules.md"
     "${configDir}/skills/tdd-workflow/SKILL.md"
     "${configDir}/skills/security-review/SKILL.md"
     "${configDir}/skills/coding-standards/SKILL.md"
@@ -140,6 +141,10 @@ let
     };
     ".claude/rules" = {
       source = "${eccRepo}/rules";
+      force = true;
+    };
+    ".config/opencode/nix-rules.md" = {
+      text = builtins.readFile ../../rules/nix-configuration.md;
       force = true;
     };
   }
