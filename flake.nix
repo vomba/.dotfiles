@@ -85,6 +85,22 @@
         ${darwin-system} = nixpkgs.legacyPackages.${darwin-system}.nixfmt;
       };
 
+      devShells.${linux-system}.default = linux-pkgs.mkShell {
+        packages = [
+          linux-pkgs.nixfmt
+          linux-pkgs.pre-commit
+          linux-pkgs.shellcheck
+        ];
+      };
+
+      devShells.${darwin-system}.default = darwin-pkgs.mkShell {
+        packages = [
+          darwin-pkgs.nixfmt
+          darwin-pkgs.pre-commit
+          darwin-pkgs.shellcheck
+        ];
+      };
+
       homeConfigurations."hani" = home-manager.lib.homeManagerConfiguration {
         pkgs = linux-pkgs;
         extraSpecialArgs = {
