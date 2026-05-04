@@ -1,6 +1,9 @@
 {
-  pkgs, config, ...
-}: {
+  pkgs,
+  config,
+  ...
+}:
+{
 
   programs.kitty = {
     enable = true;
@@ -25,17 +28,23 @@
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.slack
     pkgs.tabiew
-  ] ++ (if pkgs.stdenv.isLinux then [
-    pkgs.nautilus
-    pkgs.grim
-    pkgs.slurp
-    pkgs.swaybg
-    pkgs.wdisplays
-    pkgs.hyprland-qtutils
-    pkgs.hyprutils
-  ] else [
-    pkgs.rectangle
-  ]);
+  ]
+  ++ (
+    if pkgs.stdenv.isLinux then
+      [
+        pkgs.nautilus
+        pkgs.grim
+        pkgs.slurp
+        pkgs.swaybg
+        pkgs.wdisplays
+        pkgs.hyprland-qtutils
+        pkgs.hyprutils
+      ]
+    else
+      [
+        pkgs.rectangle
+      ]
+  );
 
   home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ../10-nix-fonts.conf;
 }

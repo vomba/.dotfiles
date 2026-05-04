@@ -1,7 +1,7 @@
 { inputs }:
 self: super: {
   cidr = super.callPackage ./cidr.nix { };
-  
+
   # Pin Swift to 5.8 from stable
   swift = inputs.nixpkgs-stable.legacyPackages.${self.system}.swift;
   swiftPackages = inputs.nixpkgs-stable.legacyPackages.${self.system}.swiftPackages;
@@ -38,6 +38,5 @@ self: super: {
       });
     })
   ];
-  
-}
 
+}

@@ -1,6 +1,8 @@
 {
-  pkgs, ...
-}: {
+  pkgs,
+  ...
+}:
+{
 
   programs.fzf = {
     enable = true;

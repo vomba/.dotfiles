@@ -38,6 +38,7 @@
     ./modules/lsp.nix
     ./modules/ai.nix
     ./modules/obsidian.nix
+    ./modules/sops.nix
   ];
 
   programs.gemini-cli = {

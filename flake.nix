@@ -32,6 +32,10 @@
       url = "github:vomba/obsidian-plugins-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -76,6 +80,11 @@
 
     in
     {
+      formatter = {
+        ${linux-system} = nixpkgs.legacyPackages.${linux-system}.nixfmt;
+        ${darwin-system} = nixpkgs.legacyPackages.${darwin-system}.nixfmt;
+      };
+
       homeConfigurations."hani" = home-manager.lib.homeManagerConfiguration {
         pkgs = linux-pkgs;
         extraSpecialArgs = {

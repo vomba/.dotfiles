@@ -34,6 +34,8 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - name: Check formatting
+        run: nix run nixpkgs#nixfmt -- --check flake.nix home.nix linux.nix darwin.nix modules/*.nix overlays/*.nix
       - name: Check flake
         run: nix flake check
       - name: Build configuration

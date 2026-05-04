@@ -22,7 +22,10 @@ buildGoModule rec {
     mainProgram = "cidr";
     homepage = "https://github.com/bschaatsbergen/cidr";
     license = licenses.mit;
-    maintainers = with maintainers; [ cyounkins vomba ];
+    maintainers = with maintainers; [
+      cyounkins
+      vomba
+    ];
   };
 
 }
