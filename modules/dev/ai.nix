@@ -100,6 +100,7 @@ let
     "${configDir}/CONTRIBUTING.md"
     "${configDir}/nix-rules.md"
     "${configDir}/learnings.md"
+    "${configDir}/instincts.md"
     "${configDir}/skills/tdd-workflow/SKILL.md"
     "${configDir}/skills/security-review/SKILL.md"
     "${configDir}/skills/coding-standards/SKILL.md"
@@ -150,6 +151,10 @@ let
     };
     ".config/opencode/learnings.md" = {
       text = builtins.readFile ../../learnings/LEARNINGS.md;
+      force = true;
+    };
+    ".config/opencode/instincts.md" = {
+      text = builtins.readFile ../../learnings/INSTINCTS.md;
       force = true;
     };
   }
