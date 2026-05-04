@@ -87,7 +87,7 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v17
         with:
           name: vomba
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -114,7 +114,7 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v17
         with:
           name: vomba
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
