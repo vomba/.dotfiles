@@ -12,14 +12,14 @@ list_commits() {
 	local dir=$1
 	local name=$2
 	if [ -d "$dir/.git" ]; then
-		pushd "$dir" >/dev/null
-		# Get commits in the last 24 hours
+		pushd "$dir" >/dev/null || exit 1
 		commits=$(git log --since="24 hours ago" --oneline --no-merges)
 		if [ -n "$commits" ]; then
 			echo "#### $name"
+			# shellcheck disable=SC2001
 			echo "$commits" | sed 's/^/- /'
 		fi
-		popd >/dev/null
+		popd >/dev/null || exit 1
 	fi
 }
 

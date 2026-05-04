@@ -45,5 +45,7 @@ jobs:
           nix run nixpkgs#nixfmt -- --check flake.nix home.nix linux.nix darwin.nix modules/**/*.nix overlays/*.nix
       - name: Check flake
         run: nix flake check
+      - name: ShellCheck
+        run: shellcheck scripts/*.sh
       - name: Build configuration
         run: nix build ${{ matrix.target }} --no-link

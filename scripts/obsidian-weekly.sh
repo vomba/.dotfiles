@@ -6,7 +6,6 @@
 set -euo pipefail
 
 VAULT_DIR="$HOME/.vault"
-DOTFILES_DIR="$HOME/.dotfiles"
 
 cd "$VAULT_DIR" || exit 1
 
