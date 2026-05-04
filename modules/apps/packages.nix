@@ -13,6 +13,7 @@
       pkgs.gh
       pkgs-stable.yq-go
       pkgs-stable.jq
+      pkgs.jless
       pkgs.glow
       pkgs.act
       pkgs.hugo

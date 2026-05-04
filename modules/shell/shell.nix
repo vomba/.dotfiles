@@ -30,6 +30,10 @@
       icons = "auto";
     };
 
+    programs.fd = {
+      enable = true;
+    };
+
     programs.starship = {
       enable = true;
       enableZshIntegration = true;
