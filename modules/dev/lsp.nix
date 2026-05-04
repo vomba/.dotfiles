@@ -11,6 +11,8 @@
       # Nix
       pkgs.nixfmt
       pkgs.nixd
+      pkgs.nix-tree
+      pkgs.typos-lsp
 
       # Bash
       pkgs.bash-language-server
