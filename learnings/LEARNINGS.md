@@ -18,6 +18,12 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 
 ### Platform Guards
 - Always guard both `enable` and `package` with `pkgs.stdenv.isLinux` for nixGL-wrapped apps
+- `nix.package` in home-manager: only set on Linux (`lib.mkIf pkgs.stdenv.isLinux pkgs.nix`). On macOS, nix-darwin propagates its system `nix.package` into home-manager — setting it in home.nix too causes a duplicate definition error.
+
+### nix.gc Across Platforms
+- **nix-darwin** (macOS): use `nix.gc.interval` (e.g. `{ Weekday = 0; Hour = 0; Minute = 0; }`)
+- **home-manager** (Linux): use `nix.gc.dates` (e.g. `"weekly"`)
+- `nix.gc.dates` was removed from nix-darwin; using it there causes: "The option definition `nix.gc.dates' no longer has any effect; please remove it"
 
 ### Build Targets
 - `homeConfigurations.<name>.activationPackage` (not the bare output)
@@ -67,11 +73,15 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 
 ### nixfmt with Recursive Globs
 - `modules/*.nix` only matches top-level files (misses `modules/dev/*`, `modules/shell/*`, etc.)
-- Fix: use `shopt -s globstar` and `modules/**/*.nix`
+- macOS bash 3.x doesn't support `shopt -s globstar` — use `find` instead:
+  ```yaml
+  run: nix run nixpkgs#nixfmt -- --check flake.nix home.nix linux.nix darwin.nix $(find modules -name '*.nix') overlays/*.nix
+  ```
 
 ### Shellcheck
 - Add `shellcheck scripts/*.sh` as a CI step
 - Style-only warnings (SC2001) don't fail the build — safe to suppress inline
+- macOS runners don't have shellcheck pre-installed — use `nix run nixpkgs#shellcheck -- scripts/*.sh`
 
 ### Dependabot
 - Weekly checks for GitHub Actions updates

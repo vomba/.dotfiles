@@ -5,7 +5,7 @@ Actionable patterns extracted from session learnings. These fire automatically w
 ## Nix Config
 
 ### When setting up nix.settings in home-manager
-- **Action**: Also set `nix.package = pkgs.nix` — without it, home-manager errors with "A corresponding Nix package must be specified"
+- **Action**: Set `nix.package = lib.mkIf pkgs.stdenv.isLinux pkgs.nix` — on macOS, nix-darwin propagates its own `nix.package` into home-manager; setting it unconditionally causes a duplicate definition error
 
 ### When adding binary caches
 - **Action**: Add substituters + trusted-public-keys to both `home.nix` and `darwin.nix`, wire `cachix/cachix-action@v15` into CI after `install-nix-action`, skip push on PRs
@@ -14,18 +14,19 @@ Actionable patterns extracted from session learnings. These fire automatically w
 - **Action**: Guard both `enable` and `package` with `pkgs.stdenv.isLinux` — nixGL evaluates on macOS even if `enable = false`
 
 ### When setting up GC or store settings
-- **Action**: Use `nix.gc` (automatic, weekly, `--delete-older-than 30d`), plus `nix.settings` with `min-free = "2G"`, `max-free = "10G"`, `auto-optimise-store = true`, `max-jobs = 4`
+- **Action**:
+  - **home-manager** (Linux): `nix.gc.dates = "weekly"`, options `--delete-older-than 30d`
+  - **nix-darwin** (macOS): `nix.gc.interval = { Weekday = 0; Hour = 0; Minute = 0; }` — `nix.gc.dates` was removed from nix-darwin
+  - Both: `nix.settings` with `min-free = "2G"`, `max-free = "10G"`, `auto-optimise-store = true`, `max-jobs = 4`
 
 ## CI
 
 ### When running nixfmt in CI
-- **Action**: Use `shopt -s globstar` + `modules/**/*.nix` — `modules/*.nix` misses all subdirectory files
-
-### When setting up Cachix in GitHub Actions
-- **Action**: Add `cachix/cachix-action@v15` after `install-nix-action` with `skipPush: ${{ github.event_name == 'pull_request' }}`, set `CACHIX_AUTH_TOKEN` as repo secret
+- **Action**: Use `$(find modules -name '*.nix')` instead of `modules/**/*.nix` — macOS bash 3.x doesn't support `shopt -s globstar`
 
 ### When running shellcheck in CI
-- **Action**: Style suggestions (SC2001) don't fail the build — safe to suppress inline with `# shellcheck disable=SC2001`
+- **Action**: Use `nix run nixpkgs#shellcheck -- scripts/*.sh` — shellcheck isn't pre-installed on macOS runners
+- Style suggestions (SC2001) don't fail the build — safe to suppress inline with `# shellcheck disable=SC2001`
 
 ### When calling GitHub API in scripts
 - **Action**: Pass `GITHUB_TOKEN` env var for 5000 req/hr instead of 60
