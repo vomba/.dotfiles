@@ -17,10 +17,18 @@ EXIT_SUCCESS = 0
 EXIT_UPDATES_AVAILABLE = 1
 EXIT_ERROR = 2
 
+def github_request(url):
+    token = os.environ.get("GITHUB_TOKEN")
+    req = urllib.request.Request(url)
+    if token:
+        req.add_header("Authorization", f"Bearer {token}")
+        req.add_header("User-Agent", "check-updates.py")
+    return req
+
 def get_latest_github_release(owner, repo):
     url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
     try:
-        req = urllib.request.Request(url)
+        req = github_request(url)
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode())
             return data['tag_name'].lstrip('v')
@@ -30,7 +38,7 @@ def get_latest_github_release(owner, repo):
 def get_latest_github_commit(owner, repo, branch="master"):
     url = f"https://api.github.com/repos/{owner}/{repo}/commits/{branch}"
     try:
-        req = urllib.request.Request(url)
+        req = github_request(url)
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode())
             return data['sha']

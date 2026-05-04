@@ -23,6 +23,8 @@ jobs:
         run: nix flake update
       - name: Check and apply overlay updates
         id: overlay-update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if ./scripts/check-updates.py --apply --yes; then
             echo "overlay_updates=false" >> $GITHUB_OUTPUT
