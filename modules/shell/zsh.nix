@@ -9,7 +9,6 @@
     home.sessionVariables = {
       GOPATH = "${config.home.homeDirectory}/.go";
       KREW_ROOT = "${config.home.homeDirectory}/.krew";
-      GOOGLE_CLOUD_PROJECT = "elastisys-vertex-poc";
     };
 
     home.sessionPath = [
@@ -26,6 +25,7 @@
       };
       initContent = ''
         compdef kubecolor=kubectl
+        export GOOGLE_CLOUD_PROJECT="$(cat ${config.sops.secrets.gcp_project.path})"
       '';
       oh-my-zsh = {
         enable = true;
