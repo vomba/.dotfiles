@@ -147,7 +147,7 @@ All flags default to `true`. Flags are grouped by domain:
 
 ```bash
 mkdir -p ~/.config/sops/age
-ssh-to-age < ~/.ssh/id_ed25519.pub > ~/.config/sops/age/keys.txt
+nix shell nixpkgs#age -c age-keygen > ~/.config/sops/age/keys.txt
 sops secrets.yaml
 ```
 
@@ -157,3 +157,46 @@ sops.secrets.my-key = { };
 ```
 
 Reference in other modules via `config.sops.secrets.my-key.path`.
+
+## Maintenance
+
+### CI Pipeline
+`.github/workflows/ci.yml` runs on every push/PR to main:
+1. **nixfmt** — format check on all `.nix` files
+2. **nix flake check** — evaluation validation
+3. **shellcheck** — lint all `.sh` scripts
+4. **Build** — Linux (home-manager) + macOS (nix-darwin) configurations
+
+`.github/workflows/update-check.yml` runs daily:
+1. `nix flake update` + overlay version checks via `scripts/check-updates.py`
+2. Builds updated config on both platforms
+3. Pushes commits back to main if updates found
+
+Builds are cached via Cachix (`vomba.cachix.org`). PRs pull from cache; pushes to main also push to cache.
+
+### Pre-Commit Hooks
+Hook management via [pre-commit](https://pre-commit.com):
+```bash
+# Install hooks (run once after cloning)
+pre-commit install
+
+# Run on all files to verify
+pre-commit run --all-files
+```
+
+Hooks configured in `.pre-commit-config.yaml`:
+| Hook | Purpose |
+|------|---------|
+| prettier | YAML formatting (excludes `secrets.yaml`) |
+| trailing-whitespace | Trim trailing whitespace |
+| end-of-file-fixer | Ensure files end with newline |
+| check-yaml | Validate YAML syntax |
+| check-added-large-files | Block oversized commits |
+| gitleaks | Detect hardcoded secrets |
+| nixfmt | Auto-format Nix files |
+
+### Updating Dependencies
+- **Flake inputs**: `nix flake update`
+- **GitHub Actions**: Dependabot checks weekly
+- **Pre-commit hooks**: `pre-commit autoupdate`
+- **Overlay packages**: `scripts/check-updates.py --apply --yes` (pass `GITHUB_TOKEN` for higher API rate limits)
