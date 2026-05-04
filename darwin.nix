@@ -78,7 +78,11 @@
 
   nix.gc = {
     automatic = true;
-    dates = "weekly";
+    interval = {
+      Weekday = 0; # Sunday
+      Hour = 0;
+      Minute = 0;
+    };
     options = "--delete-older-than 30d";
   };
 
