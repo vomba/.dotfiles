@@ -56,7 +56,10 @@
   # };
 
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     max-jobs = 4;
     min-free = "2G";
     max-free = "10G";
