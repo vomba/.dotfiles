@@ -1,42 +1,14 @@
 { inputs }:
-self: super: {
+let
+  languages = import ./languages.nix { inherit inputs; };
+  python = import ./python.nix { };
+in
+self: super:
+languages self super
+// python self super
+// {
   cidr = super.callPackage ./cidr.nix { };
-
-  # Pin Swift to 5.8 from stable
-  swift = inputs.nixpkgs-stable.legacyPackages.${self.system}.swift;
-  swiftPackages = inputs.nixpkgs-stable.legacyPackages.${self.system}.swiftPackages;
-  swift_5_10 = inputs.nixpkgs-stable.legacyPackages.${self.system}.swift;
-
-  # Pin Dotnet to stable versions
-  dotnet-sdk = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnet-sdk;
-
-  # Patch dotnetCorePackages to include missing attributes from unstable
-  dotnetCorePackages = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnetCorePackages // {
-    sdk_9_0_1xx-bin = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnet-sdk;
-  };
-
-  dotnet-sdk_8 = inputs.nixpkgs-stable.legacyPackages.${self.system}.dotnet-sdk_8;
-
-  # Pin Marksman to stable to avoid unstable dotnet dependency issues
-  marksman = inputs.nixpkgs-stable.legacyPackages.${self.system}.marksman;
-
   openstack-tui = super.callPackage ./openstack-tui.nix { };
-
   kubernetes-helm = import ./helm.nix { inherit super; };
   helmfile = import ./helmfile.nix { inherit super; };
-
-  pythonPackagesExtensions = super.pythonPackagesExtensions ++ [
-    (python-final: python-prev: {
-      python-magnumclient = python-prev.python-magnumclient.overridePythonAttrs (oldAttrs: {
-        doCheck = false;
-      });
-      python-heatclient = python-prev.python-heatclient.overridePythonAttrs (oldAttrs: {
-        doCheck = false;
-      });
-      dogpile-cache = python-prev.dogpile-cache.overridePythonAttrs (oldAttrs: {
-        doCheck = false;
-      });
-    })
-  ];
-
 }
