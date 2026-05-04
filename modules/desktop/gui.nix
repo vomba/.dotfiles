@@ -14,8 +14,8 @@
     };
 
     programs.chromium = {
-      enable = if pkgs.stdenv.isLinux then true else false;
-      package = config.lib.nixGL.wrap pkgs.chromium;
+      enable = pkgs.stdenv.isLinux;
+      package = if pkgs.stdenv.isLinux then config.lib.nixGL.wrap pkgs.chromium else pkgs.chromium;
       commandLineArgs = [
         "--ozone-platform-hint=auto"
       ];

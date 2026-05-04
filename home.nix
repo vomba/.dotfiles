@@ -19,6 +19,30 @@
   programs.firefox.configPath = ".mozilla/firefox";
   programs.yazi.shellWrapperName = "yy";
 
+  nix.package = pkgs.nix;
+  nix.settings = {
+    max-jobs = 4;
+    min-free = "2G";
+    max-free = "10G";
+    auto-optimise-store = true;
+    substituters = [
+      "https://vomba.cachix.org"
+      "https://nix-community.cachix.org"
+      "https://cache.nixos.org"
+    ];
+    trusted-public-keys = [
+      "vomba.cachix.org-1:Me8oTzj1jpd5kcE0Yz2pKzX2C9SGnT951OXSwsfv19I="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
   programs.home-manager.enable = true;
   fonts.fontconfig.enable = true;
 

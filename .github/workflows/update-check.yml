@@ -85,6 +85,10 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - uses: cachix/cachix-action@v15
+        with:
+          name: vomba
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build Linux Home Manager Configuration
         run: nix build .#homeConfigurations.hani.activationPackage --no-link
 
@@ -108,6 +112,10 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - uses: cachix/cachix-action@v15
+        with:
+          name: vomba
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build macOS Darwin Configuration
         run: nix build .#darwinConfigurations.Mac.system --no-link
 

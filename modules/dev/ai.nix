@@ -186,8 +186,6 @@ in
     home.file = homeFiles;
 
     # ── Packages ─────────────────────────────────────────────────────
-    home.packages = [
-      pkgs.nodejs_25
-    ];
+    home.packages = [ ];
   };
 }

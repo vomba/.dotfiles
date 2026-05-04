@@ -34,6 +34,11 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - uses: cachix/cachix-action@v15
+        with:
+          name: vomba
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          skipPush: ${{ github.event_name == 'pull_request' }}
       - name: Check formatting
         run: nix run nixpkgs#nixfmt -- --check flake.nix home.nix linux.nix darwin.nix modules/*.nix overlays/*.nix
       - name: Check flake
