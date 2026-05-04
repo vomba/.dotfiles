@@ -8,23 +8,37 @@
     programs.helix = {
       enable = true;
       defaultEditor = true;
-      # settings = {
-      #   keys.normal = {
-      #     space.f = [
-      #       ":sh rm -f /tmp/yazi-choice"
-      #       ":sh yazi --chooser-file=/tmp/yazi-choice"
-      #       ":open %sh{cat /tmp/yazi-choice}"
-      #       ":redraw"
-      #     ];
 
-      #   };
-      # };
       languages = {
         language-server = {
+          nixd = {
+            command = "nixd";
+          };
+          bash-language-server = {
+            command = "bash-language-server";
+            args = [ "start" ];
+          };
+          yaml-language-server = {
+            command = "yaml-language-server";
+            args = [ "--stdio" ];
+          };
+          vscode-json-language-server = {
+            command = "vscode-json-languageserver";
+            args = [ "--stdio" ];
+          };
           terraform-ls = {
             command = "terraform-ls";
-            arg = [ "serve" ];
-
+            args = [ "serve" ];
+          };
+          helm-ls = {
+            command = "helm_ls";
+            args = [ "serve" ];
+          };
+          gopls = {
+            command = "gopls";
+          };
+          marksman = {
+            command = "marksman";
           };
           mpls = {
             command = "mpls";
@@ -38,10 +52,23 @@
         language = [
           {
             name = "nix";
-            file-types = [ "nix" ];
+            language-servers = [ "nixd" ];
+            auto-format = true;
             formatter = {
               command = "nixfmt";
             };
+          }
+          {
+            name = "bash";
+            language-servers = [ "bash-language-server" ];
+          }
+          {
+            name = "yaml";
+            language-servers = [ "yaml-language-server" ];
+          }
+          {
+            name = "json";
+            language-servers = [ "vscode-json-language-server" ];
           }
           {
             name = "hcl";
@@ -54,6 +81,14 @@
             language-id = "terraform-vars";
           }
           {
+            name = "helm";
+            language-servers = [ "helm-ls" ];
+          }
+          {
+            name = "go";
+            language-servers = [ "gopls" ];
+          }
+          {
             name = "markdown";
             language-servers = [
               "marksman"
@@ -61,7 +96,6 @@
             ];
           }
         ];
-
       };
     };
   };
