@@ -23,21 +23,21 @@
   fonts.fontconfig.enable = true;
 
   imports = [
-    ./modules/zsh.nix
-    ./modules/git.nix
-    ./modules/firefox.nix
-    ./modules/editors.nix
-    ./modules/shell.nix
-    ./modules/dev.nix
-    ./modules/kubernetes.nix
-    ./modules/gui.nix
-    ./modules/yazi.nix
-    ./modules/gpg.nix
-    ./modules/packages.nix
-    ./modules/cloud.nix
-    ./modules/lsp.nix
-    ./modules/ai.nix
-    ./modules/obsidian.nix
+    ./modules/shell/zsh.nix
+    ./modules/shell/git.nix
+    ./modules/apps/firefox.nix
+    ./modules/apps/editors.nix
+    ./modules/shell/shell.nix
+    ./modules/dev/dev.nix
+    ./modules/dev/kubernetes.nix
+    ./modules/desktop/gui.nix
+    ./modules/apps/yazi.nix
+    ./modules/shell/gpg.nix
+    ./modules/apps/packages.nix
+    ./modules/dev/cloud.nix
+    ./modules/dev/lsp.nix
+    ./modules/dev/ai.nix
+    ./modules/apps/obsidian/default.nix
     ./modules/sops.nix
   ];
 

@@ -152,7 +152,7 @@ let
       })
   // {
     ".config/opencode/skills/obsidian-brain" = {
-      source = ./obsidian/skills/obsidian-brain;
+      source = ../apps/obsidian/skills/obsidian-brain;
       force = true;
     };
   };

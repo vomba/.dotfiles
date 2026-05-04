@@ -5,8 +5,8 @@
 }:
 {
   imports = [
-    ./modules/hyprland.nix
-    ./modules/kanshi.nix
+    ./modules/desktop/hyprland/default.nix
+    ./modules/desktop/kanshi.nix
   ];
 
   targets.genericLinux.enable = true;

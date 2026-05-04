@@ -46,5 +46,5 @@
       ]
   );
 
-  home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ../10-nix-fonts.conf;
+  home.file.".config/fontconfig/conf.d/10-nix-fonts.conf".source = ../../10-nix-fonts.conf;
 }

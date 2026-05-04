@@ -108,7 +108,7 @@ in
   # because it runs migrations on startup. Copy instead of symlink.
   home.activation.setupQuickAddData = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p '${vaultDir}/.obsidian/plugins/quickadd'
-    cp -f '${./obsidian/plugins/quickadd/data.json}' '${vaultDir}/.obsidian/plugins/quickadd/data.json'
+    cp -f '${./plugins/quickadd/data.json}' '${vaultDir}/.obsidian/plugins/quickadd/data.json'
   '';
 
   programs.obsidian = {
@@ -188,28 +188,28 @@ in
 
           extraFiles = {
             "Templates" = {
-              source = ./obsidian/templates;
+              source = ./templates;
             };
             "00 - Daily" = {
-              source = ./obsidian/vault-dirs/00-daily;
+              source = ./vault-dirs/00-daily;
             };
             "01 - Weekly" = {
-              source = ./obsidian/vault-dirs/01-weekly;
+              source = ./vault-dirs/01-weekly;
             };
             "02 - Projects" = {
-              source = ./obsidian/vault-dirs/02-projects;
+              source = ./vault-dirs/02-projects;
             };
             "03 - Resources" = {
-              source = ./obsidian/vault-dirs/03-resources;
+              source = ./vault-dirs/03-resources;
             };
             "04 - Snippets" = {
-              source = ./obsidian/vault-dirs/04-snippets;
+              source = ./vault-dirs/04-snippets;
             };
             "05 - Wiki" = {
-              source = ./obsidian/vault-dirs/05-wiki;
+              source = ./vault-dirs/05-wiki;
             };
             "06 - Archive" = {
-              source = ./obsidian/vault-dirs/06-archive;
+              source = ./vault-dirs/06-archive;
             };
           };
         };

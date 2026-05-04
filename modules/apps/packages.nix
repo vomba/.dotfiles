@@ -31,6 +31,6 @@
   );
 
   # Configuration for RBW (Bitwarden)
-  home.file.".config/rbw/config.json".source = ../rbw-config.json;
-  home.file.".config/ck8s-devbox/credentials-helper.bash".source = ../credentials-helper.bash;
+  home.file.".config/rbw/config.json".source = ../../rbw-config.json;
+  home.file.".config/ck8s-devbox/credentials-helper.bash".source = ../../credentials-helper.bash;
 }
