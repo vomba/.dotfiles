@@ -8,10 +8,10 @@ new Notice("Syncing vault...");
 try {
   // 1. Add changes
   await tp.system.execute("cd ~/.vault && git add -A");
-  
+
   // 2. Commit (allow empty if no changes)
   const commitOutput = await tp.system.execute(`cd ~/.vault && git commit -m "${finalMessage}" --allow-empty`);
-  
+
   // 3. Push if remote exists
   const hasRemote = await tp.system.execute("cd ~/.vault && git remote");
   if (hasRemote) {

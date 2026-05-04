@@ -24,8 +24,8 @@ due on <% tp.date.now("YYYY-MM-DD") %>
 
 ### Rich Tasks (Task-as-a-Note)
 ```dataview
-LIST FROM #task 
-WHERE due = date(<% tp.date.now("YYYY-MM-DD") %>) 
+LIST FROM #task
+WHERE due = date(<% tp.date.now("YYYY-MM-DD") %>)
 OR (status = "active" AND !due)
 ```
 
@@ -40,7 +40,7 @@ if (previousNote) {
     const unfinishedTasks = content.split("\n")
         .filter(line => line.trim().startsWith("- [ ]") && !line.includes("#task"))
         .join("\n");
-    
+
     if (unfinishedTasks) {
         tR += unfinishedTasks + "\n";
     }
@@ -49,12 +49,12 @@ if (previousNote) {
 <!-- Add simple tasks via QuickAdd or manually below -->
 
 ## Notes
-- 
+-
 
 ## Semantic Discoveries (On this day...)
 ```dataview
-LIST FROM "" 
-WHERE file.day.month = date(<% tp.date.now("YYYY-MM-DD") %>).month 
+LIST FROM ""
+WHERE file.day.month = date(<% tp.date.now("YYYY-MM-DD") %>).month
 AND file.day.day = date(<% tp.date.now("YYYY-MM-DD") %>).day
 AND file.name != this.file.name
 ```
@@ -78,7 +78,7 @@ due on <% tp.date.now("YYYY-MM-DD") %>
 ```
 
 ### Notes for tomorrow
-- 
+-
 
 ## Dataview: Recently Modified Notes
 ```dataview

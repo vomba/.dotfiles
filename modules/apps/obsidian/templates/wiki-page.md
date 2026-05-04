@@ -9,15 +9,15 @@ related: []
 # {{title}}
 
 ## Overview
-> 
+>
 
 ## Details
 
-### 
-- 
+###
+-
 
 ## Related Notes
-- 
+-
 
 ## References
-- 
+-

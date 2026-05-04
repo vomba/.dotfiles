@@ -12,18 +12,18 @@ aliases: []
 # {{title}}
 
 ## Status
-**Status:** Active  
-**Priority:** Medium  
-**Start Date:** {{date}}  
-**Target End Date:** 
+**Status:** Active
+**Priority:** Medium
+**Start Date:** {{date}}
+**Target End Date:**
 
 ## Overview
-> 
+>
 
 ## Goals
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
+- [ ]
 
 ## Tasks
 ```tasks
@@ -32,10 +32,10 @@ path includes {{title}}
 ```
 
 ## Resources
-- 
+-
 
 ## Notes
-- 
+-
 
 ## Related Projects
-- 
+-

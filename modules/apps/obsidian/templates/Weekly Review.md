@@ -53,18 +53,18 @@ SORT created DESC
 ## Reflections
 
 ### Wins
-- 
+-
 
 ### Challenges
-- 
+-
 
 ### Lessons Learned
-- 
+-
 
 ## Next Week's Focus
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
+- [ ]
 
 ## Orphaned Notes (No Tags)
 ```dataview

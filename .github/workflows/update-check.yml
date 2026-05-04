@@ -2,7 +2,7 @@ name: Update and Build
 
 on:
   schedule:
-    - cron: '0 5 * * *' # Run daily at 5:00 UTC
+    - cron: "0 5 * * *" # Run daily at 5:00 UTC
   workflow_dispatch:
 
 jobs:

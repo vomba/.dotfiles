@@ -12,18 +12,18 @@ aliases: []
 # {{title}}
 
 ## Summary
-> 
+>
 
 ## Key Takeaways
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Highlights / Notes
-- 
+-
 
 ## Related Notes
-- 
+-
 
 ## Action Items
-- [ ] 
+- [ ]

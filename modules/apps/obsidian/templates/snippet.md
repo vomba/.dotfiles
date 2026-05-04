@@ -10,7 +10,7 @@ aliases: []
 # {{title}}
 
 ## Description
-> 
+>
 
 ## Code
 ```{{language}}
@@ -18,10 +18,10 @@ aliases: []
 ```
 
 ## Usage Notes
-- 
+-
 
 ## Related Snippets
-- 
+-
 
 ## References
-- 
+-
