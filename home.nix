@@ -19,7 +19,7 @@
   programs.firefox.configPath = ".mozilla/firefox";
   programs.yazi.shellWrapperName = "yy";
 
-  nix.package = pkgs.nix;
+  nix.package = lib.mkIf pkgs.stdenv.isLinux pkgs.nix;
   nix.settings = {
     max-jobs = 4;
     min-free = "2G";
