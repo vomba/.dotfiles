@@ -32,6 +32,7 @@ in
       pkgs.krew
       pkgs.crossplane-cli
       pkgs.kubectl-view-secret
+      pkgs.viddy
     ];
 
     home.file.".kube/kubie.yaml".source = ../../kubie.yaml;

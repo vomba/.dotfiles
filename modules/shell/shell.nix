@@ -40,5 +40,11 @@
       # Load settings from the existing toml file
       settings = builtins.fromTOML (builtins.readFile ../../starship.toml);
     };
+
+    programs.direnv = {
+      enable = true;
+      enableZshIntegration = true;
+      nix-direnv.enable = true;
+    };
   };
 }

@@ -9,7 +9,6 @@
   config = lib.mkIf config.dotfiles.apps.enable {
     home.packages = [
       # Utilities
-      pkgs.direnv
       pkgs.gh
       pkgs-stable.yq-go
       pkgs-stable.jq
