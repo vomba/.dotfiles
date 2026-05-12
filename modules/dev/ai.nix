@@ -92,6 +92,7 @@ let
     "strategic-compact"
     "eval-harness"
     "obsidian-brain"
+    "continuous-learning-v2"
   ];
 
   # Instructions with absolute paths (opencode resolves these)
@@ -113,6 +114,7 @@ let
     "${configDir}/skills/strategic-compact/SKILL.md"
     "${configDir}/skills/eval-harness/SKILL.md"
     "${configDir}/skills/obsidian-brain/SKILL.md"
+    "${configDir}/skills/continuous-learning-v2/SKILL.md"
   ];
 
   # Path to the context7 API key from sops (known at build time)
@@ -181,6 +183,10 @@ let
     };
   };
 
+  instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
+    exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
+  '';
+
 in
 {
   config = lib.mkIf config.dotfiles.dev.ai.enable {
@@ -211,6 +217,9 @@ in
     home.file = homeFiles;
 
     # ── Packages ─────────────────────────────────────────────────────
-    home.packages = [ context7Wrapper ];
+    home.packages = [
+      context7Wrapper
+      instinctWrapper
+    ];
   };
 }
