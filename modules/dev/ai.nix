@@ -115,6 +115,15 @@ let
     "${configDir}/skills/obsidian-brain/SKILL.md"
   ];
 
+  # Path to the context7 API key from sops (known at build time)
+  context7KeyPath = config.sops.secrets.context7_api_key.path;
+
+  # Wrapper script for context7 MCP that reads the API key from sops
+  context7Wrapper = pkgs.writeShellScriptBin "context7-mcp" ''
+    CONTEXT7_API_KEY="$(cat ${context7KeyPath})" exec \
+      npx -y "@upstash/context7-mcp@latest" "$@"
+  '';
+
   # Build the complete home.file attrset — all entries merged together
   homeFiles = {
     ".config/opencode/.opencode" = {
@@ -189,6 +198,12 @@ in
         permission = {
           "mcp_*" = "ask";
         };
+        mcp = {
+          context7 = {
+            type = "local";
+            command = [ "${context7Wrapper}/bin/context7-mcp" ];
+          };
+        };
       };
     };
 
@@ -196,6 +211,6 @@ in
     home.file = homeFiles;
 
     # ── Packages ─────────────────────────────────────────────────────
-    home.packages = [ ];
+    home.packages = [ context7Wrapper ];
   };
 }

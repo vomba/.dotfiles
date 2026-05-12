@@ -13,6 +13,7 @@
     defaultSopsFile = ../secrets.yaml;
     secrets = {
       gcp_project = { };
+      context7_api_key = { };
     };
   };
 
