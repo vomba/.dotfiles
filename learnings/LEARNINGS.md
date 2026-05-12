@@ -97,8 +97,29 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Pass `GITHUB_TOKEN` env var to scripts that call GitHub API
 - Use `|| exit` after `pushd`/`popd` in bash scripts (SC2164)
 
+### ECC Skills Sourced from Flake Input
+- All skills referenced in `mergedInstructions` must be in `neededSkills` to be Nix-managed
+- `neededSkills` skills (except `obsidian-brain`) are symlinked from `eccRepo` flake input via `lib.genAttrs`
+- Adding a skill to `neededSkills` auto-wires both the symlink and version tracking
+- Skills missing from `neededSkills` (like `continuous-learning-v2` was) exist on disk unmanaged
+
+### writeShellScriptBin for CLI Wrappers
+- Use `pkgs.writeShellScriptBin "<name>"` to create system-wide commands from scripts in managed paths
+- Bakes the target path at build time, so `configDir` paths resolve correctly
+- Add the wrapper to `home.packages` alongside other packages
+
+### Local Skill Overrides
+- Local-only skills (like `obsidian-brain`) use `source = ../relative/path` instead of `${eccRepo}/skills/...`
+- To keep a skill tracking the upstream flake version, add to `neededSkills` — separate `home.file` is redundant
+- When a skill has local improvements over upstream, they get lost when switching to the flake source; contribute upstream instead
+
+### Nix Flake Version Bump
+- `nix flake update --update-input everything-claude-code` or bump the tag in `flake.nix` (e.g. `v1.10.0` → `v1.11.0`)
+- All skills sourced from `eccRepo` update automatically on rebuild
+
 ## See Also
 
 Detailed session learnings:
 - `learnings/2026-05-04-nix-caching-and-ci.md`
 - `learnings/2026-05-04-full-audit.md`
+- `learnings/2026-05-12-ecc-skills-nix-integration.md`

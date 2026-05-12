@@ -52,3 +52,12 @@ Actionable patterns extracted from session learnings. These fire automatically w
 
 ### When creating a new sops secret in home-manager
 - **Action**: Just use `sops.secrets.<name> = {};` — `neededForUsers` doesn't exist in home-manager (that's NixOS only)
+
+### When adding a CLI script from a managed directory to PATH
+- **Action**: Use `pkgs.writeShellScriptBin "<name>" ''exec <path-to-script> "$@"''` and add to `home.packages` — avoids manual symlinks and survives rebuilds
+
+### When a skill is on disk but not Nix-managed
+- **Action**: Check if it's in `neededSkills` in `modules/dev/ai.nix` — if not, add it. Skills outside `neededSkills` exist unmanaged and won't track flake version bumps
+
+### When a skill symlink from eccRepo would replace a local improved copy
+- **Action**: Don't keep a divergent local copy — contribute improvements upstream to ECC. The flake input is the single source of truth for all skills (except obsidian-brain which is project-specific)
