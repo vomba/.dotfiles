@@ -74,6 +74,38 @@
         brightness = 0.5
       }
 
+      label {
+        monitor =
+        text = cmd[update:10000] date "+%H:%M"
+        font_size = 96
+        font_family = JetBrains Mono
+        position = 0, -200
+        halign = center
+        valign = center
+        color = rgb(eceff4)
+      }
+
+      label {
+        monitor =
+        text = cmd[update:60000] date "+%A, %d %B %Y"
+        font_size = 20
+        position = 0, -80
+        halign = center
+        valign = center
+        color = rgb(88c0d0)
+      }
+
+      label {
+        monitor =
+        text = $LAYOUT[en,se]
+        font_size = 16
+        position = 20, -20
+        halign = left
+        valign = bottom
+        color = rgb(81a1c1)
+        onclick = hyprctl switchxkblayout all next
+      }
+
       input-field {
         monitor =
         size = 300, 60
@@ -82,16 +114,16 @@
         placeholder_text = <i>Password...</i>
         hide_input = false
         inner_color = rgb(2e3440)
-        outer_color = rgb(5e81ac)
+        outer_color = rgb(5e81ac) rgba(88c0d0ee) 45deg
         font_color = rgb(eceff4)
-        check_color = rgb(a3be8c)
+        check_color = rgba(a3be8cee) rgba(88c0d0ee) 120deg
         fail_color = rgb(bf616a)
         fail_text = <i>$FAIL</i>
         capslock_color = rgb(d08770)
         fade_on_empty = true
         dots_spacing = 0.3
         dots_size = 0.2
-        position = 0, -20
+        position = 0, 40
         halign = center
         valign = center
       }
