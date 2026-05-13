@@ -61,3 +61,15 @@ Actionable patterns extracted from session learnings. These fire automatically w
 
 ### When a skill symlink from eccRepo would replace a local improved copy
 - **Action**: Don't keep a divergent local copy — contribute improvements upstream to ECC. The flake input is the single source of truth for all skills (except obsidian-brain which is project-specific)
+
+### When splitting a Nix module that exceeds 200 lines
+- **Action**: Extract self-contained sections into sub-module files. Parent uses `imports = [ ./submodule.nix ];`. Nix merges duplicate attr paths from multiple modules, so they can all write to the same `wayland.windowManager.hyprland.settings` target.
+
+### When adding a new .nix file to a flake module
+- **Action**: Run `git add <file>` before `nix flake check` — flakes refuse to evaluate untracked files.
+
+### When setting up Hyprland on a system with a display manager
+- **Action**: Set `hyprland.systemd.enable = true` — safe with DM (SDDM/GDM), provides env propagation and clean shutdown. Only keep `false` for TTY-start without DM.
+
+### When removing deprecated Hyprland workarounds
+- **Action**: Check upstream changelogs first. `render.direct_scanout = false` is no longer needed with NVIDIA 555+ drivers. Remove and observe before committing.

@@ -117,9 +117,51 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - `nix flake update --update-input everything-claude-code` or bump the tag in `flake.nix` (e.g. `v1.10.0` → `v1.11.0`)
 - All skills sourced from `eccRepo` update automatically on rebuild
 
+## Nix Flake + Git
+
+### Flake Evaluation Requires Git-Tracked Files
+- `nix flake check` errors with `Path '...' in the repository is not tracked by Git` for any file referenced by a flake module that isn't `git add`ed
+- Fix: `git add <file>` before running `nix flake check`
+- This includes new `.nix` files created during refactoring
+
+## Pre-Commit
+
+### nixfmt Auto-Format Loop
+- When `entry: nixfmt` (not `--check`) is used in pre-commit, the hook modifies files in place
+- If the commit is rejected, the staged files don't match the formatted files on disk
+- Fix: `git add <modified-files>` and re-run the commit
+- The second run passes because files are now properly formatted
+
+## Module Refactoring
+
+### Hyprland Sub-Module Split Pattern
+- Extract self-contained sections (keybindings, env, window rules) into separate `.nix` files
+- Parent module imports them via `imports = [ ./submodule.nix ]; `
+- Both modules merge into the same `wayland.windowManager.hyprland.settings` attrset
+- Nix merges duplicate attribute paths from multiple modules automatically
+
+### Brace Matching After Section Removal
+- Removing a large block from a Nix attrset can accidentally consume closing `};`
+- After edits, verify each level's braces are balanced — especially when sections above and below the removed block both end with `};`
+
+## Hyprland
+
+### direct_scanout on Modern NVIDIA
+- `render.direct_scanout = false` was a workaround for older NVIDIA drivers (pre-555)
+- With NVIDIA 555+ and current Hyprland, explicit sync is properly supported
+- Default (`true`) provides lower latency without issues
+- Test by removing and observing for tearing
+
+### systemd.enable with Display Managers
+- `hyprland.systemd.enable = true` is safe when using a display manager (SDDM, GDM)
+- Display managers initialize the user systemd session before Hyprland starts
+- On TTY-start without a DM, systemd may not be initialized — then `enable = false` is safer
+- Benefits of `true`: proper env propagation, session lifecycle, clean shutdown
+
 ## See Also
 
 Detailed session learnings:
 - `learnings/2026-05-04-nix-caching-and-ci.md`
 - `learnings/2026-05-04-full-audit.md`
 - `learnings/2026-05-12-ecc-skills-nix-integration.md`
+- `learnings/2026-05-13-comprehensive-audit.md`
