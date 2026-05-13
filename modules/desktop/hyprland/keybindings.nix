@@ -9,7 +9,7 @@ let
   terminal = "kitty";
   menu = "fuzzel";
   file_explorer = "nautilus";
-  lock_screen = "/usr/bin/swaylock";
+  lock_screen = "hyprlock";
   screenshot_dir = "$HOME/Pictures/Screenshots";
 in
 {

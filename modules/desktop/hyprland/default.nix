@@ -44,6 +44,14 @@
     home.packages = with pkgs; [
       xdg-desktop-portal-wlr
       hypridle
+      (pkgs.writeShellScriptBin "hyprlock" ''
+        unset __EGL_VENDOR_LIBRARY_FILENAMES
+        unset LIBGL_DRIVERS_PATH
+        unset GBM_BACKENDS_PATH
+        unset LD_LIBRARY_PATH
+        export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnu"
+        exec /usr/bin/hyprlock "$@"
+      '')
     ];
 
     wayland.windowManager.hyprland = {
@@ -55,54 +63,58 @@
       };
     };
 
-    xdg.configFile."swaylock/config".text = ''
-      ignore-empty-password
-      show-failed-attempts
-      image=${config.home.homeDirectory}/Pictures/welkin.png
-      show-keyboard-layout
-      indicator-caps-lock
-      bs-hl-color=b48eadff
-      caps-lock-bs-hl-color=d08770ff
-      caps-lock-key-hl-color=ebcb8bff
-      font-size=40
-      indicator-radius=100
-      indicator-thickness=10
-      inside-color=2e3440ff
-      inside-clear-color=81a1c1ff
-      inside-ver-color=5e81acff
-      inside-wrong-color=bf616aff
-      key-hl-color=a3be8cff
-      layout-bg-color=2e3440ff
-      line-uses-ring
-      ring-color=3b4252ff
-      ring-clear-color=88c0d0ff
-      ring-ver-color=81a1c1ff
-      ring-wrong-color=d08770ff
-      separator-color=3b4252ff
-      text-color=eceff4ff
-      text-clear-color=3b4252ff
-      text-ver-color=3b4252ff
-      text-wrong-color=3b4252ff
+    xdg.configFile."hypr/hyprlock.conf".text = ''
+      background {
+        monitor =
+        path = screenshot
+        blur_passes = 3
+        blur_size = 7
+        noise = 0.01
+        contrast = 0.8
+        brightness = 0.5
+      }
+
+      input-field {
+        monitor =
+        size = 300, 60
+        outline_thickness = 3
+        rounding = 10
+        placeholder_text = <i>Password...</i>
+        hide_input = false
+        inner_color = rgb(2e3440)
+        outer_color = rgb(5e81ac)
+        font_color = rgb(eceff4)
+        check_color = rgb(a3be8c)
+        fail_color = rgb(bf616a)
+        fail_text = <i>$FAIL</i>
+        capslock_color = rgb(d08770)
+        fade_on_empty = true
+        dots_spacing = 0.3
+        dots_size = 0.2
+        position = 0, -20
+        halign = center
+        valign = center
+      }
     '';
 
     services.hypridle = {
       enable = true;
       settings = {
         general = {
-          lock_cmd = "/usr/bin/swaylock";
+          lock_cmd = "hyprlock";
           unlock_cmd = "";
-          before_sleep_cmd = "/usr/bin/swaylock";
+          before_sleep_cmd = "hyprlock";
           after_sleep_cmd = "hyprctl dispatch dpms on";
           ignore_dbus_inhibit = false;
           ignore_systemd_inhibit = false;
         };
         listener = [
           {
-            timeout = 300;
-            on-timeout = "/usr/bin/swaylock";
+            timeout = 180;
+            on-timeout = "hyprlock";
           }
           {
-            timeout = 600;
+            timeout = 180;
             on-timeout = "hyprctl dispatch dpms off";
             on-resume = "hyprctl dispatch dpms on";
           }
