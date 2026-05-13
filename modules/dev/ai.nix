@@ -216,6 +216,25 @@ in
     # ── File symlinks (skills, plugin, docs, rules) ──────────────────
     home.file = homeFiles;
 
+    # ── Session environment ─────────────────────────────────────────
+    home.sessionVariables = {
+      CLAUDE_PLUGIN_ROOT = configDir;
+    };
+
+    # ── Homunculus: consolidate instinct store under opencode ───────
+    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      NEW_HOME="${configDir}/homunculus"
+      OLD_HOME="$HOME/.claude/homunculus"
+      mkdir -p "$NEW_HOME"/{instincts/{personal,inherited},evolved/{skills,commands,agents},projects}
+      if [ -d "$OLD_HOME" ] && [ ! -L "$OLD_HOME" ]; then
+        cp -r "$OLD_HOME"/. "$NEW_HOME"/ 2>/dev/null || true
+        rm -rf "$OLD_HOME"
+      fi
+      if [ ! -L "$OLD_HOME" ]; then
+        ln -sf "$NEW_HOME" "$OLD_HOME"
+      fi
+    '';
+
     # ── Packages ─────────────────────────────────────────────────────
     home.packages = [
       context7Wrapper
