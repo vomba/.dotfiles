@@ -6,7 +6,7 @@
 }:
 {
   imports = [ ./keybindings.nix ];
-
+  wayland.windowManager.hyprland.configType = "hyprlang";
   wayland.windowManager.hyprland.settings = lib.mkIf config.dotfiles.desktop.hyprland.enable {
 
     env = [
@@ -64,7 +64,6 @@
     };
 
     dwindle = {
-      pseudotile = true;
       preserve_split = true;
     };
 
