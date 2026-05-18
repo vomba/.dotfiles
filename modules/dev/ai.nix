@@ -210,6 +210,52 @@ in
             command = [ "${context7Wrapper}/bin/context7-mcp" ];
           };
         };
+        lsp = {
+          marksman = {
+            command = [ "marksman" ];
+            extensions = [ ".md" ];
+          };
+          typos-lsp = {
+            command = [ "typos-lsp" ];
+            extensions = [
+              ".nix"
+              ".rs"
+              ".py"
+              ".go"
+              ".ts"
+              ".tsx"
+              ".js"
+              ".sh"
+              ".md"
+              ".toml"
+              ".yaml"
+              ".yml"
+              ".json"
+            ];
+          };
+          jq-lsp = {
+            command = [ "jq-lsp" ];
+            extensions = [ ".jq" ];
+          };
+          helm-ls = {
+            command = [
+              "helm_ls"
+              "serve"
+            ];
+            extensions = [
+              ".yaml"
+              ".yml"
+              ".tpl"
+            ];
+          };
+          vscode-json = {
+            command = [
+              "vscode-json-languageserver"
+              "--stdio"
+            ];
+            extensions = [ ".json" ];
+          };
+        };
       };
     };
 
