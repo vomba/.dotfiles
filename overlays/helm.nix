@@ -3,7 +3,7 @@
 let
   helm = super.kubernetes-helm.overrideAttrs (oldAttrs: rec {
     pname = "kubernetes-helm";
-    version = "4.1.4";
+    version = "4.2.0";
 
     src = super.fetchFromGitHub {
       owner = "helm";
@@ -100,7 +100,7 @@ let
     # Example of a fully custom plugin from a repo using the helper function:
     # my-custom-plugin = buildHelmPlugin {
     #   pluginName = "my-custom-plugin";
-    #   version = "4.1.4";
+    #   version = "4.2.0";
     #   src = super.fetchFromGitHub {
     #     owner = "example";
     #     repo = "my-custom-plugin";
