@@ -65,46 +65,105 @@ def prefetch_url(url):
         pass
     return None
 
-def parse_overlay_metadata(content):
-    github_matches = re.findall(r'owner = "(.*?)";\s+repo = "(.*?)";', content)
-    if github_matches:
-        owner, repo = github_matches[0]
-        version_match = re.search(r'version = "(.*?)";', content)
-        rev_match = re.search(r'rev = "(.*?)";', content)
-        has_multihash = bool(re.search(r'sha256\s*=\s*\{', content))
-        return {
-            'owner': owner,
-            'repo': repo,
-            'version': version_match.group(1) if version_match else None,
-            'rev': rev_match.group(1) if rev_match else None,
-            'has_multihash': has_multihash,
-        }
+def _nearest_unclaimed(matches, pos, claimed):
+    best = None
+    best_d = float('inf')
+    for m in matches:
+        if m.start() not in claimed and abs(m.start() - pos) < best_d:
+            best_d = abs(m.start() - pos)
+            best = m
+    return best
 
-    url_match = re.search(r'url = "https://github\.com/([^/]+)/([^/]+)/releases/download/', content)
-    if url_match:
-        owner, repo = url_match.group(1), url_match.group(2)
-        version_match = re.search(r'version = "(.*?)";', content)
-        has_multihash = bool(re.search(r'sha256\s*=\s*\{', content))
-        return {
+
+def parse_overlay_metadata(content):
+    """Parse all packages from an overlay file. Returns list of metadata dicts."""
+    packages = []
+    seen = set()
+
+    has_multihash = bool(re.search(r'sha256\s*=\s*\{', content))
+
+    version_matches = list(re.finditer(r'version = "([^"]*)"', content))
+    rev_matches = list(re.finditer(r'rev = "([^"]*)"', content))
+    claimed_versions = set()
+    claimed_revs = set()
+
+    # 1. Explicit owner/repo packages
+    for m in re.finditer(r'owner = "(.*?)";\s+repo = "(.*?)";', content):
+        owner, repo = m.group(1), m.group(2)
+        if (owner, repo) in seen:
+            continue
+        seen.add((owner, repo))
+
+        v = _nearest_unclaimed(version_matches, m.start(), claimed_versions)
+        if v is None:
+            continue
+        claimed_versions.add(v.start())
+
+        r = _nearest_unclaimed(rev_matches, m.start(), claimed_revs)
+        if r is not None:
+            claimed_revs.add(r.start())
+
+        packages.append({
             'owner': owner,
             'repo': repo,
-            'version': version_match.group(1) if version_match else None,
+            'version': v.group(1),
+            'version_positions': [v.start()],
+            'rev': r.group(1) if r else None,
+            'has_multihash': has_multihash,
+        })
+
+    # 2. URL-based packages (from download URLs)
+    url_matches = list(re.finditer(
+        r'url = "https://github\.com/([^/]+)/([^/]+)/releases/download/', content
+    ))
+    for m in url_matches:
+        owner, repo = m.group(1), m.group(2)
+        if (owner, repo) in seen:
+            continue
+        seen.add((owner, repo))
+
+        v_positions = []
+        for um in url_matches:
+            if um.group(1) != owner or um.group(2) != repo:
+                continue
+            v = _nearest_unclaimed(version_matches, um.start(), claimed_versions)
+            if v is not None:
+                claimed_versions.add(v.start())
+                v_positions.append(v.start())
+
+        if not v_positions:
+            continue
+
+        value = next(v.group(1) for v in version_matches if v.start() == v_positions[0])
+        packages.append({
+            'owner': owner,
+            'repo': repo,
+            'version': value,
+            'version_positions': v_positions,
             'rev': None,
             'has_multihash': has_multihash,
-        }
-    return None
+        })
+
+    return packages
+
+def _replace_versions(content, positions, old_version, new_version):
+    """Replace version strings at specific byte positions. Processes in descending order."""
+    old = f'version = "{old_version}"'
+    new_s = f'version = "{new_version}"'
+    for pos in sorted(positions, reverse=True):
+        if content[pos:pos + len(old)] == old:
+            content = content[:pos] + new_s + content[pos + len(old):]
+    return content
+
 
 def update_version_with_rev_template(file_path, content, metadata, latest_version, dry_run=False):
     filename = os.path.basename(file_path)
     current_version = metadata['version']
+    version_positions = metadata.get('version_positions', [])
     if latest_version != current_version:
         print(f"[{filename}] UPDATE AVAILABLE: {current_version} -> {latest_version}")
         if not dry_run:
-            new_content = re.sub(
-                r'(version = ")(.*?)(";)',
-                f'\\g<1>{latest_version}\\g<3>',
-                content
-            )
+            new_content = _replace_versions(content, version_positions, current_version, latest_version)
             with open(file_path, "w") as f:
                 f.write(new_content)
             print(f"[{filename}] Applied version update: {current_version} -> {latest_version}")
@@ -116,6 +175,9 @@ def update_multihash_template(file_path, content, metadata, latest_version, dry_
     owner = metadata['owner']
     repo = metadata['repo']
     current_version = metadata['version']
+    version_positions = metadata.get('version_positions', [])
+
+    content = _replace_versions(content, version_positions, current_version, latest_version)
 
     new_lines = []
     lines = content.split('\n')
@@ -180,11 +242,6 @@ def update_multihash_template(file_path, content, metadata, latest_version, dry_
         i += 1
 
     new_content = '\n'.join(new_lines)
-    new_content = re.sub(
-        r'(version = ")(.*?)(";)',
-        f'\\g<1>{latest_version}\\g<3>',
-        new_content
-    )
 
     if not dry_run:
         with open(file_path, "w") as f:
@@ -197,6 +254,9 @@ def update_version_with_url_template(file_path, content, metadata, latest_versio
     owner = metadata['owner']
     repo = metadata['repo']
     current_version = metadata['version']
+    version_positions = metadata.get('version_positions', [])
+
+    content = _replace_versions(content, version_positions, current_version, latest_version)
 
     new_lines = []
     lines = content.split('\n')
@@ -240,11 +300,6 @@ def update_version_with_url_template(file_path, content, metadata, latest_versio
         i += 1
 
     new_content = '\n'.join(new_lines)
-    new_content = re.sub(
-        r'(version = ")(.*?)(";)',
-        f'\\g<1>{latest_version}\\g<3>',
-        new_content
-    )
 
     if not dry_run:
         with open(file_path, "w") as f:
@@ -320,26 +375,37 @@ def check_file(file_path, apply_updates=False, dry_run=False, force_rev=False):
     with open(file_path, "r") as f:
         content = f.read()
 
-    metadata = parse_overlay_metadata(content)
-    if not metadata:
+    packages = parse_overlay_metadata(content)
+    if not packages:
         return False
 
-    metadata['_content'] = content
+    any_updated = False
     filename = os.path.basename(file_path)
-    owner = metadata['owner']
-    repo = metadata['repo']
 
-    if metadata['version']:
-        latest_version = get_latest_github_release(owner, repo)
-        if latest_version and latest_version != metadata['version']:
-            print(f"[{filename}] UPDATE AVAILABLE: {metadata['version']} -> {latest_version} (https://github.com/{owner}/{repo})")
+    packages_to_check = [(p['owner'], p['repo'], bool(p.get('version')), bool(p.get('rev'))) for p in packages]
 
-        if latest_version:
-            return check_version_update(file_path, metadata, apply_updates, dry_run)
-    elif metadata['rev']:
-        return check_rev_update(file_path, metadata, apply_updates, dry_run, force_rev)
+    for owner, repo, has_version, has_rev in packages_to_check:
+        with open(file_path, "r") as f:
+            content = f.read()
 
-    return False
+        all_packages = parse_overlay_metadata(content)
+        metadata = next((p for p in all_packages if p['owner'] == owner and p['repo'] == repo), None)
+        if metadata is None:
+            continue
+
+        metadata['_content'] = content
+
+        if has_version:
+            latest_version = get_latest_github_release(owner, repo)
+            if latest_version and latest_version != metadata['version']:
+                print(f"[{filename}] UPDATE AVAILABLE: {metadata['version']} -> {latest_version} (https://github.com/{owner}/{repo})")
+            if latest_version and check_version_update(file_path, metadata, apply_updates, dry_run):
+                any_updated = True
+        elif has_rev:
+            if check_rev_update(file_path, metadata, apply_updates, dry_run, force_rev):
+                any_updated = True
+
+    return any_updated
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Check for updates in Nix overlay packages")
