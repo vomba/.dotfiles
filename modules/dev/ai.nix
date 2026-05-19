@@ -6,10 +6,9 @@
   ...
 }:
 let
-  eccRepo = inputs.everything-claude-code;
+  eccPkg = inputs.ecc-universal;
   homeDir = config.home.homeDirectory;
   configDir = "${homeDir}/.config/opencode";
-  eccOpencode = "${eccRepo}/.opencode";
 
   # Model assignments — mirrors upstream's intentional routing
   # Upstream uses opus for reviewers, sonnet for builders
@@ -51,7 +50,7 @@ let
   };
 
   # Read upstream config once
-  upstreamConfig = builtins.fromJSON (builtins.readFile "${eccOpencode}/opencode.json");
+  upstreamConfig = builtins.fromJSON (builtins.readFile "${eccPkg}/.opencode/opencode.json");
 
   # Rewrite {file: paths to point to our configDir
   rewritePaths =
@@ -98,7 +97,6 @@ let
   # Instructions with absolute paths (opencode resolves these)
   mergedInstructions = [
     "${configDir}/AGENTS.md"
-    "${configDir}/CONTRIBUTING.md"
     "${configDir}/nix-rules.md"
     "${configDir}/learnings.md"
     "${configDir}/instincts.md"
@@ -127,61 +125,61 @@ let
   '';
 
   # Build the complete home.file attrset — all entries merged together
-  homeFiles = {
-    ".config/opencode/.opencode" = {
-      source = "${eccOpencode}";
-      force = true;
-    };
-    ".config/opencode/commands" = {
-      source = "${eccOpencode}/commands";
-      force = true;
-    };
-    ".config/opencode/prompts" = {
-      source = "${eccOpencode}/prompts";
-      force = true;
-    };
-    ".config/opencode/AGENTS.md" = {
-      source = "${eccRepo}/AGENTS.md";
-      force = true;
-    };
-    ".config/opencode/CONTRIBUTING.md" = {
-      source = "${eccRepo}/CONTRIBUTING.md";
-      force = true;
-    };
-    ".config/opencode/rules" = {
-      source = "${eccRepo}/rules";
-      force = true;
-    };
-    ".claude/rules" = {
-      source = "${eccRepo}/rules";
-      force = true;
-    };
-    ".config/opencode/nix-rules.md" = {
-      text = builtins.readFile ../../rules/nix-configuration.md;
-      force = true;
-    };
-    ".config/opencode/learnings.md" = {
-      text = builtins.readFile ../../learnings/LEARNINGS.md;
-      force = true;
-    };
-    ".config/opencode/instincts.md" = {
-      text = builtins.readFile ../../learnings/INSTINCTS.md;
-      force = true;
-    };
-  }
-  //
-    lib.genAttrs
-      (map (s: ".config/opencode/skills/${s}") (lib.filter (s: s != "obsidian-brain") neededSkills))
-      (path: {
-        source = "${eccRepo}/skills/${lib.last (lib.splitString "/" path)}";
+  homeFiles =
+    # Compiled plugin, commands, prompts, and root files from npm package
+    {
+      ".config/opencode/plugins" = {
+        source = "${eccPkg}/.opencode/dist/plugins";
         force = true;
-      })
-  // {
-    ".config/opencode/skills/obsidian-brain" = {
-      source = ../apps/obsidian/skills/obsidian-brain;
-      force = true;
+      };
+      ".config/opencode/commands" = {
+        source = "${eccPkg}/.opencode/commands";
+        force = true;
+      };
+      ".config/opencode/prompts" = {
+        source = "${eccPkg}/.opencode/prompts";
+        force = true;
+      };
+      ".config/opencode/AGENTS.md" = {
+        source = "${eccPkg}/AGENTS.md";
+        force = true;
+      };
+      ".config/opencode/rules" = {
+        source = "${eccPkg}/rules";
+        force = true;
+      };
+      ".claude/rules" = {
+        source = "${eccPkg}/rules";
+        force = true;
+      };
+      ".config/opencode/nix-rules.md" = {
+        text = builtins.readFile ../../rules/nix-configuration.md;
+        force = true;
+      };
+      ".config/opencode/learnings.md" = {
+        text = builtins.readFile ../../learnings/LEARNINGS.md;
+        force = true;
+      };
+      ".config/opencode/instincts.md" = {
+        text = builtins.readFile ../../learnings/INSTINCTS.md;
+        force = true;
+      };
+    }
+    # Skills from npm package (only the ones we reference in instructions)
+    //
+      lib.genAttrs
+        (map (s: ".config/opencode/skills/${s}") (lib.filter (s: s != "obsidian-brain") neededSkills))
+        (path: {
+          source = "${eccPkg}/skills/${lib.last (lib.splitString "/" path)}";
+          force = true;
+        })
+    # Local skill override (not in npm package)
+    // {
+      ".config/opencode/skills/obsidian-brain" = {
+        source = ../apps/obsidian/skills/obsidian-brain;
+        force = true;
+      };
     };
-  };
 
   instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
     exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
@@ -198,7 +196,7 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
-        plugin = [ "${configDir}/.opencode/plugins" ];
+        plugin = [ "${configDir}/plugins" ];
         agent = mergedAgents;
         command = mergedCommands;
         permission = {

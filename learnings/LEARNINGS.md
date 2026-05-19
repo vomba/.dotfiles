@@ -97,11 +97,34 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Pass `GITHUB_TOKEN` env var to scripts that call GitHub API
 - Use `|| exit` after `pushd`/`popd` in bash scripts (SC2164)
 
-### ECC Skills Sourced from Flake Input
+### ECC Sourced from npm Tarball (not git repo)
+- ECC is fetched as the `ecc-universal` npm tarball (1.3MB) instead of the full git repo (100MB+)
+- Tarball URL: `https://registry.npmjs.org/ecc-universal/-/ecc-universal-${version}.tgz`
+- Version is pinned in the URL string in `flake.nix` — self-documenting
+- Only files published by npm are included (no git history, no `ecc2/`, `assets/`, `docs/`, etc.)
+- `nix flake update ecc-universal` updates the hash in `flake.lock`
+
+### Agent Model Override (Claude → DeepSeek)
+- The upstream `.opencode/opencode.json` is read at build time with `builtins.fromJSON`
+- Agent models are overridden: reviewers → `deepseek-v4-pro`, builders → `deepseek-v4-flash`
+- New agents from upstream get a safe fallback (`reasoningModel`) via `agentModels.${name} or reasoningModel`
+- The `{file:...}` paths in the upstream config are rewritten to absolute paths via `rewritePaths`
+
+### Selective Skill Linking
 - All skills referenced in `mergedInstructions` must be in `neededSkills` to be Nix-managed
-- `neededSkills` skills (except `obsidian-brain`) are symlinked from `eccRepo` flake input via `lib.genAttrs`
+- `neededSkills` skills (except `obsidian-brain`) are symlinked from npm package via `lib.genAttrs`
 - Adding a skill to `neededSkills` auto-wires both the symlink and version tracking
 - Skills missing from `neededSkills` (like `continuous-learning-v2` was) exist on disk unmanaged
+
+### Plugin Source
+- The plugin is symlinked from `${eccPkg}/.opencode/dist/plugins` (compiled JS, not TypeScript source)
+- OpenCode plugin path: `"${configDir}/plugins"` (flat, no nested `.opencode/`)
+- The old `.opencode/` directory was removed — no more dual `opencode.json` confusion
+
+### CONTRIBUTING.md Not Included
+- `CONTRIBUTING.md` is not shipped in the npm package (it's a root-level file excluded by `.npmignore`)
+- It was removed from the `mergedInstructions` array — not agent-critical content
+- AGENTS.md is the important system instruction and is included
 
 ### writeShellScriptBin for CLI Wrappers
 - Use `pkgs.writeShellScriptBin "<name>"` to create system-wide commands from scripts in managed paths
@@ -109,13 +132,15 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Add the wrapper to `home.packages` alongside other packages
 
 ### Local Skill Overrides
-- Local-only skills (like `obsidian-brain`) use `source = ../relative/path` instead of `${eccRepo}/skills/...`
-- To keep a skill tracking the upstream flake version, add to `neededSkills` — separate `home.file` is redundant
-- When a skill has local improvements over upstream, they get lost when switching to the flake source; contribute upstream instead
+- Local-only skills (like `obsidian-brain`) use `source = ../relative/path` instead of `${eccPkg}/skills/...`
+- To keep a skill tracking the upstream version, add to `neededSkills` — separate `home.file` is redundant
+- When a skill has local improvements over upstream, they get lost when switching to the npm source; contribute upstream instead
 
-### Nix Flake Version Bump
-- `nix flake update --update-input everything-claude-code` or bump the tag in `flake.nix` (e.g. `v1.10.0` → `v1.11.0`)
-- All skills sourced from `eccRepo` update automatically on rebuild
+### ECC Version Bump
+- Edit version in the tarball URL in `flake.nix` (e.g. `v1.10.0` → `v1.11.0`)
+- Run `nix flake update ecc-universal` to update the lock file hash
+- All components (plugin, commands, prompts, skills, rules) update automatically on rebuild
+- After bumping, check upstream `.opencode/opencode.json` for new agents — add to `agentModels` if they need non-default models
 
 ## Nix Flake + Git
 
@@ -151,6 +176,32 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - With NVIDIA 555+ and current Hyprland, explicit sync is properly supported
 - Default (`true`) provides lower latency without issues
 - Test by removing and observing for tearing
+
+### Deprecated Dispatchers
+- `togglesplit` and `swapsplit` dispatchers removed in Hyprland 0.44+
+- Replace with `layoutmsg togglesplit` / `layoutmsg swapsplit` (pass old name as string arg)
+- In home-manager hyprlang bind: `"${modifier}, T, layoutmsg, togglesplit"` (no trailing comma — it takes an arg)
+
+### Removed Config Options
+- `dwindle.pseudotile` is gone entirely — no replacement config option
+- Use the `pseudo` dispatcher (e.g. bound to a keybind) to toggle pseudotile per-window instead
+
+### Hyprlang Deprecation
+- Since Hyprland 0.55, hyprlang is deprecated in favor of lua
+- `configType = "hyprlang"` in home-manager still works for pre-0.55
+- lua syntax: `hl.dsp.layout("togglesplit")` instead of `layoutmsg` dispatcher
+
+## Git
+
+### Separate Commits for Separate Changes
+- Commit each logically distinct change separately, even if they're in the same area
+- Use `git restore --staged <file>` to unstage, then add+commit one group at a time
+- Avoid parallel commits when pre-commit hooks are active — serialize sequential operations
+
+### GPG Agent Stale After Upgrade
+- `gpg: signing failed: Invalid value` with "gpg-agent is older than us"
+- Fix: `gpgconf --kill all` to restart agent
+- Happens after system upgrades where gpg is updated but agent process lingers
 
 ### systemd.enable with Display Managers
 - `hyprland.systemd.enable = true` is safe when using a display manager (SDDM, GDM)

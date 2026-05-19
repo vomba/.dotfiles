@@ -1,20 +1,16 @@
 {
   "nodes": {
-    "everything-claude-code": {
+    "ecc-universal": {
       "flake": false,
       "locked": {
-        "lastModified": 1775420418,
-        "narHash": "sha256-vzlPCasQIl7WWgtpUoeVu0Q9lAHKmahFp0oi4542weo=",
-        "owner": "affaan-m",
-        "repo": "everything-claude-code",
-        "rev": "846ffb75da9a5f4e677d927af1ad4a1951652267",
-        "type": "github"
+        "lastModified": 499162500,
+        "narHash": "sha256-I9MESOwtokju2fxr7hkOg411h4U47ENoBtHNYtfTGdA=",
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/ecc-universal/-/ecc-universal-1.10.0.tgz"
       },
       "original": {
-        "owner": "affaan-m",
-        "ref": "v1.10.0",
-        "repo": "everything-claude-code",
-        "type": "github"
+        "type": "tarball",
+        "url": "https://registry.npmjs.org/ecc-universal/-/ecc-universal-1.10.0.tgz"
       }
     },
     "flake-parts": {
@@ -63,11 +59,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779075347,
-        "narHash": "sha256-ZqttlFPw0meQMdABi8/vgle14OWQ3FkIqUkb4/Mrc+0=",
+        "lastModified": 1779157263,
+        "narHash": "sha256-VbiyZkRf8/qr7ObmlyfOHJsNAW5tyZ4MB1+cUwAwdrw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "08c9d01457badce151aa4a983c475042d9dec018",
+        "rev": "866412a19866b4a8e32d2306a118040afa2b840c",
         "type": "github"
       },
       "original": {
@@ -177,11 +173,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779086136,
-        "narHash": "sha256-etMxZCa8SugHjJbV8GBwhNCH9vMo9f1svcY1FjCFSP0=",
+        "lastModified": 1779186405,
+        "narHash": "sha256-qTfC1XgmcLxgXpC0UGQEQhyFnpTTxQ3IjXzdjSL932M=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "0d79a052c8471dd39db502d835df76c4f6ca6fc4",
+        "rev": "84719722e4631d30eab38b36725b6c4f1c8598d7",
         "type": "github"
       },
       "original": {
@@ -197,11 +193,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779071628,
-        "narHash": "sha256-itjLvpGMOmJPohd9DiFYfOfXOZrzaTmwbCCFF0G+4xU=",
+        "lastModified": 1779157946,
+        "narHash": "sha256-PpLoMzVGFIIAFsLy7G4XeIRONzzLPUQetf65QlLw6HM=",
         "owner": "vomba",
         "repo": "obsidian-plugins-nix",
-        "rev": "5e69382228dc4621d2a484a643c2c441c8ea5ece",
+        "rev": "9e0118f28ee534b22ad8bc8feb9d2f71f36d7912",
         "type": "github"
       },
       "original": {
@@ -212,7 +208,7 @@
     },
     "root": {
       "inputs": {
-        "everything-claude-code": "everything-claude-code",
+        "ecc-universal": "ecc-universal",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",

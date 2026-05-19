@@ -59,8 +59,11 @@ Actionable patterns extracted from session learnings. These fire automatically w
 ### When a skill is on disk but not Nix-managed
 - **Action**: Check if it's in `neededSkills` in `modules/dev/ai.nix` — if not, add it. Skills outside `neededSkills` exist unmanaged and won't track flake version bumps
 
-### When a skill symlink from eccRepo would replace a local improved copy
-- **Action**: Don't keep a divergent local copy — contribute improvements upstream to ECC. The flake input is the single source of truth for all skills (except obsidian-brain which is project-specific)
+### When a skill symlink from the ECC source would replace a local improved copy
+- **Action**: Don't keep a divergent local copy — contribute improvements upstream to ECC. The npm tarball is the single source of truth for all skills (except obsidian-brain which is project-specific)
+
+### When bumping the ECC version
+- **Action**: Edit the version in the tarball URL in `flake.nix`, run `nix flake update ecc-universal`, then diff the upstream `.opencode/opencode.json` for new agents. Add any new agents to `agentModels` if they need non-default model assignments. New agents default to `reasoningModel` (safe fallback).
 
 ### When splitting a Nix module that exceeds 200 lines
 - **Action**: Extract self-contained sections into sub-module files. Parent uses `imports = [ ./submodule.nix ];`. Nix merges duplicate attr paths from multiple modules, so they can all write to the same `wayland.windowManager.hyprland.settings` target.
@@ -73,3 +76,17 @@ Actionable patterns extracted from session learnings. These fire automatically w
 
 ### When removing deprecated Hyprland workarounds
 - **Action**: Check upstream changelogs first. `render.direct_scanout = false` is no longer needed with NVIDIA 555+ drivers. Remove and observe before committing.
+
+### When Hyprland errors on removed dispatchers (togglesplit/swapsplit)
+- **Action**: Replace with `layoutmsg` — e.g. `togglesplit,` → `layoutmsg, togglesplit` (no trailing comma, the old name becomes the arg). These dispatchers were removed in 0.44+.
+
+### When Hyprland errors on removed config option (dwindle:pseudotile)
+- **Action**: Remove the `pseudotile = true/false;` line entirely. There is no replacement config option — use the `pseudo` dispatcher per-window instead.
+
+## Git
+
+### When committing multiple separate changes
+- **Action**: Stage and commit each logical change individually. Use `git restore --staged <file>` to unstage, then add+commit one group at a time. Avoid parallel commits when pre-commit hooks are active.
+
+### When gpg signing fails with "gpg-agent is older than us"
+- **Action**: Run `gpgconf --kill all` to restart the stale gpg-agent. Happens after system upgrades where gpg binary is updated but agent process lingers.

@@ -24,8 +24,8 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    everything-claude-code = {
-      url = "github:affaan-m/everything-claude-code/v1.10.0";
+    ecc-universal = {
+      url = "https://registry.npmjs.org/ecc-universal/-/ecc-universal-1.10.0.tgz";
       flake = false;
     };
     obsidian-plugins = {
