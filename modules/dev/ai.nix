@@ -92,6 +92,33 @@ let
     "eval-harness"
     "obsidian-brain"
     "continuous-learning-v2"
+
+    # Go
+    "golang-patterns"
+    "golang-testing"
+
+    # Python
+    "python-patterns"
+    "python-testing"
+
+    # Cross-platform mobile
+    "dart-flutter-patterns"
+    "compose-multiplatform-patterns"
+
+    # Web / design
+    "frontend-design"
+
+    # DevOps / infra
+    "docker-patterns"
+    "deployment-patterns"
+    "postgres-patterns"
+    "database-migrations"
+    "mcp-server-patterns"
+    "autonomous-loops"
+    "agent-harness-construction"
+    "clickhouse-io"
+    "terminal-ops"
+    "search-first"
   ];
 
   # Instructions with absolute paths (opencode resolves these)
@@ -113,6 +140,33 @@ let
     "${configDir}/skills/eval-harness/SKILL.md"
     "${configDir}/skills/obsidian-brain/SKILL.md"
     "${configDir}/skills/continuous-learning-v2/SKILL.md"
+
+    # Go
+    "${configDir}/skills/golang-patterns/SKILL.md"
+    "${configDir}/skills/golang-testing/SKILL.md"
+
+    # Python
+    "${configDir}/skills/python-patterns/SKILL.md"
+    "${configDir}/skills/python-testing/SKILL.md"
+
+    # Cross-platform mobile
+    "${configDir}/skills/dart-flutter-patterns/SKILL.md"
+    "${configDir}/skills/compose-multiplatform-patterns/SKILL.md"
+
+    # Web / design
+    "${configDir}/skills/frontend-design/SKILL.md"
+
+    # DevOps / infra
+    "${configDir}/skills/docker-patterns/SKILL.md"
+    "${configDir}/skills/deployment-patterns/SKILL.md"
+    "${configDir}/skills/postgres-patterns/SKILL.md"
+    "${configDir}/skills/database-migrations/SKILL.md"
+    "${configDir}/skills/mcp-server-patterns/SKILL.md"
+    "${configDir}/skills/autonomous-loops/SKILL.md"
+    "${configDir}/skills/agent-harness-construction/SKILL.md"
+    "${configDir}/skills/clickhouse-io/SKILL.md"
+    "${configDir}/skills/terminal-ops/SKILL.md"
+    "${configDir}/skills/search-first/SKILL.md"
   ];
 
   # Path to the context7 API key from sops (known at build time)
@@ -130,6 +184,10 @@ let
     {
       ".config/opencode/plugins" = {
         source = "${eccPkg}/.opencode/dist/plugins";
+        force = true;
+      };
+      ".config/opencode/tools" = {
+        source = "${eccPkg}/.opencode/dist/tools";
         force = true;
       };
       ".config/opencode/commands" = {
