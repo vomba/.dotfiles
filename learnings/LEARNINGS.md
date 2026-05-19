@@ -141,6 +141,22 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Run `nix flake update ecc-universal` to update the lock file hash
 - All components (plugin, commands, prompts, skills, rules) update automatically on rebuild
 - After bumping, check upstream `.opencode/opencode.json` for new agents — add to `agentModels` if they need non-default models
+- Run `scripts/ecc-skills.sh -u -v <new-version>` to see what new skills appeared
+
+### Skill Discovery
+- `scripts/ecc-skills.sh` is a standalone bash script that fetches the upstream npm tarball and diffs its skill catalog against local `neededSkills`
+- Supports keyword filtering: `scripts/ecc-skills.sh -u kotlin` shows unloaded Kotlin skills
+- No Nix dependency — uses curl + tar directly, works anywhere bash runs
+
+### Safe Agent Model Fallback
+- Use `agentModels.${name} or reasoningModel` instead of `agentModels.${name}` when processing upstream agents
+- New agents added upstream get `reasoningModel` by default instead of breaking the build
+- The `agentModels` attrset only needs entries for agents that should use a non-default model
+
+### Single Source for Skill Symlinks + Instructions
+- `neededSkills` drives both `home.file` symlinks and `mergedInstructions`
+- Adding a skill to `neededSkills` auto-wires both the directory symlink and the instruction load path
+- No need to maintain two separate lists — derive instructions from the same list
 
 ## Nix Flake + Git
 

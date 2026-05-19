@@ -63,7 +63,13 @@ Actionable patterns extracted from session learnings. These fire automatically w
 - **Action**: Don't keep a divergent local copy — contribute improvements upstream to ECC. The npm tarball is the single source of truth for all skills (except obsidian-brain which is project-specific)
 
 ### When bumping the ECC version
-- **Action**: Edit the version in the tarball URL in `flake.nix`, run `nix flake update ecc-universal`, then diff the upstream `.opencode/opencode.json` for new agents. Add any new agents to `agentModels` if they need non-default model assignments. New agents default to `reasoningModel` (safe fallback).
+- **Action**: Edit the version in the tarball URL in `flake.nix`, run `nix flake update ecc-universal`, then diff the upstream `.opencode/opencode.json` for new agents. Add any new agents to `agentModels` if they need non-default model assignments. New agents default to `reasoningModel` (safe fallback). Run `scripts/ecc-skills.sh -u -v <new-version>` to discover new unloaded skills.
+
+### When processing upstream agent config in ai.nix
+- **Action**: Use `agentModels.${name} or reasoningModel` instead of `agentModels.${name}` — gives new upstream agents a safe fallback instead of breaking the build.
+
+### When wondering what ECC skills exist but aren't loaded
+- **Action**: Run `scripts/ecc-skills.sh -u <keyword>` to search unloaded skills by keyword. Use `scripts/ecc-skills.sh` alone to see all 149 upstream skills.
 
 ### When splitting a Nix module that exceeds 200 lines
 - **Action**: Extract self-contained sections into sub-module files. Parent uses `imports = [ ./submodule.nix ];`. Nix merges duplicate attr paths from multiple modules, so they can all write to the same `wayland.windowManager.hyprland.settings` target.
