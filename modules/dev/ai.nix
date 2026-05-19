@@ -182,10 +182,13 @@ let
   homeFiles =
     # Compiled plugin, commands, prompts, and root files from npm package
     {
-      ".config/opencode/plugins" = {
-        source = "${eccPkg}/.opencode/dist/plugins";
+      # Full .opencode/ from the npm package — includes opencode.json
+      # which OpenCode uses as the plugin's config for agent namespacing
+      ".config/opencode/.opencode" = {
+        source = "${eccPkg}/.opencode";
         force = true;
       };
+      # Tools for build agent (changed-files, etc.) — not in .opencode/ symlink
       ".config/opencode/tools" = {
         source = "${eccPkg}/.opencode/dist/tools";
         force = true;
@@ -254,7 +257,7 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
-        plugin = [ "${configDir}/plugins" ];
+        plugin = [ "${configDir}/.opencode/plugins" ];
         agent = mergedAgents;
         command = mergedCommands;
         permission = {
