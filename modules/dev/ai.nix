@@ -206,9 +206,18 @@ let
       source = "${eccPkg}/AGENTS.md";
       force = true;
     };
-    # NOT symlinked: .opencode/ — its opencode.json registers agents with
-    # "everything-claude-code:" namespace which breaks command agent resolution.
-    # Agents and commands come solely from the main opencode.json config.
+    # ECC plugin (compiled hooks) — the .opencode/opencode.json is NOT loaded.
+    # Only the compiled JS plugin is used, which provides tool.execute.before/after
+    # hooks for prettier, typecheck, console.log audit, etc.
+    ".config/opencode/plugins/ecc" = {
+      source = eccPlugin;
+      force = true;
+    };
+    # Observation plugin — captures tool events for continuous-learning-v2 instincts
+    ".config/opencode/plugins/observe" = {
+      source = ../../apps/opencode/plugins/observe;
+      force = true;
+    };
     ".config/opencode/rules" = {
       source = "${eccPkg}/rules";
       force = true;
@@ -229,6 +238,12 @@ let
       text = builtins.readFile ../../learnings/INSTINCTS.md;
       force = true;
     };
+    # Writable observer config override — enables continuous-learning observer
+    # (the default config.json in the nix store has enabled: false)
+    ".config/opencode/homunculus/observer-config.json" = {
+      source = ../../apps/opencode/observer-config.json;
+      force = true;
+    };
   }
   //
     lib.genAttrs
@@ -243,6 +258,15 @@ let
       force = true;
     };
   };
+
+  # Patched ECC plugin — removes the changed-files tool import that fails
+  # because @opencode-ai/plugin/tool can't be resolved from the Nix store path.
+  eccPlugin = pkgs.runCommand "ecc-plugin" { buildInputs = [ pkgs.gnused ]; } ''
+    mkdir -p $out
+    cp -r ${eccPkg}/.opencode/dist/plugins/* $out/
+    sed -i 's|import changedFilesTool from "../tools/changed-files.js";||' $out/ecc-hooks.js
+    sed -i '/"changed-files": changedFilesTool/d' $out/ecc-hooks.js
+  '';
 
   instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
     exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
@@ -259,11 +283,14 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
-        # Plugin disabled: ECC's .opencode/opencode.json (if loaded) registers
-        # agents under "everything-claude-code:" namespace. The npm package also
-        # ships .claude-plugin/plugin.json with that name. Agents, commands, and
-        # prompts are all served from the main opencode.json config directly.
-        plugin = [ ];
+        # ECC plugin provides tool hooks (prettier, typecheck, console.log audit).
+        # The observe plugin captures tool events for continuous-learning instinct extraction.
+        # The compiled JS plugin (dist/plugins/) is loaded, not .opencode/opencode.json —
+        # so there's no namespace conflict with agents defined in this config.
+        plugin = [
+          "${configDir}/plugins/ecc"
+          "${configDir}/plugins/observe"
+        ];
         agent = mergedAgents;
         command = mergedCommands;
         permission = {
@@ -330,6 +357,7 @@ in
     # ── Session environment ─────────────────────────────────────────
     home.sessionVariables = {
       CLAUDE_PLUGIN_ROOT = configDir;
+      CLV2_CONFIG = "${configDir}/homunculus/observer-config.json";
     };
 
     # ── Homunculus: consolidate instinct store under opencode ───────

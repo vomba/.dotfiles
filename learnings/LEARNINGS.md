@@ -272,6 +272,19 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Use `gh repo fork --remote --remote-name=<user>` from within the repo to create fork + add remote
 - Create PR: `gh pr create --repo <org>/<repo> --head <user>:<branch> --base main`
 
+### OpenCode Plugin Hooks for Observation Capture
+- OpenCode supports hooks via plugins that export event handlers (`tool.execute.before`, `tool.execute.after`, `session.created`, `session.deleted`)
+- The ECC npm package ships a compiled plugin at `.opencode/dist/plugins/` that provides hooks for prettier, typecheck, console.log audit, etc.
+- To add custom hooks, create a JS file in a plugin directory that exports a default async function returning event handlers
+- The plugin is referenced in `opencode.json` via relative or absolute path in the `plugin` array
+- The continuous-learning-v2 `observe.sh` can be called from a plugin's `tool.execute.before`/`after` handlers
+- Must set `CLAUDE_CODE_ENTRYPOINT=cli` when calling observe.sh from non-Claude-Code tools to bypass its session guard
+- Must pass JSON via stdin with fields: `tool_name`, `tool_input`, `cwd`, `session_id`
+- Hook phase is passed as first CLI arg: `"pre"` or `"post"`
+- The observer config must have `"enabled": true` and be writable (override the Nix store default)
+- Use `CLV2_CONFIG` env var to point to the writable config
+- The observer lazily starts on first observation if enabled but not running
+
 ### Running Nix Tools One-Off
 - Use `nix run nixpkgs#<package> -- <args>` for tools not installed locally (golangci-lint, gofmt, etc.)
 - Some packages may be removed after EOL (`go_1_23`) or broken (`gci`) — check before depending on them

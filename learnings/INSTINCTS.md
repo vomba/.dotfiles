@@ -116,3 +116,11 @@ Actionable patterns extracted from session learnings. These fire automatically w
 
 ### When running a Go linter or tool not installed locally
 - **Action**: Use `nix run nixpkgs#<package> -- <args>`. Check availability first — some packages are removed after EOL (`go_1_23`) or are broken (`gci`).
+
+## OpenCode / ECC
+
+### When setting up automatic instinct capture for opencode
+- **Action**: Enable the ECC compiled plugin in `opencode.json` (`plugin = [ "${configDir}/plugins/ecc" ]`). Create a small observation plugin that calls `observe.sh` on `tool.execute.before`/`after`. Set `CLAUDE_CODE_ENTRYPOINT=cli` to bypass session guard. Pass JSON stdin with `tool_name`, `tool_input`, `cwd`, `session_id`. Pass `"pre"` or `"post"` as first CLI arg. Create writable observer config with `enabled: true` and point `CLV2_CONFIG` env var to it.
+
+### When the Nix store makes a config file read-only
+- **Action**: Create a writable override file in a managed directory (e.g., `~/.dotfiles/apps/opencode/`). Symlink it via `home.file` in the Nix config. Point any relevant env vars (`CLV2_CONFIG`) to the writable path.
