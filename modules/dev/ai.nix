@@ -181,10 +181,10 @@ let
 
   # Build the complete home.file attrset — all entries merged together
   homeFiles = {
-    ".config/opencode/.opencode" = {
-      source = "${eccPkg}/.opencode";
-      force = true;
-    };
+    # ".config/opencode/.opencode" = {
+    #   source = "${eccPkg}/.opencode";
+    #   force = true;
+    # };
     ".config/opencode/commands" = {
       source = "${eccPkg}/.opencode/commands";
       force = true;
@@ -248,7 +248,7 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
-        plugin = [ "${configDir}/.opencode/plugins" ];
+        plugin = [ ];
         agent = mergedAgents;
         command = mergedCommands;
         permission = {
@@ -317,8 +317,15 @@ in
       CLAUDE_PLUGIN_ROOT = configDir;
     };
 
+    # ── Clean stale plugin state before Homunculus ────────────────
+    home.activation.cleanupOpenCode = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      rm -rf "${configDir}/.opencode"
+      rm -f "${homeDir}/.local/share/opencode/opencode-stable.db"*
+      rm -rf "${homeDir}/.local/share/opencode/snapshot"
+    '';
+
     # ── Homunculus: consolidate instinct store under opencode ───────
-    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "cleanupOpenCode" ] ''
       NEW_HOME="${configDir}/homunculus"
       OLD_HOME="$HOME/.claude/homunculus"
       mkdir -p "$NEW_HOME"/{instincts/{personal,inherited},evolved/{skills,commands,agents},projects}
