@@ -97,6 +97,28 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Pass `GITHUB_TOKEN` env var to scripts that call GitHub API
 - Use `|| exit` after `pushd`/`popd` in bash scripts (SC2164)
 
+### Plugin Namespace Poisoning
+- OpenCode plugin configs (`opencode.json`) register agents under the plugin's package name as a namespace prefix (e.g., `everything-claude-code:code-reviewer`)
+- Even if the main config defines agents without namespace, commands from the plugin or with frontmatter referencing the namespaced name will fail with "Agent not found"
+- **Fix**: Symlink the plugin source to an isolated store path or disable plugins entirely; strip `agent:` frontmatter from command `.md` files
+
+### Command Frontmatter Override
+- ECC command `.md` files ship with `agent: everything-claude-code:<name>` in YAML frontmatter
+- This frontmatter overrides the `agent` field in the main `opencode.json` command definition
+- **Fix**: Strip `agent:` lines from frontmatter with `sed` during the Nix build:
+  ```nix
+  eccCommands = pkgs.runCommand "ecc-commands" { } ''
+    for f in ${eccPkg}/.opencode/commands/*.md; do
+      sed '/^---$/,/^---$/ { /^agent:/d; }' "$f" > "$out/$(basename "$f")"
+    done
+  '';
+  ```
+
+### Activation Cleanup Can Destroy User Data
+- `home.activation` scripts that wipe `opencode-stable.db` or `snapshot` directories permanently destroy session history
+- Only clean up files that are known to be stale or broken; never wipe user state
+- **Better**: Leave OpenCode's state alone once things are working
+
 ### ECC Sourced from npm Tarball (not git repo)
 - ECC is fetched as the `ecc-universal` npm tarball (1.3MB) instead of the full git repo (100MB+)
 - Tarball URL: `https://registry.npmjs.org/ecc-universal/-/ecc-universal-${version}.tgz`

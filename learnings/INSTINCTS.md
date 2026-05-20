@@ -71,6 +71,12 @@ Actionable patterns extracted from session learnings. These fire automatically w
 ### When wondering what ECC skills exist but aren't loaded
 - **Action**: Run `scripts/ecc-skills.sh -u <keyword>` to search unloaded skills by keyword. Use `scripts/ecc-skills.sh` alone to see all 149 upstream skills.
 
+### When ECC command agents fail with "everything-claude-code:agent not found"
+- **Action**: The command `.md` files have `agent: everything-claude-code:<name>` in YAML frontmatter. Strip it via: `sed '/^---$/,/^---$/ { /^agent:/d; }'`. Also ensure the plugin's `opencode.json` is not loaded (it registers namespaced agents).
+
+### When an ECC plugin's opencode.json pollutes agent namespace
+- **Action**: Don't symlink the `.opencode/` directory from the npm package. Define agents and commands solely in the main `opencode.json`. Keep `plugin = []` in the OpenCode config.
+
 ### When splitting a Nix module that exceeds 200 lines
 - **Action**: Extract self-contained sections into sub-module files. Parent uses `imports = [ ./submodule.nix ];`. Nix merges duplicate attr paths from multiple modules, so they can all write to the same `wayland.windowManager.hyprland.settings` target.
 
