@@ -180,15 +180,9 @@ let
 
   # Build the complete home.file attrset — all entries merged together
   homeFiles =
-    # Compiled plugin, commands, prompts, and root files from npm package
+    # Commands, prompts, and root files from npm package
     {
-      # Full .opencode/ from the npm package — includes opencode.json
-      # which OpenCode uses as the plugin's config for agent namespacing
-      ".config/opencode/.opencode" = {
-        source = "${eccPkg}/.opencode";
-        force = true;
-      };
-      # Tools for build agent (changed-files, etc.) — not in .opencode/ symlink
+      # Tools for build agent (changed-files, etc.)
       ".config/opencode/tools" = {
         source = "${eccPkg}/.opencode/dist/tools";
         force = true;
@@ -257,7 +251,9 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
-        plugin = [ "${configDir}/.opencode/plugins" ];
+        # plugin intentionally disabled — ECC's .claude-plugin/plugin.json
+        # has name "everything-claude-code" which OpenCode uses as namespace
+        # plugin = [ "${configDir}/plugins" ];
         agent = mergedAgents;
         command = mergedCommands;
         permission = {
@@ -326,8 +322,15 @@ in
       CLAUDE_PLUGIN_ROOT = configDir;
     };
 
-    # ── Homunculus: consolidate instinct store under opencode ───────
-    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # ── ECC cleanup & Homunculus ─────────────────────────────────
+    home.activation.cleanupECC = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # Remove stale .opencode/ symlink (OpenCode caches its namespace)
+      rm -rf "${configDir}/.opencode" "${configDir}/plugins"
+      # Clear OpenCode state DB so it re-reads config fresh
+      rm -f "${homeDir}/.local/share/opencode/opencode-stable.db"*
+      rm -rf "${homeDir}/.local/share/opencode/snapshot"
+    '';
+    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "cleanupECC" ] ''
       NEW_HOME="${configDir}/homunculus"
       OLD_HOME="$HOME/.claude/homunculus"
       mkdir -p "$NEW_HOME"/{instincts/{personal,inherited},evolved/{skills,commands,agents},projects}
