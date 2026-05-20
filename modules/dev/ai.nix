@@ -124,7 +124,6 @@ let
   # Instructions with absolute paths (opencode resolves these)
   mergedInstructions = [
     "${configDir}/AGENTS.md"
-    # "${configDir}/CONTRIBUTING.md"  # not in npm package
     "${configDir}/nix-rules.md"
     "${configDir}/learnings.md"
     "${configDir}/instincts.md"
@@ -179,13 +178,16 @@ let
       npx -y "@upstash/context7-mcp@latest" "$@"
   '';
 
-  # Commands with agent frontmatter stripped — upstream files have
-  # "agent: everything-claude-code:<name>" which overrides main config
+  # Commands with namespaced agent frontmatter stripped.
+  # Upstream ECC command .md files declare agent: "everything-claude-code:<name>"
+  # in YAML frontmatter. If loaded, this overrides the non-namespaced agent
+  # reference in the main opencode.json command section. Stripping the agent
+  # line ensures commands resolve to the agents defined in opencode.json.
+  # If upstream changes the frontmatter format, this sed may need updating.
   eccCommands = pkgs.runCommand "ecc-commands" { } ''
     mkdir -p $out
     for f in ${eccPkg}/.opencode/commands/*.md; do
       base=$(basename "$f")
-      # Strip 'agent:' line from YAML frontmatter (between first two '---')
       sed '/^---$/,/^---$/ { /^agent:/d; }' "$f" > "$out/$base"
     done
   '';
@@ -204,7 +206,9 @@ let
       source = "${eccPkg}/AGENTS.md";
       force = true;
     };
-    # CONTRIBUTING.md not in npm package — omitted
+    # NOT symlinked: .opencode/ — its opencode.json registers agents with
+    # "everything-claude-code:" namespace which breaks command agent resolution.
+    # Agents and commands come solely from the main opencode.json config.
     ".config/opencode/rules" = {
       source = "${eccPkg}/rules";
       force = true;
@@ -255,6 +259,10 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
+        # Plugin disabled: ECC's .opencode/opencode.json (if loaded) registers
+        # agents under "everything-claude-code:" namespace. The npm package also
+        # ships .claude-plugin/plugin.json with that name. Agents, commands, and
+        # prompts are all served from the main opencode.json config directly.
         plugin = [ ];
         agent = mergedAgents;
         command = mergedCommands;
