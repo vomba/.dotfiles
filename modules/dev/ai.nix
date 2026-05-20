@@ -179,14 +179,21 @@ let
       npx -y "@upstash/context7-mcp@latest" "$@"
   '';
 
+  # Commands with agent frontmatter stripped — upstream files have
+  # "agent: everything-claude-code:<name>" which overrides main config
+  eccCommands = pkgs.runCommand "ecc-commands" { } ''
+    mkdir -p $out
+    for f in ${eccPkg}/.opencode/commands/*.md; do
+      base=$(basename "$f")
+      # Strip 'agent:' line from YAML frontmatter (between first two '---')
+      sed '/^---$/,/^---$/ { /^agent:/d; }' "$f" > "$out/$base"
+    done
+  '';
+
   # Build the complete home.file attrset — all entries merged together
   homeFiles = {
-    # ".config/opencode/.opencode" = {
-    #   source = "${eccPkg}/.opencode";
-    #   force = true;
-    # };
     ".config/opencode/commands" = {
-      source = "${eccPkg}/.opencode/commands";
+      source = eccCommands;
       force = true;
     };
     ".config/opencode/prompts" = {
