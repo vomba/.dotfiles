@@ -247,6 +247,35 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - On TTY-start without a DM, systemd may not be initialized — then `enable = false` is safer
 - Benefits of `true`: proper env propagation, session lifecycle, clean shutdown
 
+## Go / Helmfile
+
+### Testing Interactive Confirmation Prompts
+- Confirmation prompts (e.g., `askForConfirmation`) use `Run.Ask func(string) bool` as the injection point
+- To test interactive code paths, use `ForEachState` to get access to the `*Run`, set `run.Ask`, then call the target function directly
+- You cannot inject `Ask` through the public `App.Sync()` API — use `ForEachState` to bypass it
+- Pattern: `app.ForEachState(func(run *Run) (bool, []error) { run.Ask = func(msg string) bool { return confirm }; return app.SyncState(run, config) }, false)`
+
+### Extending a Config to Satisfy an Interface
+- Adding a new capability by making a config struct implement a pre-existing interface (`DiffConfigProvider`)
+- Add fields to the options struct, implement getter methods, then type-assert at runtime: `if diffC, ok := c.(SomeProvider); ok { ... }`
+- No interface changes or new abstractions needed
+
+### Helm-Diff Mock Flag Matching
+- When mocking `helm-diff` calls in tests, the `DiffKey.Flags` string must match exactly what the production code produces
+- Key sources: `--kube-context` from `appendConnectionFlags`, `--namespace` from `namespaceAndValuesFlags`, `--reset-values` from `appendValuesControlModeFlag`
+- `--detailed-exitcode` is only present when `detailedExitCode=true` — verify which value your code path uses
+
+### PR Workflow for Fork-Based Contributions
+- Fetch latest upstream main: `git fetch origin main && git rebase origin/main`
+- Verify default branch name: the repo may use `main` not `master`
+- Always signoff: `git commit --amend --signoff --no-edit`
+- Use `gh repo fork --remote --remote-name=<user>` from within the repo to create fork + add remote
+- Create PR: `gh pr create --repo <org>/<repo> --head <user>:<branch> --base main`
+
+### Running Nix Tools One-Off
+- Use `nix run nixpkgs#<package> -- <args>` for tools not installed locally (golangci-lint, gofmt, etc.)
+- Some packages may be removed after EOL (`go_1_23`) or broken (`gci`) — check before depending on them
+
 ## See Also
 
 Detailed session learnings:

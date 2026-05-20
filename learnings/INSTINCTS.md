@@ -102,3 +102,17 @@ Actionable patterns extracted from session learnings. These fire automatically w
 
 ### When gpg signing fails with "gpg-agent is older than us"
 - **Action**: Run `gpgconf --kill all` to restart the stale gpg-agent. Happens after system upgrades where gpg binary is updated but agent process lingers.
+
+## Go / Helmfile
+
+### When testing interactive confirmation prompts in a Go CLI app
+- **Action**: Look for a function field injection point (e.g., `Run.Ask func(string) bool`). Use a framework method (e.g., `ForEachState`) to get access to the object, set the mock, then call the target function directly. Public API wrappers often don't expose the injection point.
+
+### When mocking helm-diff calls in Go tests
+- **Action**: Trace through `flagsForDiff` + `commonDiffFlags` to determine the exact flag string. Key sources: `--kube-context` from connection flags, `--namespace` from namespace flags, `--reset-values` from values control mode. Verify whether `--detailed-exitcode` is present — it depends on the `detailedExitCode` parameter.
+
+### When creating a PR from a fork via gh CLI
+- **Action**: First `git fetch origin main && git rebase origin/main`. Verify the base branch name (`main` vs `master`). Signoff with `git commit --amend --signoff --no-edit`. Fork with `gh repo fork --remote --remote-name=<user>`. Create PR with `gh pr create --repo <org>/<repo> --head <user>:<branch> --base main`.
+
+### When running a Go linter or tool not installed locally
+- **Action**: Use `nix run nixpkgs#<package> -- <args>`. Check availability first — some packages are removed after EOL (`go_1_23`) or are broken (`gci`).
