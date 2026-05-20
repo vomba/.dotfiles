@@ -124,6 +124,7 @@ let
   # Instructions with absolute paths (opencode resolves these)
   mergedInstructions = [
     "${configDir}/AGENTS.md"
+    # "${configDir}/CONTRIBUTING.md"  # not in npm package
     "${configDir}/nix-rules.md"
     "${configDir}/learnings.md"
     "${configDir}/instincts.md"
@@ -179,62 +180,58 @@ let
   '';
 
   # Build the complete home.file attrset — all entries merged together
-  homeFiles =
-    # Commands, prompts, and root files from npm package
-    {
-      # Tools for build agent (changed-files, etc.)
-      ".config/opencode/tools" = {
-        source = "${eccPkg}/.opencode/dist/tools";
-        force = true;
-      };
-      ".config/opencode/commands" = {
-        source = "${eccPkg}/.opencode/commands";
-        force = true;
-      };
-      ".config/opencode/prompts" = {
-        source = "${eccPkg}/.opencode/prompts";
-        force = true;
-      };
-      ".config/opencode/AGENTS.md" = {
-        source = "${eccPkg}/AGENTS.md";
-        force = true;
-      };
-      ".config/opencode/rules" = {
-        source = "${eccPkg}/rules";
-        force = true;
-      };
-      ".claude/rules" = {
-        source = "${eccPkg}/rules";
-        force = true;
-      };
-      ".config/opencode/nix-rules.md" = {
-        text = builtins.readFile ../../rules/nix-configuration.md;
-        force = true;
-      };
-      ".config/opencode/learnings.md" = {
-        text = builtins.readFile ../../learnings/LEARNINGS.md;
-        force = true;
-      };
-      ".config/opencode/instincts.md" = {
-        text = builtins.readFile ../../learnings/INSTINCTS.md;
-        force = true;
-      };
-    }
-    # Skills from npm package (only the ones we reference in instructions)
-    //
-      lib.genAttrs
-        (map (s: ".config/opencode/skills/${s}") (lib.filter (s: s != "obsidian-brain") neededSkills))
-        (path: {
-          source = "${eccPkg}/skills/${lib.last (lib.splitString "/" path)}";
-          force = true;
-        })
-    # Local skill override (not in npm package)
-    // {
-      ".config/opencode/skills/obsidian-brain" = {
-        source = ../apps/obsidian/skills/obsidian-brain;
-        force = true;
-      };
+  homeFiles = {
+    ".config/opencode/.opencode" = {
+      source = "${eccPkg}/.opencode";
+      force = true;
     };
+    ".config/opencode/commands" = {
+      source = "${eccPkg}/.opencode/commands";
+      force = true;
+    };
+    ".config/opencode/prompts" = {
+      source = "${eccPkg}/.opencode/prompts";
+      force = true;
+    };
+    ".config/opencode/AGENTS.md" = {
+      source = "${eccPkg}/AGENTS.md";
+      force = true;
+    };
+    # CONTRIBUTING.md not in npm package — omitted
+    ".config/opencode/rules" = {
+      source = "${eccPkg}/rules";
+      force = true;
+    };
+    ".claude/rules" = {
+      source = "${eccPkg}/rules";
+      force = true;
+    };
+    ".config/opencode/nix-rules.md" = {
+      text = builtins.readFile ../../rules/nix-configuration.md;
+      force = true;
+    };
+    ".config/opencode/learnings.md" = {
+      text = builtins.readFile ../../learnings/LEARNINGS.md;
+      force = true;
+    };
+    ".config/opencode/instincts.md" = {
+      text = builtins.readFile ../../learnings/INSTINCTS.md;
+      force = true;
+    };
+  }
+  //
+    lib.genAttrs
+      (map (s: ".config/opencode/skills/${s}") (lib.filter (s: s != "obsidian-brain") neededSkills))
+      (path: {
+        source = "${eccPkg}/skills/${lib.last (lib.splitString "/" path)}";
+        force = true;
+      })
+  // {
+    ".config/opencode/skills/obsidian-brain" = {
+      source = ../apps/obsidian/skills/obsidian-brain;
+      force = true;
+    };
+  };
 
   instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
     exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
@@ -251,9 +248,7 @@ in
         small_model = reasoningModel;
         default_agent = "build";
         instructions = mergedInstructions;
-        # plugin intentionally disabled — ECC's .claude-plugin/plugin.json
-        # has name "everything-claude-code" which OpenCode uses as namespace
-        # plugin = [ "${configDir}/plugins" ];
+        plugin = [ "${configDir}/.opencode/plugins" ];
         agent = mergedAgents;
         command = mergedCommands;
         permission = {
@@ -322,15 +317,8 @@ in
       CLAUDE_PLUGIN_ROOT = configDir;
     };
 
-    # ── ECC cleanup & Homunculus ─────────────────────────────────
-    home.activation.cleanupECC = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      # Remove stale .opencode/ symlink (OpenCode caches its namespace)
-      rm -rf "${configDir}/.opencode" "${configDir}/plugins"
-      # Clear OpenCode state DB so it re-reads config fresh
-      rm -f "${homeDir}/.local/share/opencode/opencode-stable.db"*
-      rm -rf "${homeDir}/.local/share/opencode/snapshot"
-    '';
-    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "cleanupECC" ] ''
+    # ── Homunculus: consolidate instinct store under opencode ───────
+    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       NEW_HOME="${configDir}/homunculus"
       OLD_HOME="$HOME/.claude/homunculus"
       mkdir -p "$NEW_HOME"/{instincts/{personal,inherited},evolved/{skills,commands,agents},projects}
