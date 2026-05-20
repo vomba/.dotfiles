@@ -332,15 +332,8 @@ in
       CLAUDE_PLUGIN_ROOT = configDir;
     };
 
-    # ── Clean stale plugin state before Homunculus ────────────────
-    home.activation.cleanupOpenCode = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      rm -rf "${configDir}/.opencode"
-      rm -f "${homeDir}/.local/share/opencode/opencode-stable.db"*
-      rm -rf "${homeDir}/.local/share/opencode/snapshot"
-    '';
-
     # ── Homunculus: consolidate instinct store under opencode ───────
-    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "cleanupOpenCode" ] ''
+    home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       NEW_HOME="${configDir}/homunculus"
       OLD_HOME="$HOME/.claude/homunculus"
       mkdir -p "$NEW_HOME"/{instincts/{personal,inherited},evolved/{skills,commands,agents},projects}
