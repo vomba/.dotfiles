@@ -358,6 +358,8 @@ in
     home.sessionVariables = {
       CLAUDE_PLUGIN_ROOT = configDir;
       CLV2_CONFIG = "${configDir}/homunculus/observer-config.json";
+      # File watcher native binding needs libstdc++.so.6 from the Nix GCC build closure
+      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     };
 
     # ── Homunculus: consolidate instinct store under opencode ───────
