@@ -268,6 +268,22 @@ let
     sed -i '/"changed-files": changedFilesTool/d' $out/ecc-hooks.js
   '';
 
+  # CodeGraph needs Node.js 22 LTS — newer versions (25+) have a V8 WASM JIT bug
+  # that causes OOM crashes during tree-sitter grammar compilation.
+  codegraphNode = pkgs.nodejs_22;
+
+  # Wrapper for codegraph MCP server
+  codegraphMCPWrapper = pkgs.writeShellScriptBin "codegraph-mcp" ''
+    export PATH="${codegraphNode}/bin:$PATH"
+    exec npx -y "@colbymchenry/codegraph@latest" serve --mcp "$@"
+  '';
+
+  # Wrapper for codegraph CLI (init, status, sync, etc.)
+  codegraphCLIWrapper = pkgs.writeShellScriptBin "codegraph" ''
+    export PATH="${codegraphNode}/bin:$PATH"
+    exec npx -y "@colbymchenry/codegraph@latest" "$@"
+  '';
+
   instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
     exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
   '';
@@ -295,11 +311,24 @@ in
         command = mergedCommands;
         permission = {
           "mcp_*" = "ask";
+          # CodeGraph tools are read-only — safe to auto-allow
+          "mcp__codegraph__codegraph_search" = "allow";
+          "mcp__codegraph__codegraph_context" = "allow";
+          "mcp__codegraph__codegraph_callers" = "allow";
+          "mcp__codegraph__codegraph_callees" = "allow";
+          "mcp__codegraph__codegraph_impact" = "allow";
+          "mcp__codegraph__codegraph_node" = "allow";
+          "mcp__codegraph__codegraph_status" = "allow";
+          "mcp__codegraph__codegraph_files" = "allow";
         };
         mcp = {
           context7 = {
             type = "local";
             command = [ "${context7Wrapper}/bin/context7-mcp" ];
+          };
+          codegraph = {
+            type = "local";
+            command = [ "${codegraphMCPWrapper}/bin/codegraph-mcp" ];
           };
         };
         lsp = {
@@ -379,6 +408,7 @@ in
     # ── Packages ─────────────────────────────────────────────────────
     home.packages = [
       context7Wrapper
+      codegraphCLIWrapper
       instinctWrapper
     ];
   };
