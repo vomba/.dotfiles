@@ -48,6 +48,38 @@
       "domain": "crossplane-testing",
       "scope": "project",
       "source": "git-history-analysis"
+    },
+    {
+      "trigger": "pre-commit CI fails with exit code 3 during golangci-lint hook",
+      "action": "Check the CI runner's Go version against golangci-lint's minimum Go requirement. Upgrade CI Go version or downgrade golangci-lint rev to match.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "pre-commit golangci-lint hook runs in CI despite being in the SKIP list",
+      "action": "The hook ID was renamed in .pre-commit-config.yaml but the CI workflow's SKIP env var still references the old ID. Keep hook IDs in sync between both files.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "tagliatelle linter complains about struct field names with pluralized initialisms like CRDs",
+      "action": "Use overrides[].pkg with ignore:true for the API package instead of trying initialism-overrides, which don't handle plural forms of initialisms.",
+      "confidence": 0.85,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "golangci-lint nolintlint complains directive is unused for a listed linter",
+      "action": "Only list linters in //nolint that actually flag that line. Remove any linters from the nolint directive that don't report issues on that line.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
     }
   ]
 }

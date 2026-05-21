@@ -148,6 +148,63 @@ func NamespaceExistsWithLabels(c sdk.Cluster, cluster, name string, expectedLabe
 }
 ```
 
+### 6. Inline nolint with require-specific and require-explanation
+
+When `nolintlint` has `require-specific: true` and `require-explanation: true`, put the nolint on the same line and list all relevant linters:
+
+```go
+r.Delete(ctx, secret) //nolint:errcheck,gosec // may not exist yet, create below handles it
+```
+
+Use `_ = ...` for errcheck with `check-blank: true`, and suppress gosec G104 explicitly.
+
+## CI / Pre-commit Configuration
+
+### Pre-commit Hook ID Alignment
+
+The CI workflow's `SKIP` list must match the hook `id` in `.pre-commit-config.yaml` exactly:
+
+```yaml
+# .pre-commit-config.yaml
+hooks:
+  - id: golangci-lint  # ← this ID
+
+# .github/workflows/pre-commit.yml
+env:
+  SKIP: no-commit-to-branch,golangci-lint  # ← must match
+```
+
+Renaming a hook ID without updating the SKIP list breaks the CI skip.
+
+### Golangci-lint Version / Go Version Alignment
+
+The pre-commit action builds golangci-lint from source using the CI runner's Go version. Check `go.mod` in the golangci-lint repo for minimum Go requirements:
+
+```yaml
+# .github/workflows/pre-commit.yml
+- uses: actions/setup-go@v6
+  with:
+    go-version: "1.25"  # must satisfy golangci-lint's go.mod go directive
+
+- uses: golangci/golangci-lint-action@v8
+  with:
+    version: v2.10   # match the rev in .pre-commit-config.yaml
+```
+
+### Tagliatelle: Package-Level Exclusion for API Types
+
+When API structs use intentional naming that violates `goCamel` rules (e.g., `userCRDs`), use `overrides[].ignore: true` per package instead of `initialism-overrides` (which don't handle plural initialisms like `CRDs`):
+
+```yaml
+tagliatelle:
+  case:
+    rules:
+      json: goCamel
+    overrides:
+      - pkg: apis/module/v1alpha1
+        ignore: true
+```
+
 ## Common Issues
 
 | Issue | Root Cause | Fix |
@@ -157,9 +214,14 @@ func NamespaceExistsWithLabels(c sdk.Cluster, cluster, name string, expectedLabe
 | Chart pull fails (401) | Private OCI chart with no auth | Add `pullSecretRef` to Release and `username`/`password` Secret |
 | Namespace not found | Chart creates resources before namespaces | Pre-create required namespaces as Setup steps |
 | Cleanup "not found" errors | Provider deletion destroyed CRD instances | Use in-place provider upgrade |
+| Pre-commit CI fails exit code 3 | golangci-lint rev requires newer Go than CI provides | Align `go-version` in CI with golangci-lint's minimum Go requirement |
+| Pre-commit hook runs in CI despite SKIP | Hook ID renamed but SKIP list not updated | Keep hook `id` in sync between `.pre-commit-config.yaml` and CI workflow's `SKIP` env |
+| Tagliatelle flags API struct tags | Plural initialisms (CRDs) don't match initialism-overrides | Use `overrides[].ignore: true` for the API package instead |
+| nolintlint: directive is unused for linter | Listed a linter in `//nolint` that doesn't flag the line | Only list linters that actually report issues on that line |
 
 ## Related
 
 - `sigs.k8s.io/e2e-framework` for test infrastructure
 - `github.com/elastisys/sdk-module/e2e` for Crossplane module test helpers
+- `golangci-lint` docs for linter configuration
 - `tdd-workflow` skill for test-driven development
