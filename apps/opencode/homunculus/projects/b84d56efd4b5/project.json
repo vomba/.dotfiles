@@ -1,0 +1,8 @@
+{
+  "id": "b84d56efd4b5",
+  "name": ".dotfiles",
+  "root": "/home/hani/.dotfiles",
+  "remote": "ssh://github.com/vomba/.dotfiles.git",
+  "created_at": "2026-05-20T12:58:32.283141Z",
+  "last_seen": "2026-05-21T13:30:25.994436Z"
+}

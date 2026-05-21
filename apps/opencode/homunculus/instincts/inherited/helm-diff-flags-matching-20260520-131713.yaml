@@ -1,0 +1,27 @@
+# Imported from /tmp/instincts/helm-diff-flags-matching.yaml
+# Date: 2026-05-20T13:17:13.866358
+# Scope: global
+
+---
+id: helm-diff-flags-matching
+trigger: "mocking helm-diff calls in Go tests"
+confidence: 0.8
+domain: go-testing
+source: inherited
+scope: global
+imported_from: "/tmp/instincts/helm-diff-flags-matching.yaml"
+---
+
+# Match helm-diff flags exactly in test mocks
+
+## Action
+Trace through flagsForDiff + commonDiffFlags to determine the exact flag string.
+Key sources: --kube-context from appendConnectionFlags, --namespace from
+namespaceAndValuesFlags, --reset-values from appendValuesControlModeFlag.
+Verify whether --detailed-exitcode is present — it depends on detailedExitCode param.
+
+## Evidence
+- learned while debugging helmfile sync interactive test failures
+- The DiffKey.Flags string must match exactly what the production code produces
+- "--kube-context default --namespace default --reset-values" not including --detailed-exitcode
+

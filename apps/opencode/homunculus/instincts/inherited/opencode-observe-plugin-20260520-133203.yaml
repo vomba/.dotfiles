@@ -1,0 +1,29 @@
+# Imported from /tmp/instincts2/opencode-observe-plugin.yaml
+# Date: 2026-05-20T13:32:03.586328
+# Scope: global
+
+---
+id: opencode-observe-plugin
+trigger: "setting up automatic instinct capture for opencode"
+confidence: 0.8
+domain: opencode-config
+source: inherited
+scope: global
+imported_from: "/tmp/instincts2/opencode-observe-plugin.yaml"
+---
+
+# Wire continuous-learning observation capture for opencode
+
+## Action
+Enable the ECC compiled plugin in opencode.json. Create a small JS observation
+plugin that calls observe.sh on tool.execute.before/after events. Pass stdin JSON
+with tool_name, tool_input, cwd, session_id. Set CLAUDE_CODE_ENTRYPOINT=cli to
+bypass the session guard. Create a writable observer config with enabled: true
+and point CLV2_CONFIG env var to it.
+
+## Evidence
+- The ECC npm package ships a compiled plugin at .opencode/dist/plugins/
+- observe.sh reads JSON from stdin in Claude Code hook format
+- The observer lazily starts on first observation if enabled but not running
+- Nix store files are read-only; use home.file symlinks for writable overrides
+

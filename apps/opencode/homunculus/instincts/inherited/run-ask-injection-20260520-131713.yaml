@@ -1,0 +1,26 @@
+# Imported from /tmp/instincts/run-ask-injection.yaml
+# Date: 2026-05-20T13:17:13.786880
+# Scope: global
+
+---
+id: run-ask-injection
+trigger: "testing interactive confirmation prompts in a Go CLI app"
+confidence: 0.8
+domain: go-testing
+source: inherited
+scope: global
+imported_from: "/tmp/instincts/run-ask-injection.yaml"
+---
+
+# Inject Run.Ask for testing interactive confirmation prompts
+
+## Action
+Look for a function field injection point (like `Run.Ask func(string) bool`).
+Use a framework method (like `ForEachState`) to access the object, set the mock,
+then call the target function directly. Public API wrappers often don't expose the injection point.
+
+## Evidence
+- Discovered while writing tests for helmfile sync --interactive diff preview
+- Tested with 3 test cases: non-interactive, confirm, reject
+- Pattern: app.ForEachState(func(run *Run) (bool, []error) { run.Ask = ...; return app.SyncState(run, config) }, false)
+

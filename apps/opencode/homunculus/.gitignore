@@ -1,14 +1,21 @@
 # Runtime observation data (auto-generated, can be large)
-observations.jsonl
-observations.archive/
 *.jsonl
+observations.archive/
 
-# Observer runtime state and temp files
-.observer-*
+# Observer runtime state (.observer.pid, .observer-signal-counter, etc.)
+.observer*
+observer.log
+.last-purge
+
+# Temp files
 .observer-tmp/
+*.lock
 
 # Per-project runtime data (same patterns as above)
-projects/*/observations.jsonl
+projects/*/*.jsonl
 projects/*/observations.archive/
-projects/*/.observer-*
+projects/*/.observer*
+projects/*/observer.log
+projects/*/.last-purge
 projects/*/.observer-tmp/
+projects/*/*.lock

@@ -1,0 +1,27 @@
+# Imported from /tmp/instincts/pr-fork-workflow.yaml
+# Date: 2026-05-20T13:17:13.940862
+# Scope: global
+
+---
+id: pr-fork-workflow
+trigger: "creating a PR from a fork via gh CLI"
+confidence: 0.9
+domain: git-workflow
+source: inherited
+scope: global
+imported_from: "/tmp/instincts/pr-fork-workflow.yaml"
+---
+
+# PR from fork workflow
+
+## Action
+Fetch latest upstream main (git fetch origin main && git rebase origin/main).
+Verify the base branch name (main vs master). Signoff with --signoff.
+Fork with: gh repo fork --remote --remote-name=<user>
+Create PR with: gh pr create --repo <org>/<repo> --head <user>:<branch> --base main
+
+## Evidence
+- Encountered error: "No commits between helmfile:master and fork:branch"
+- Fix: --base main (not master)
+- DCO required --signoff on commit
+

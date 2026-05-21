@@ -1,0 +1,44 @@
+{
+  "9567eee18ece": {
+    "name": "terax-ai",
+    "root": "/home/hani/pers/terax-ai",
+    "remote": "git@github.com:crynta/terax-ai.git",
+    "last_seen": "2026-05-13T09:27:11.591781Z"
+  },
+  "bbfc4d616248": {
+    "name": ".dotfiles",
+    "root": "/home/hani/.dotfiles",
+    "remote": "ssh://git@github.com/vomba/.dotfiles.git",
+    "last_seen": "2026-05-21T13:10:14.456921Z"
+  },
+  "d024dd8c6a46": {
+    "id": "d024dd8c6a46",
+    "name": "helmfile",
+    "root": "/home/hani/pers/helmfile",
+    "remote": "git@github.com:helmfile/helmfile.git",
+    "created_at": "2026-05-21T10:25:00.549430Z",
+    "last_seen": "2026-05-21T10:43:41.472930Z"
+  },
+  "b05864ddf62b": {
+    "name": "ecc-opencode-flake",
+    "root": "/home/hani/pers/ecc-opencode-flake",
+    "remote": "",
+    "last_seen": "2026-05-20T12:49:40.473064Z"
+  },
+  "b84d56efd4b5": {
+    "id": "b84d56efd4b5",
+    "name": ".dotfiles",
+    "root": "/home/hani/.dotfiles",
+    "remote": "ssh://github.com/vomba/.dotfiles.git",
+    "created_at": "2026-05-20T12:58:32.283141Z",
+    "last_seen": "2026-05-21T13:30:25.994436Z"
+  },
+  "79196a4271db": {
+    "id": "79196a4271db",
+    "name": "module-dev-rbac",
+    "root": "/home/hani/elastisys/module-dev-rbac",
+    "remote": "git@github.com:elastisys/module-dev-rbac.git",
+    "created_at": "2026-05-21T12:43:07.759734Z",
+    "last_seen": "2026-05-21T12:45:38.778308Z"
+  }
+}

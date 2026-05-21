@@ -260,7 +260,9 @@ let
   //
     lib.genAttrs
       (map (s: ".config/opencode/skills/${s}") (
-        lib.filter (s: s != "obsidian-brain" && s != "helmfile-contribution") neededSkills
+        lib.filter (
+          s: s != "obsidian-brain" && s != "helmfile-contribution" && s != "continuous-learning-v2"
+        ) neededSkills
       ))
       (path: {
         source = "${eccPkg}/skills/${lib.last (lib.splitString "/" path)}";
@@ -280,6 +282,12 @@ let
     };
     ".config/opencode/skills/helmfile-contribution" = {
       source = ../../apps/opencode/skills/helmfile-contribution;
+      force = true;
+    };
+    # Patched continuous-learning-v2 — observer-loop.sh uses absolute paths
+    # so opencode run resolves them correctly from PROJECT_DIR
+    ".config/opencode/skills/continuous-learning-v2" = {
+      source = patchedClv2Skill;
       force = true;
     };
   };
@@ -309,6 +317,17 @@ let
     exec npx -y "@colbymchenry/codegraph@latest" "$@"
   '';
 
+  # Patched observer-loop.sh — upstream uses relative paths (.observer-tmp/filename)
+  # for Windows compat, but opencode run resolves relative paths from PROJECT_ROOT
+  # (git root) instead of PROJECT_DIR (homunculus project dir). Patching to absolute
+  # paths fixes this for Linux.
+  patchedClv2Skill = pkgs.runCommand "clv2-patched" { buildInputs = [ pkgs.gnused ]; } ''
+    cp -r ${eccPkg}/skills/continuous-learning-v2 $out
+    chmod -R +w $out
+    substituteInPlace $out/agents/observer-loop.sh \
+      --replace-fail '.observer-tmp/$(basename "$analysis_file")' '$analysis_file'
+  '';
+
   instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
     exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
   '';
@@ -327,7 +346,10 @@ let
         *) shift ;;
       esac
     done
-    exec opencode run -m "${codeModel}" "$PROMPT"
+    # --dangerously-skip-permissions: the observer needs to read temp analysis
+    # files and write instinct files to homunculus. Auto-rejecting these would
+    # silently prevent instinct creation.
+    exec opencode run -m "${codeModel}" --pure --dangerously-skip-permissions "$PROMPT"
   '';
 
 in
@@ -459,10 +481,8 @@ in
         done
       fi
 
-      # Symlink ~/.claude/homunculus → dotfiles repo
-      if [ ! -L "$OLD_HOME" ]; then
-        ln -sf "$NEW_HOME" "$OLD_HOME"
-      fi
+      # Always ensure symlink → dotfiles repo (target changed from configDir)
+      ln -sfn "$NEW_HOME" "$OLD_HOME"
     '';
 
     # ── Packages ─────────────────────────────────────────────────────
