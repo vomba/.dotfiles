@@ -119,6 +119,7 @@ let
     "clickhouse-io"
     "terminal-ops"
     "search-first"
+    "helmfile-contribution"
   ];
 
   # Instructions with absolute paths (opencode resolves these)
@@ -167,6 +168,9 @@ let
     "${configDir}/skills/clickhouse-io/SKILL.md"
     "${configDir}/skills/terminal-ops/SKILL.md"
     "${configDir}/skills/search-first/SKILL.md"
+
+    # User-contributed (derived from git history analysis)
+    "${configDir}/skills/helmfile-contribution/SKILL.md"
   ];
 
   # Path to the context7 API key from sops (known at build time)
@@ -247,14 +251,27 @@ let
   }
   //
     lib.genAttrs
-      (map (s: ".config/opencode/skills/${s}") (lib.filter (s: s != "obsidian-brain") neededSkills))
+      (map (s: ".config/opencode/skills/${s}") (
+        lib.filter (s: s != "obsidian-brain" && s != "helmfile-contribution") neededSkills
+      ))
       (path: {
         source = "${eccPkg}/skills/${lib.last (lib.splitString "/" path)}";
         force = true;
       })
   // {
+    # Local (non-ECC) skills — must be filtered from genAttrs above.
+    # To add a new local skill:
+    #   1. Create ~/.dotfiles/apps/opencode/skills/<name>/SKILL.md
+    #   2. Add "<name>" to neededSkills
+    #   3. Filter it in the genAttrs above (add && s != "<name>")
+    #   4. Add home.file entry below
+    #   5. Add "${configDir}/skills/<name>/SKILL.md" to mergedInstructions
     ".config/opencode/skills/obsidian-brain" = {
       source = ../apps/obsidian/skills/obsidian-brain;
+      force = true;
+    };
+    ".config/opencode/skills/helmfile-contribution" = {
+      source = ../../apps/opencode/skills/helmfile-contribution;
       force = true;
     };
   };

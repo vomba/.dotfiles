@@ -124,3 +124,12 @@ Actionable patterns extracted from session learnings. These fire automatically w
 
 ### When the Nix store makes a config file read-only
 - **Action**: Create a writable override file in a managed directory (e.g., `~/.dotfiles/apps/opencode/`). Symlink it via `home.file` in the Nix config. Point any relevant env vars (`CLV2_CONFIG`) to the writable path.
+
+### When creating a new opencode skill from session learnings
+- **Action**: Save to the dotfiles repo for Nix management and cross-machine portability. Follow the 5-step recipe:
+  1. Create `~/.dotfiles/apps/opencode/skills/<name>/SKILL.md`
+  2. Add `"<name>"` to `neededSkills` in `modules/dev/ai.nix`
+  3. Add `&& s != "<name>"` to the `lib.filter` in genAttrs
+  4. Add a `home.file` entry symlinking `../../apps/opencode/skills/<name>`
+  5. Add `"${configDir}/skills/<name>/SKILL.md"` to `mergedInstructions`
+- Run `nix run home-manager -- switch --flake .#hani` from `~/.dotfiles` to activate

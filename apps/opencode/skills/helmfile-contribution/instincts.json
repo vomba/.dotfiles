@@ -1,0 +1,82 @@
+[
+  {
+    "trigger": "when making changes to sync or apply commands",
+    "action": "ensure flags and behavior are consistent between sync and apply; check both --detailed-exitcode, --timeout, and any user-facing flag",
+    "confidence": 0.85,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when modifying code that processes helmfiles sequentially",
+    "action": "use absolute baseDir instead of os.Chdir to prevent race conditions and path resolution bugs",
+    "confidence": 0.9,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when adding a commit to a helmfile PR branch",
+    "action": "format as 'type: description (#PR)' with types feat/fix/chore/docs/test/refactor and reference the PR number",
+    "confidence": 0.95,
+    "domain": "git-workflow",
+    "source": "git-history-analysis",
+    "scope": "global"
+  },
+  {
+    "trigger": "when writing diff-related code in helmfile",
+    "action": "verify that flagsForDiff includes --kube-context from appendConnectionFlags, --namespace from namespace flags, and --reset-values from appendValuesControlModeFlag",
+    "confidence": 0.85,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when adding a feature that differs between Helm 3 and Helm 4",
+    "action": "use h.isHelm4() guard with Helm 4 as the primary path and Helm 3 as the fallback; check flag names differ between versions",
+    "confidence": 0.9,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when handling values arrays in helmfile state",
+    "action": "default to replacing arrays (not merging element-by-element) unless there is an explicit semantic reason to merge",
+    "confidence": 0.85,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when adding a feature flag to a helmfile provider interface",
+    "action": "prefer type assertion at the call site (e.g., c.(interface{ DetailedExitcode() bool })) over adding methods to ConfigProvider",
+    "confidence": 0.9,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when writing a Go test in helmfile",
+    "action": "use table-driven tests with testify/assert, use -count=1 flag, and use t.Run subtests for each case",
+    "confidence": 0.9,
+    "domain": "go-testing",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when adding error handling to helmfile",
+    "action": "use fmt.Errorf with %w for error wrapping, match existing style (lowercase, no trailing punctuation), and avoid hardcoded strings that differ from similar features",
+    "confidence": 0.85,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  },
+  {
+    "trigger": "when reviewing a PR for concurrent file operations",
+    "action": "check for shared cache access, os.Chdir usage, and unprotected shared state — these are recurring sources of race conditions",
+    "confidence": 0.9,
+    "domain": "helmfile-dev",
+    "source": "git-history-analysis",
+    "scope": "project"
+  }
+]

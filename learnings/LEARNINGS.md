@@ -289,6 +289,12 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Use `nix run nixpkgs#<package> -- <args>` for tools not installed locally (golangci-lint, gofmt, etc.)
 - Some packages may be removed after EOL (`go_1_23`) or broken (`gci`) — check before depending on them
 
+### Adding Local Skills to Nix
+- New opencode skills created from session learnings should live in `apps/opencode/skills/<name>/SKILL.md` in the dotfiles repo
+- Wiring requires 5 edits in `modules/dev/ai.nix`: add to `neededSkills`, filter from `genAttrs`, add `home.file` entry, add to `mergedInstructions`
+- Run `nix run home-manager -- switch --flake .#hani` from `~/.dotfiles` to activate
+- This ensures portability to macOS and Nix-store management
+
 ## See Also
 
 Detailed session learnings:
