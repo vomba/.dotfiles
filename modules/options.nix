@@ -34,6 +34,23 @@
         enable = lib.mkEnableOption "AI/LLM tools (OpenCode, ECC)" // {
           default = true;
         };
+        observer = {
+          enable = lib.mkOption {
+            type = lib.types.bool;
+            default = true;
+            description = "Enable the continuous-learning-v2 background observer agent";
+          };
+          runIntervalMinutes = lib.mkOption {
+            type = lib.types.int;
+            default = 5;
+            description = "How often the observer runs analysis (minutes)";
+          };
+          minObservations = lib.mkOption {
+            type = lib.types.int;
+            default = 20;
+            description = "Minimum observations before observer runs analysis";
+          };
+        };
       };
     };
     shell = {

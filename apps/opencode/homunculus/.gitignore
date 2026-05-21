@@ -1,0 +1,14 @@
+# Runtime observation data (auto-generated, can be large)
+observations.jsonl
+observations.archive/
+*.jsonl
+
+# Observer runtime state and temp files
+.observer-*
+.observer-tmp/
+
+# Per-project runtime data (same patterns as above)
+projects/*/observations.jsonl
+projects/*/observations.archive/
+projects/*/.observer-*
+projects/*/.observer-tmp/

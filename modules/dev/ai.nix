@@ -9,6 +9,7 @@ let
   eccPkg = inputs.ecc-universal;
   homeDir = config.home.homeDirectory;
   configDir = "${homeDir}/.config/opencode";
+  homunculusDir = "${homeDir}/.dotfiles/apps/opencode/homunculus";
 
   # Model assignments — mirrors upstream's intentional routing
   # Upstream uses opus for reviewers, sonnet for builders
@@ -245,7 +246,14 @@ let
     # Writable observer config override — enables continuous-learning observer
     # (the default config.json in the nix store has enabled: false)
     ".config/opencode/homunculus/observer-config.json" = {
-      source = ../../apps/opencode/observer-config.json;
+      text = builtins.toJSON {
+        version = "2.1";
+        observer = {
+          enabled = config.dotfiles.dev.ai.observer.enable;
+          run_interval_minutes = config.dotfiles.dev.ai.observer.runIntervalMinutes;
+          min_observations_to_analyze = config.dotfiles.dev.ai.observer.minObservations;
+        };
+      };
       force = true;
     };
   }
@@ -303,6 +311,23 @@ let
 
   instinctWrapper = pkgs.writeShellScriptBin "instinct" ''
     exec python3 "${configDir}/skills/continuous-learning-v2/scripts/instinct-cli.py" "$@"
+  '';
+
+  # claude → opencode wrapper for the continuous-learning-v2 observer agent.
+  # The upstream observer-loop.sh calls `claude --model haiku --max-turns N --print --allowedTools "..." -p "prompt"`
+  # to analyze observations into instincts. We don't have claude CLI — translate the essential args
+  # to `opencode run` so the observer actually analyzes observations instead of silently skipping.
+  # Uses the cheap/flash model (matching upstream's haiku choice) since the observer runs
+  # in the background and only needs basic pattern detection.
+  claudeWrapper = pkgs.writeShellScriptBin "claude" ''
+    PROMPT=""
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        -p) PROMPT="$2"; shift 2 ;;
+        *) shift ;;
+      esac
+    done
+    exec opencode run -m "${codeModel}" "$PROMPT"
   '';
 
 in
@@ -408,15 +433,33 @@ in
       LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
     };
 
-    # ── Homunculus: consolidate instinct store under opencode ───────
+    # ── Homunculus: instinct store lives in the dotfiles repo ──────
+    # so instincts are automatically synced to macOS (and other machines)
+    # via git. Symlinked from ~/.claude/homunculus (where the instinct
+    # CLI and observer scripts expect to find it).
     home.activation.setupHomunculus = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      NEW_HOME="${configDir}/homunculus"
+      NEW_HOME="${homunculusDir}"
       OLD_HOME="$HOME/.claude/homunculus"
+      LEGACY_CONFIG="${configDir}/homunculus"
+
       mkdir -p "$NEW_HOME"/{instincts/{personal,inherited},evolved/{skills,commands,agents},projects}
+
+      # Migrate from ~/.claude/homunculus (pre-symlink era)
       if [ -d "$OLD_HOME" ] && [ ! -L "$OLD_HOME" ]; then
+        echo "[setupHomunculus] Migrating $OLD_HOME → $NEW_HOME"
         cp -r "$OLD_HOME"/. "$NEW_HOME"/ 2>/dev/null || true
         rm -rf "$OLD_HOME"
       fi
+
+      # Migrate instinct/evolved data from previous configDir location
+      if [ -d "$LEGACY_CONFIG" ] && [ ! -L "$LEGACY_CONFIG" ] && [ "$LEGACY_CONFIG" != "$NEW_HOME" ]; then
+        for item in instincts evolved projects.json identity.json; do
+          src="$LEGACY_CONFIG/$item"
+          [ -e "$src" ] && cp -r "$src" "$NEW_HOME/" 2>/dev/null || true
+        done
+      fi
+
+      # Symlink ~/.claude/homunculus → dotfiles repo
       if [ ! -L "$OLD_HOME" ]; then
         ln -sf "$NEW_HOME" "$OLD_HOME"
       fi
@@ -427,6 +470,7 @@ in
       context7Wrapper
       codegraphCLIWrapper
       instinctWrapper
+      claudeWrapper
     ];
   };
 }

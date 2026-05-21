@@ -123,7 +123,7 @@ Actionable patterns extracted from session learnings. These fire automatically w
 - **Action**: Enable the ECC compiled plugin in `opencode.json` (`plugin = [ "${configDir}/plugins/ecc" ]`). Create a small observation plugin that calls `observe.sh` on `tool.execute.before`/`after`. Set `CLAUDE_CODE_ENTRYPOINT=cli` to bypass session guard. Pass JSON stdin with `tool_name`, `tool_input`, `cwd`, `session_id`. Pass `"pre"` or `"post"` as first CLI arg. Create writable observer config with `enabled: true` and point `CLV2_CONFIG` env var to it.
 
 ### When the Nix store makes a config file read-only
-- **Action**: Create a writable override file in a managed directory (e.g., `~/.dotfiles/apps/opencode/`). Symlink it via `home.file` in the Nix config. Point any relevant env vars (`CLV2_CONFIG`) to the writable path.
+- **Action**: Add Nix options for the config values in `modules/options.nix`, then generate the config in `modules/dev/ai.nix` via `home.file."<path>" = { text = builtins.toJSON { ... }; force = true; }`. Point any relevant env vars to the generated path.
 
 ### When creating a new opencode skill from session learnings
 - **Action**: Save to the dotfiles repo for Nix management and cross-machine portability. Follow the 5-step recipe:
