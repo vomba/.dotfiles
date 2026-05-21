@@ -1,3 +1,4 @@
 .direnv/
 result/
 .codegraph/
+node_modules/
