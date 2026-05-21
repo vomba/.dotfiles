@@ -1,0 +1,53 @@
+{
+  "version": "2.1",
+  "instincts": [
+    {
+      "trigger": "e2e test XR never becomes Available in a Crossplane module test",
+      "action": "Check the Helm Release status in kube-system for error messages. Common issues: missing forProvider.namespace, pull secret for private charts, or prerequisite CRDs/namespaces not created before the XR.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "upgrading a Crossplane provider in a test or script environment",
+      "action": "Patch spec.package in-place via r.Update(ctx, patch) instead of delete+recreate. Deleting a Provider wipes its CRDs which destroys all ProviderConfig and ClusterProviderConfig instances.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "Helm chart pull fails with 401 from a private OCI registry during Crossplane composition",
+      "action": "Add pullSecretRef to the Release base in the composition YAML. The referenced Secret must have username and password keys (not dockerconfigjson format). Create the Secret before the Release via a setup step.",
+      "confidence": 0.85,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "Crossplane composition Helm Release fails with 'Namespace is invalid'",
+      "action": "Add the namespace field to the Release's spec.forProvider in the composition YAML. Older provider-helm versions lack this field — upgrade to v1.0.2+ via spec.package patch.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "writing Crossplane module e2e tests with sdk-module",
+      "action": "Order setup steps: 1) XRDs, 2) Composition, 3) runtime config + RBAC + functions, 4) provider upgrade (if needed), 5) ProviderConfig, 6) pull secrets + namespaces, 7) XR. ProviderConfig must be applied AFTER provider upgrade to survive CRD recreation.",
+      "confidence": 0.85,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    },
+    {
+      "trigger": "e2e test cleanup fails with 'ClusterProviderConfig not found'",
+      "action": "This happens when a provider was deleted and recreated, wiping CRD instances. Switch to in-place spec.package update instead of delete+recreate to keep CRD instances intact.",
+      "confidence": 0.9,
+      "domain": "crossplane-testing",
+      "scope": "project",
+      "source": "git-history-analysis"
+    }
+  ]
+}
