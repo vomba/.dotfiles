@@ -8,9 +8,8 @@
 let
   homeDir = config.home.homeDirectory;
   vaultDir = "${homeDir}/.vault";
-  templatesDir = "${vaultDir}/Templates";
 
-  # Community plugins from the obsidian-plugins-nix overlay
+  # Minimal plugin set — obsidian-second-brain skill handles the rest
   communityPluginsList = with obsidian-plugins.packages.${pkgs.system}; [
     { pkg = dataview; }
     {
@@ -19,7 +18,7 @@ let
         template_folder = "Templates";
         trigger_on_file_creation = true;
         auto_jump_to_cursor = false;
-        enable_system_commands = true;
+        enable_system_commands = false;
         timeout = 5;
         startup_templates = [ ];
         enabled_templates_hotkeys = [ ];
@@ -60,9 +59,6 @@ let
         taskCompleteSettings = "";
       };
     }
-    { pkg = tasknotes; }
-    { pkg = omnisearch; }
-    { pkg = tag-wrangler; }
     { pkg = quickadd; }
     {
       pkg = obsidian-git;
@@ -74,43 +70,33 @@ let
       };
     }
     {
-      pkg = obsidian-linter;
-      settings = {
-        lintOnSave = false;
-      };
-    }
-    {
       pkg = obsidian-local-rest-api;
       settings = {
         apiKey = "obsidian-local-rest-api-key";
         port = 27124;
       };
     }
-    {
-      pkg = smart-connections;
-      settings = {
-        smart_folder = "06 - Archive";
-      };
-    }
-    { pkg = obsidian-style-settings; }
-    { pkg = obsidian-advanced-uri; }
-    { pkg = obsidian-hover-editor; }
   ];
 
   obsidianPkg = if pkgs.stdenv.isLinux then config.lib.nixGL.wrap pkgs.obsidian else pkgs.obsidian;
 in
 {
   config = lib.mkIf config.dotfiles.apps.obsidian.enable {
-    home.activation.createObsidianVaultDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      mkdir -p '${vaultDir}'
+    home.activation.createObsidianVaultDirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p '${vaultDir}' \
+        '${vaultDir}/00 - Daily' \
+        '${vaultDir}/01 - Weekly' \
+        '${vaultDir}/02 - Projects' \
+        '${vaultDir}/03 - Resources' \
+        '${vaultDir}/04 - Snippets' \
+        '${vaultDir}/05 - Wiki' \
+        '${vaultDir}/06 - Archive'
     '';
 
-    # QuickAdd needs a writable data.json (not a symlink to the Nix store)
-    # because it runs migrations on startup. Copy instead of symlink.
-    home.activation.setupQuickAddData = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      mkdir -p '${vaultDir}/.obsidian/plugins/quickadd'
-      cp -f '${./plugins/quickadd/data.json}' '${vaultDir}/.obsidian/plugins/quickadd/data.json'
-    '';
+    home.file."${vaultDir}/Templates" = {
+      source = ./templates;
+      force = true;
+    };
 
     programs.obsidian = {
       enable = true;
@@ -126,7 +112,6 @@ in
               defaultViewMode = "source";
               strictLineBreaks = false;
               spellcheck = true;
-              spellcheckLanguages = null;
               livePreview = true;
               readableLineLength = true;
               newFileLocation = "folder";
@@ -141,11 +126,7 @@ in
             };
 
             appearance = {
-              theme = "";
-              enabledCssSnippets = [ ];
               baseFontSize = 16;
-              monospaceFontFamily = "";
-              textFontFamily = "";
               nativeMenus = false;
               accentColor = "#7c3aed";
             };
@@ -162,7 +143,6 @@ in
               "note-composer"
               "command-palette"
               "editor-status"
-              "markdown-importer"
               "outline"
               "word-count"
               "file-recovery"
@@ -185,33 +165,6 @@ in
                   key = "T";
                 }
               ];
-            };
-
-            extraFiles = {
-              "Templates" = {
-                source = ./templates;
-              };
-              "00 - Daily" = {
-                source = ./vault-dirs/00-daily;
-              };
-              "01 - Weekly" = {
-                source = ./vault-dirs/01-weekly;
-              };
-              "02 - Projects" = {
-                source = ./vault-dirs/02-projects;
-              };
-              "03 - Resources" = {
-                source = ./vault-dirs/03-resources;
-              };
-              "04 - Snippets" = {
-                source = ./vault-dirs/04-snippets;
-              };
-              "05 - Wiki" = {
-                source = ./vault-dirs/05-wiki;
-              };
-              "06 - Archive" = {
-                source = ./vault-dirs/06-archive;
-              };
             };
           };
         };

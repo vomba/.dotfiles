@@ -206,6 +206,22 @@
         "type": "github"
       }
     },
+    "obsidian-second-brain": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779360160,
+        "narHash": "sha256-7A/nY/yurKHUY9obVa6fDeaAAn4bymT2iPvFwOpuU/4=",
+        "owner": "eugeniughelbur",
+        "repo": "obsidian-second-brain",
+        "rev": "d9fb8d7f587253c9efa0c5a96ac0c4eb3f25f373",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eugeniughelbur",
+        "repo": "obsidian-second-brain",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "ecc-universal": "ecc-universal",
@@ -217,6 +233,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nur": "nur",
         "obsidian-plugins": "obsidian-plugins",
+        "obsidian-second-brain": "obsidian-second-brain",
         "sops-nix": "sops-nix"
       }
     },

@@ -32,6 +32,10 @@
       url = "github:vomba/obsidian-plugins-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    obsidian-second-brain = {
+      url = "github:eugeniughelbur/obsidian-second-brain";
+      flake = false;
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

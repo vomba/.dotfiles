@@ -280,6 +280,13 @@ let
       source = ../apps/obsidian/skills/obsidian-brain;
       force = true;
     };
+    # obsidian-second-brain — on-demand skill (not in mergedInstructions).
+    # The agent loads it via skill({ name: "obsidian-second-brain" }) when
+    # the user mentions vault/note operations.
+    ".config/opencode/skills/obsidian-second-brain" = {
+      source = inputs.obsidian-second-brain;
+      force = true;
+    };
     ".config/opencode/skills/helmfile-contribution" = {
       source = ../../apps/opencode/skills/helmfile-contribution;
       force = true;
