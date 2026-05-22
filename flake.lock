@@ -173,11 +173,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779342741,
-        "narHash": "sha256-l0IpSVGzUsgrjZs7wpcI9B2BSDQTWyO1KtXzS/AmX/w=",
+        "lastModified": 1779428888,
+        "narHash": "sha256-n3YXioWaPHBlE0yYNgOiHWSidbEB34zrcEaVLV9evik=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "ec5d1886d5d35304bed565b41c17207421c95c36",
+        "rev": "dfd35dcb32209b10caa99ff8a155cf1d7983a971",
         "type": "github"
       },
       "original": {
@@ -193,11 +193,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779330854,
-        "narHash": "sha256-6E9TBV01KAphvaF2JO/JqguOjwq+rJIlPg1Uh+Xwl9g=",
+        "lastModified": 1779417330,
+        "narHash": "sha256-7vjpxeUMihBFPfrPiN1262mbZXF3HiuTiE0Fl3+k6Wg=",
         "owner": "vomba",
         "repo": "obsidian-plugins-nix",
-        "rev": "e1e861604f1a08196122a198bc91902d8aa60ee3",
+        "rev": "a8d352991432aedd7c91a73739e461818f0ea557",
         "type": "github"
       },
       "original": {

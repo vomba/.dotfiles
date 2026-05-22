@@ -2,7 +2,7 @@
 
 super.helmfile.overrideAttrs (oldAttrs: rec {
   pname = "helmfile";
-  version = "1.5.1";
+  version = "1.5.2";
 
   src = super.fetchFromGitHub {
     owner = "helmfile";
