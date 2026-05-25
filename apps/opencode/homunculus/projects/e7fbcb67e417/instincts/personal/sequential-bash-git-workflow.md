@@ -5,7 +5,7 @@ confidence: 0.7
 domain: git
 source: session-observation
 scope: project
-project_id: b84d56efd4b5
+project_id: e7fbcb67e417
 project_name: .dotfiles
 ---
 
