@@ -25,7 +25,7 @@
       pkgs.yubikey-manager
 
       # Runtimes
-      pkgs.nodejs_25 # bleeding-edge (not LTS); switch to nodejs_24 for LTS
+      pkgs.nodejs_26 # bleeding-edge (not LTS); switch to nodejs_24 for LTS
       pkgs.ruby
     ]
     ++ (
