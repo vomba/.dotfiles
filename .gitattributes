@@ -1,5 +1,6 @@
 # git-crypt encrypted files
-apps/opencode/homunculus/projects.json  filter=git-crypt diff=git-crypt
-kubie.yaml                              filter=git-crypt diff=git-crypt
-credentials-helper.bash                 filter=git-crypt diff=git-crypt
-oh-my-zsh/devbox.zsh                    filter=git-crypt diff=git-crypt
+apps/opencode/homunculus/projects.json          filter=git-crypt diff=git-crypt
+apps/opencode/homunculus/**/project.json         filter=git-crypt diff=git-crypt
+kubie.yaml                                      filter=git-crypt diff=git-crypt
+credentials-helper.bash                         filter=git-crypt diff=git-crypt
+oh-my-zsh/devbox.zsh                            filter=git-crypt diff=git-crypt
