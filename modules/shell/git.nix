@@ -34,6 +34,16 @@
 
     home.packages = [
       pkgs.lazygit
+      pkgs.git-crypt
     ];
+
+    home.activation.unlockGitCrypt = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if [ -f "${config.sops.secrets.git_crypt_key.path}" ]; then
+        tmpKey="$(${pkgs.coreutils}/bin/mktemp)"
+        ${pkgs.coreutils}/bin/base64 -d "${config.sops.secrets.git_crypt_key.path}" > "$tmpKey"
+        ${pkgs.git-crypt}/bin/git-crypt unlock "$tmpKey" 2>/dev/null || true
+        rm -f "$tmpKey"
+      fi
+    '';
   };
 }

@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: prettier
         types: [yaml]
-        exclude: "secrets\\.yaml$|apps/opencode/homunculus/"
+        exclude: "secrets\\.yaml$|apps/opencode/homunculus/|kubie\\.yaml$|credentials-helper\\.bash$|oh-my-zsh/devbox\\.zsh$"
         args: ["--prose-wrap", "always"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -12,9 +12,9 @@ repos:
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
-        exclude: "apps/opencode/homunculus/"
+        exclude: "apps/opencode/homunculus/|kubie\\.yaml$|credentials-helper\\.bash$|oh-my-zsh/devbox\\.zsh$"
       - id: check-yaml
-        exclude: "apps/opencode/homunculus/"
+        exclude: "apps/opencode/homunculus/|kubie\\.yaml$"
       - id: check-added-large-files
 
   - repo: https://github.com/gitleaks/gitleaks
