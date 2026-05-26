@@ -59,11 +59,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779678629,
-        "narHash": "sha256-gHcIFg0mm+KFsg7iZQt67kni3+qR5U3PhEC9P7vKlZ4=",
+        "lastModified": 1779726696,
+        "narHash": "sha256-/p37CB5n6Wpw250b0Lq0CYwNq2D8uGKzDoBulyLcQqA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "612bbe3b405ad5f71d7bf9edecc04b678a061652",
+        "rev": "1a95e2efb477959b70b4a14c51035975c0481df6",
         "type": "github"
       },
       "original": {
@@ -135,11 +135,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1779508470,
-        "narHash": "sha256-Ap9KJX+5xHIn3bPIpfNgT6MEXdAECECwo4/rmlQD74M=",
+        "lastModified": 1779560665,
+        "narHash": "sha256-tpyBcxPpcQb8ukyNF7DoCwfSY3VPsxHoYwj00Cayv5o=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "29916453413845e54a65b8a1cf996842300cd299",
+        "rev": "64c08a7ca051951c8eae34e3e3cb1e202fe36786",
         "type": "github"
       },
       "original": {
@@ -173,11 +173,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779708822,
-        "narHash": "sha256-xDGVxs+G6nOY4rXdPS4WCLRSl0HqbUxg7F46KDPJf8U=",
+        "lastModified": 1779781981,
+        "narHash": "sha256-fCPztRUwSGO4kGyV/YQ55cd55pGVwTLcWLnPmthN9R0=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "8ff70c4748e6b75f5f66e845bbe8a72a038a931b",
+        "rev": "474a13af747af123993261fa84cc711ce5b983ca",
         "type": "github"
       },
       "original": {
@@ -193,11 +193,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779676744,
-        "narHash": "sha256-jF7qkPOOKpYKj9nOImD4sBE3kvZSCh+FBOOlgADUuFg=",
+        "lastModified": 1779762553,
+        "narHash": "sha256-5fvlnuzSQh+RjLkS8PpTd/8Wp53T3W+IhJhKaFhFmvI=",
         "owner": "vomba",
         "repo": "obsidian-plugins-nix",
-        "rev": "1bb0a3b6bf9ab97572b11e1c6f1afa0fa5dd1edd",
+        "rev": "02b311f60fbc704884426d5b3f7c25455081e2cb",
         "type": "github"
       },
       "original": {
@@ -209,11 +209,11 @@
     "obsidian-second-brain": {
       "flake": false,
       "locked": {
-        "lastModified": 1779360160,
-        "narHash": "sha256-7A/nY/yurKHUY9obVa6fDeaAAn4bymT2iPvFwOpuU/4=",
+        "lastModified": 1779630351,
+        "narHash": "sha256-WusZfJE5dpTdvhpQEREJdPsnyzsRUZ+lfa9bEXXYIgw=",
         "owner": "eugeniughelbur",
         "repo": "obsidian-second-brain",
-        "rev": "d9fb8d7f587253c9efa0c5a96ac0c4eb3f25f373",
+        "rev": "23a0ed29afe63314c8fe0f8ff8a7d3ba5192b52c",
         "type": "github"
       },
       "original": {
