@@ -295,6 +295,13 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Run `nix run home-manager -- switch --flake .#hani` from `~/.dotfiles` to activate
 - This ensures portability to macOS and Nix-store management
 
+## General Rules
+
+### Password Manager Entries Are Sacred
+- Never delete entries from any password manager (rbw, pass, etc.) without explicit user confirmation
+- These are personal secrets stores, not cache files — deletion is irreversible
+- Always ask before removing any credential entry, even if it appears unused
+
 ## See Also
 
 Detailed session learnings:
