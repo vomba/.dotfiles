@@ -358,9 +358,10 @@ let
     exec npx -y "@colbymchenry/codegraph@latest" "$@"
   '';
 
-  # MCP server for Obsidian vault access (read/write notes via tool calls)
+  # MCP server for Obsidian vault access via Local REST API plugin
+  # Uses obsidian-mcp-server (v3+) which supports the HTTPS-based REST API
   obsidianMCPWrapper = pkgs.writeShellScriptBin "obsidian-mcp" ''
-    exec npx -y mcp-obsidian "${homeDir}/.vault"
+    exec npx -y obsidian-mcp-server
   '';
 
   # Patched observer-loop.sh — upstream uses relative paths (.observer-tmp/filename)
@@ -443,6 +444,9 @@ in
           obsidian = {
             type = "local";
             command = [ "${obsidianMCPWrapper}/bin/obsidian-mcp" ];
+            env = {
+              OBSIDIAN_API_KEY = "obsidian-local-rest-api-key";
+            };
           };
         };
         lsp = {
