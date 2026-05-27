@@ -121,6 +121,21 @@ let
     "terminal-ops"
     "search-first"
     "helmfile-contribution"
+
+    # Optimization (v2.0.0-rc.1)
+    "parallel-execution-optimizer"
+    "benchmark-optimization-loop"
+    "data-throughput-accelerator"
+    "latency-critical-systems"
+    "recursive-decision-ledger"
+
+    # Research / ops
+    "deep-research"
+    "workspace-surface-audit"
+    "knowledge-ops"
+    "continuous-agent-loop"
+    "github-ops"
+    "research-ops"
   ];
 
   # Instructions with absolute paths (opencode resolves these)
@@ -172,6 +187,21 @@ let
 
     # User-contributed (derived from git history analysis)
     "${configDir}/skills/helmfile-contribution/SKILL.md"
+
+    # Optimization (v2.0.0-rc.1)
+    "${configDir}/skills/parallel-execution-optimizer/SKILL.md"
+    "${configDir}/skills/benchmark-optimization-loop/SKILL.md"
+    "${configDir}/skills/data-throughput-accelerator/SKILL.md"
+    "${configDir}/skills/latency-critical-systems/SKILL.md"
+    "${configDir}/skills/recursive-decision-ledger/SKILL.md"
+
+    # Research / ops
+    "${configDir}/skills/deep-research/SKILL.md"
+    "${configDir}/skills/workspace-surface-audit/SKILL.md"
+    "${configDir}/skills/knowledge-ops/SKILL.md"
+    "${configDir}/skills/continuous-agent-loop/SKILL.md"
+    "${configDir}/skills/github-ops/SKILL.md"
+    "${configDir}/skills/research-ops/SKILL.md"
   ];
 
   # Path to the context7 API key from sops (known at build time)

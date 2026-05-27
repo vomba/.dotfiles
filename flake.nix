@@ -25,7 +25,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     ecc-universal = {
-      url = "https://registry.npmjs.org/ecc-universal/-/ecc-universal-1.10.0.tgz";
+      url = "https://registry.npmjs.org/ecc-universal/-/ecc-universal-2.0.0-rc.1.tgz";
       flake = false;
     };
     obsidian-plugins = {

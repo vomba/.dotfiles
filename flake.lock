@@ -4,13 +4,13 @@
       "flake": false,
       "locked": {
         "lastModified": 499162500,
-        "narHash": "sha256-I9MESOwtokju2fxr7hkOg411h4U47ENoBtHNYtfTGdA=",
+        "narHash": "sha256-fwk/XbdmWVayQfFN72g5KAXPBZCWimMcNi3Acm5mryg=",
         "type": "tarball",
-        "url": "https://registry.npmjs.org/ecc-universal/-/ecc-universal-1.10.0.tgz"
+        "url": "https://registry.npmjs.org/ecc-universal/-/ecc-universal-2.0.0-rc.1.tgz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://registry.npmjs.org/ecc-universal/-/ecc-universal-1.10.0.tgz"
+        "url": "https://registry.npmjs.org/ecc-universal/-/ecc-universal-2.0.0-rc.1.tgz"
       }
     },
     "flake-parts": {
