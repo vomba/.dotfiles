@@ -19,3 +19,8 @@ projects/*/observer.log
 projects/*/.last-purge
 projects/*/.observer-tmp/
 projects/*/*.lock
+
+# Project registry — machine-specific paths + last_seen timestamps
+# Instincts/evolved are still tracked and shared across machines
+projects.json
+projects/*/project.json
