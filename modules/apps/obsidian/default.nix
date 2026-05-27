@@ -18,7 +18,7 @@ let
         template_folder = "Templates";
         trigger_on_file_creation = true;
         auto_jump_to_cursor = false;
-        enable_system_commands = false;
+        enable_system_commands = true;
         timeout = 5;
         startup_templates = [ ];
         enabled_templates_hotkeys = [ ];

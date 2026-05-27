@@ -91,7 +91,6 @@ let
     "api-design"
     "strategic-compact"
     "eval-harness"
-    "obsidian-brain"
     "continuous-learning-v2"
 
     # Go
@@ -136,6 +135,9 @@ let
     "continuous-agent-loop"
     "github-ops"
     "research-ops"
+
+    # Crossplane
+    "crossplane-e2e"
   ];
 
   # Instructions with absolute paths (opencode resolves these)
@@ -155,7 +157,6 @@ let
     "${configDir}/skills/api-design/SKILL.md"
     "${configDir}/skills/strategic-compact/SKILL.md"
     "${configDir}/skills/eval-harness/SKILL.md"
-    "${configDir}/skills/obsidian-brain/SKILL.md"
     "${configDir}/skills/continuous-learning-v2/SKILL.md"
 
     # Go
@@ -202,6 +203,9 @@ let
     "${configDir}/skills/continuous-agent-loop/SKILL.md"
     "${configDir}/skills/github-ops/SKILL.md"
     "${configDir}/skills/research-ops/SKILL.md"
+
+    # Crossplane
+    "${configDir}/skills/crossplane-e2e/SKILL.md"
   ];
 
   # Path to the context7 API key from sops (known at build time)
@@ -291,7 +295,7 @@ let
     lib.genAttrs
       (map (s: ".config/opencode/skills/${s}") (
         lib.filter (
-          s: s != "obsidian-brain" && s != "helmfile-contribution" && s != "continuous-learning-v2"
+          s: s != "helmfile-contribution" && s != "continuous-learning-v2" && s != "crossplane-e2e"
         ) neededSkills
       ))
       (path: {
@@ -306,10 +310,6 @@ let
     #   3. Filter it in the genAttrs above (add && s != "<name>")
     #   4. Add home.file entry below
     #   5. Add "${configDir}/skills/<name>/SKILL.md" to mergedInstructions
-    ".config/opencode/skills/obsidian-brain" = {
-      source = ../apps/obsidian/skills/obsidian-brain;
-      force = true;
-    };
     # obsidian-second-brain — on-demand skill (not in mergedInstructions).
     # The agent loads it via skill({ name: "obsidian-second-brain" }) when
     # the user mentions vault/note operations.
@@ -319,6 +319,10 @@ let
     };
     ".config/opencode/skills/helmfile-contribution" = {
       source = ../../apps/opencode/skills/helmfile-contribution;
+      force = true;
+    };
+    ".config/opencode/skills/crossplane-e2e" = {
+      source = ../../apps/opencode/skills/crossplane-e2e;
       force = true;
     };
     # Patched continuous-learning-v2 — observer-loop.sh uses absolute paths
@@ -352,6 +356,11 @@ let
   codegraphCLIWrapper = pkgs.writeShellScriptBin "codegraph" ''
     export PATH="${codegraphNode}/bin:$PATH"
     exec npx -y "@colbymchenry/codegraph@latest" "$@"
+  '';
+
+  # MCP server for Obsidian vault access (read/write notes via tool calls)
+  obsidianMCPWrapper = pkgs.writeShellScriptBin "obsidian-mcp" ''
+    exec npx -y mcp-obsidian "${homeDir}/.vault"
   '';
 
   # Patched observer-loop.sh — upstream uses relative paths (.observer-tmp/filename)
@@ -430,6 +439,10 @@ in
           codegraph = {
             type = "local";
             command = [ "${codegraphMCPWrapper}/bin/codegraph-mcp" ];
+          };
+          obsidian = {
+            type = "local";
+            command = [ "${obsidianMCPWrapper}/bin/obsidian-mcp" ];
           };
         };
         lsp = {
