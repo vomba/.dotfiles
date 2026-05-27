@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-stable,
   config,
   lib,
   ...
@@ -10,8 +9,8 @@
     home.packages = [
       # Utilities
       pkgs.gh
-      pkgs-stable.yq-go
-      pkgs-stable.jq
+      pkgs.yq-go
+      pkgs.jq
       pkgs.jless
       pkgs.glow
       pkgs.act

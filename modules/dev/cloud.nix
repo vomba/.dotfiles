@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-stable,
   config,
   lib,
   ...
@@ -9,10 +8,10 @@
   config = lib.mkIf config.dotfiles.dev.cloud.enable {
     home.packages = [
       # AWS
-      pkgs-stable.awscli2
+      pkgs.awscli2
 
       # Azure
-      pkgs-stable.azure-cli
+      pkgs.azure-cli
       pkgs.azure-storage-azcopy
 
       # OpenStack / UpCloud

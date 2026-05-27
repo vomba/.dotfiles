@@ -1,6 +1,5 @@
 {
   pkgs,
-  pkgs-stable,
   config,
   lib,
   ...
@@ -21,7 +20,7 @@
       # Web / Config
       pkgs.yaml-language-server
       pkgs.vscode-json-languageserver
-      pkgs-stable.jq # Required for jq-lsp often, but lsp is separate
+      pkgs.jq
       pkgs.jq-lsp
 
       # Markdown

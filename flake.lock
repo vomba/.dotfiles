@@ -173,11 +173,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779781981,
-        "narHash": "sha256-fCPztRUwSGO4kGyV/YQ55cd55pGVwTLcWLnPmthN9R0=",
+        "lastModified": 1779880329,
+        "narHash": "sha256-98Sm7Lj/Og1kzVgLH4tS972RkSoJNqdpOwXfWz6xirc=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "474a13af747af123993261fa84cc711ce5b983ca",
+        "rev": "67d3be7d79a5436bfa1548d76719304198494ec6",
         "type": "github"
       },
       "original": {
@@ -193,11 +193,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779762553,
-        "narHash": "sha256-5fvlnuzSQh+RjLkS8PpTd/8Wp53T3W+IhJhKaFhFmvI=",
+        "lastModified": 1779849513,
+        "narHash": "sha256-IzXo2sDj+y71AHWV36hvov5jBDXxcpG4Q4mNvsgp5lQ=",
         "owner": "vomba",
         "repo": "obsidian-plugins-nix",
-        "rev": "02b311f60fbc704884426d5b3f7c25455081e2cb",
+        "rev": "f37356b965f20a35d168c7cf3a633180b7c9499b",
         "type": "github"
       },
       "original": {
@@ -209,11 +209,11 @@
     "obsidian-second-brain": {
       "flake": false,
       "locked": {
-        "lastModified": 1779630351,
-        "narHash": "sha256-WusZfJE5dpTdvhpQEREJdPsnyzsRUZ+lfa9bEXXYIgw=",
+        "lastModified": 1779880279,
+        "narHash": "sha256-VtSnt8LscMWB1Hwh775b9Q4Jj47AFuh0r5M5ntsBfkw=",
         "owner": "eugeniughelbur",
         "repo": "obsidian-second-brain",
-        "rev": "23a0ed29afe63314c8fe0f8ff8a7d3ba5192b52c",
+        "rev": "c1c6352232f376ed10021f23eb9dc8f059225478",
         "type": "github"
       },
       "original": {
