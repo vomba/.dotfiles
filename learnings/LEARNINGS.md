@@ -302,6 +302,18 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - These are personal secrets stores, not cache files — deletion is irreversible
 - Always ask before removing any credential entry, even if it appears unused
 
+### OpenCode MCP Config
+- `env` vars in opencode's MCP server config don't get passed to the child process
+- Bake required env vars directly into the wrapper script (`writeShellScriptBin`) instead
+- When an MCP server fails, test it directly via stdio JSON-RPC to isolate the issue
+- Check for newer/alternative packages before debugging outdated ones
+
+### Obsidian REST API Plugin
+- Version 4.1.0+ switched from HTTP to HTTPS with a self-signed cert
+- Use `curl -sk` for testing, not plain HTTP
+- The `mcp-obsidian` npm package is outdated (MCP SDK 0.5.0, only 2 tools)
+- Replace with `obsidian-mcp-server` (modern SDK, 14 tools) for better vault access
+
 ## See Also
 
 Detailed session learnings:
