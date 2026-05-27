@@ -361,6 +361,7 @@ let
   # MCP server for Obsidian vault access via Local REST API plugin
   # Uses obsidian-mcp-server (v3+) which supports the HTTPS-based REST API
   obsidianMCPWrapper = pkgs.writeShellScriptBin "obsidian-mcp" ''
+    export OBSIDIAN_API_KEY="obsidian-local-rest-api-key"
     exec npx -y obsidian-mcp-server
   '';
 
@@ -444,9 +445,6 @@ in
           obsidian = {
             type = "local";
             command = [ "${obsidianMCPWrapper}/bin/obsidian-mcp" ];
-            env = {
-              OBSIDIAN_API_KEY = "obsidian-local-rest-api-key";
-            };
           };
         };
         lsp = {
