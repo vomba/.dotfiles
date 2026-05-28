@@ -8,11 +8,11 @@ aliases:
   - How to use this vault
 ---
 
-# 🧠 Obsidian Setup Guide (2026 Edition)
+# Obsidian Setup Guide (2026 Edition)
 
-This vault is configured as a **Smart Environment**, integrating Nix-managed stability with AI-powered agility via the **Gemini CLI (opencode)**.
+This vault is configured as a **Smart Environment**, integrating Nix-managed stability with AI-powered agility via **opencode**.
 
-## 📅 Daily Workflow
+## Daily Workflow
 
 ### 1. The Daily Note (`Alt + D`)
 Your Daily Note is the "Command Center." It automatically pulls in:
@@ -29,44 +29,61 @@ Use the **QuickAdd** hotkeys to capture information without losing focus:
 
 ---
 
-## 🤖 AI & Agent Prompts
+## AI & Agent Integration
 
-You are using a **Local REST API** which allows `opencode` (the Gemini CLI) to interact with your vault directly.
+The vault is accessible to opencode via the **Obsidian Local REST API** plugin using `obsidian-mcp-server`. This enables AI read/write/search operations directly on the vault.
 
-### CLI Commands (Run from Terminal)
-| Goal | Command |
+### Slash Commands (in opencode)
+
+26 vault operations are available as `/obsidian-*` commands:
+
+| Command | Purpose |
 | :--- | :--- |
-| **Brainstorm** | `opencode --prompt "Brainstorm 5 ideas for [Topic] and save them to 05 - Wiki/[Topic].md"` |
-| **Summarize** | `opencode --prompt "Read 03 - Resources/[File].md and summarize it into my Daily Note"` |
-| **Organize** | `opencode --prompt "Review all untagged notes in Resources and suggest tags"` |
-| **Plan** | `opencode --prompt "Create a strategic roadmap for [Project] in 02 - Projects/[Project].canvas"` |
+| `obsidian-read` | Read a vault note |
+| `obsidian-write` | Create or overwrite a note |
+| `obsidian-append` | Append content to a note |
+| `obsidian-patch` | Edit a heading/block/frontmatter section |
+| `obsidian-search` | Search the vault |
+| `obsidian-daily` | Open/create the daily note |
+| `obsidian-weekly` | Weekly note and review operations |
+| ... | 26 commands total |
 
-### Internal AI Prompts (Coming from Obsidian)
-- Use **Templater** (`Alt + E`) to run dynamic scripts that call the AI.
-- Use **Smart Connections** to chat with your vault in the sidebar. It uses your local notes as "Context Packs" for more accurate answers.
+### AI Workflows
+
+| Goal | How |
+| :--- | :--- |
+| **Brainstorm** | Ask opencode to save ideas to a note |
+| **Summarize** | Ask opencode to read and summarize vault content |
+| **Organize** | Ask opencode to review and tag untagged notes |
+| **Research** | Ask opencode to save research findings to vault notes |
 
 ---
 
-## 🛠️ Advanced 2026 Features
+## Advanced Features
 
 ### Task-as-a-Note
 For big tasks, don't just use a checkbox. Create a note:
 1. Create `My Big Project Task.md` in `00 - Daily/`.
 2. Tag it `#task`.
-3. Add properties: `due: 2026-04-23`, `status: active`.
+3. Add properties: `due: YYYY-MM-DD`, `status: active`.
 4. It will automatically appear in your Daily Note's **Rich Tasks** section.
 
-### Omnisearch (Semantic Search)
-Press `Ctrl + S` (standard) or your Omnisearch hotkey to search by **intent**. Instead of searching for "Nix," you can search for "How do I configure my shell?" and it will find relevant notes even if the exact word isn't there.
+### Obsidian MCP Access
+The vault is served via `obsidian-mcp-server` (HTTPS-based, self-signed cert):
+- **MCP tools**: 14 tools for read, write, search, list, and manage notes
+- **URL**: `https://localhost:27124`
+- **Auth**: Bearer token via `OBSIDIAN_API_KEY` (baked into the MCP wrapper)
 
 ### Canvas Mapping
-For complex projects, open a **Canvas** (`02 - Projects/`). You can ask me (`opencode`) to "Populate this canvas with research from my resources," and I will place cards and arrows representing the relationships between your notes.
+For complex projects, open a **Canvas** (`02 - Projects/`). Ask opencode to populate it with research from your resources.
 
 ---
 
-## 🔧 Maintenance
-- **Weekly Review**: Every Sunday, create a Weekly Review note. It will automatically aggregate your "Wins," "Challenges," and "Lessons Learned" from the past 7 days.
-- **Nix Updates**: To add new plugins, update `modules/obsidian.nix` and run `home-manager switch`.
+## Maintenance
+- **Weekly Review**: Every Sunday, the Weekly Review aggregates "Wins," "Challenges," and "Lessons Learned" from the past 7 days.
+- **Nix Updates**: Edit `modules/apps/obsidian/default.nix` and run `home-manager switch`.
+- **Automation**: obsidian-second-brain commands handle vault ops — no manual scripts needed.
 
 ---
-*Note: This guide is maintained by your AI Agent. If you change your workflow, ask me to update this manual!*
+
+*Note: This guide is maintained by opencode. If you change your workflow, ask it to update this guide.*

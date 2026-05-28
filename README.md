@@ -6,6 +6,7 @@ Nix-based dotfiles managed via [home-manager](https://github.com/nix-community/h
 
 ```
 flake.nix              # Entry point — flake inputs, outputs, formatter
+AGENTS.md              # Agent-essential facts for opencode sessions
 home.nix               # Shared home-manager module imports
 linux.nix              # Linux-specific: Hyprland, kanshi
 darwin.nix             # macOS-specific: nix-darwin system config
@@ -24,7 +25,7 @@ modules/
 │   ├── cloud.nix      # AWS, Azure, OpenStack, Terraform/OpenTofu
 │   ├── kubernetes.nix # kubectl, helm, helmfile, kind, velero, krew, kubie, popeye, crossplane, OIDC
 │   ├── lsp.nix        # LSP servers (nixd, gopls, terraform-ls, nix-tree, typos-lsp, etc.)
-│   └── ai.nix         # OpenCode + Everything Claude Code upstream
+│   └── ai.nix         # OpenCode + Everything Claude Code + obsidian-second-brain
 ├── shell/
 │   ├── zsh.nix        # Zsh, oh-my-zsh, aliases, env vars
 │   ├── shell.nix      # fzf, bat, zoxide, eza, starship
@@ -34,25 +35,32 @@ modules/
     ├── firefox.nix     # Firefox policies, extensions, search engines
     ├── editors.nix     # Helix
     ├── yazi.nix        # Yazi file manager
-    ├── packages.nix    # Misc CLI packages (gh, direnv, sops, etc.)
+    ├── packages.nix    # Misc CLI packages (gh, direnv, sops, act, etc.)
     └── obsidian/
-        ├── default.nix # Obsidian vault, plugins, templates
+        ├── default.nix # Obsidian vault, Templater, plugins, templates
         ├── plugins/    # Plugin data files (quickadd, etc.)
         ├── templates/  # Note templates
         └── vault-dirs/ # Vault directory structure
+apps/
+└── opencode/
+    ├── homunculus/     # Continuous-learning instincts (per-project + global)
+    ├── skills/         # Local skills (crossplane-e2e, helmfile-contribution, etc.)
+    └── plugins/        # OpenCode plugins (ECC, observe)
 overlays/
 ├── default.nix        # Compositor — merges all overlays
-├── languages.nix      # Language toolchain pins (swift, dotnet, marksman)
-├── python.nix         # Python package patches (magnumclient, etc.)
 ├── cidr.nix           # CIDR CLI
 ├── openstack-tui.nix  # OpenStack TUI (Rust)
 ├── helm.nix           # Helm v4 + plugin builder
 └── helmfile.nix       # Helmfile override
 scripts/
-├── git-daily-summary.sh
-├── obsidian-weekly.sh
-└── check-updates.py
+├── check-updates.py   # Overlay version health checks
+├── ecc-skills.sh      # ECC skill discovery helper
+└── git-daily-summary.sh
 ```
+
+> **Overlay cleanup**: `python.nix` and `languages.nix` removed — toolchains now come from nixpkgs directly. Only CIDR, OpenStack TUI, Helm, and Helmfile remain as local overrides.
+
+> **Script changes**: `obsidian-weekly.sh` replaced by obsidian-second-brain command automation via opencode.
 
 ## Usage
 
@@ -84,8 +92,8 @@ All flags default to `true`. Flags are grouped by domain:
 | `dotfiles.desktop.hyprland.enable` | Hyprland WM, waybar, hypridle, fuzzel |
 | `dotfiles.dev.enable` | Go, pre-commit, skopeo |
 | `dotfiles.dev.kubernetes.enable` | kubectl, helm, helmfile, kind, velero, krew |
-| `dotfiles.dev.cloud.enable` | AWS, Azure, OpenStack, Terraform/OpenTofu |
-| `dotfiles.dev.lsp.enable` | LSP servers (nixd, gopls, terraform-ls, etc.) |
+| `dotfiles.dev.cloud.enable` | AWS, Azure, OpenStack, Terraform/OpenTofu, OpenStack TUI |
+| `dotfiles.dev.lsp.enable` | LSP servers (nixd, gopls, terraform-ls, marksman, typos-lsp, etc.) |
 | `dotfiles.dev.ai.enable` | OpenCode + Everything Claude Code |
 | `dotfiles.shell.enable` | fzf, bat, zoxide, eza, fd, starship |
 | `dotfiles.shell.zsh.enable` | Zsh config |
@@ -141,6 +149,8 @@ All flags default to `true`. Flags are grouped by domain:
    ```
 3. `nix flake check` to verify.
 
+> **Note**: Overlays have been simplified. `python.nix` (OpenStack Python patches) and `languages.nix` (swift/dotnet/marksman version pins) were removed — those toolchains now come from the nixpkgs channel directly. Only CIDR, OpenStack TUI, Helm v4, and Helmfile remain as local overrides. Similarly, `pkgs-stable` usage was reduced: `packages.nix`, `cloud.nix`, and `lsp.nix` now use `pkgs` (nixpkgs unstable). The `nixpkgs-stable` input still exists for kubernetes and hyprland modules.
+
 ## Secrets
 
 [sops-nix](https://github.com/Mic92/sops-nix) is pre-configured:
@@ -158,6 +168,38 @@ sops.secrets.my-key = { };
 
 Reference in other modules via `config.sops.secrets.my-key.path`.
 
+**Password manager entries (rbw, pass) are sacred** — never delete without asking. These are personal secrets stores, not cache files; deletion is irreversible.
+
+See [AGENTS.md](AGENTS.md) for agent-essential facts, module rules, CI format, and secrets conventions used by opencode sessions.
+
+## Obsidian Vault & Second Brain
+
+The repo manages an [Obsidian](https://obsidian.md) vault with:
+
+- **Templater templates** (Daily Note, Weekly Review, project, resource, snippet, wiki page)
+- **Vault directory structure** (00-daily through 06-archive)
+- **Templater system commands** enabled (`enable_system_commands = true`) for running shell commands from templates
+- **obsidian-second-brain** ([v0.8.0](https://github.com/eugeniughelbur/obsidian-second-brain)) — 26 `/` slash commands for vault operations (read, write, search, manage notes) registered as opencode commands
+
+### OpenCode / AI Integration
+
+The vault is accessible from opencode via:
+- **Obsidian MCP server** (`obsidian-mcp-server`) — connects via the Local REST API plugin (HTTPS-based, self-signed cert). Test with `curl -sk`.
+- **`OBSIDIAN_API_KEY`** baked into a `writeShellScriptBin` wrapper (not via opencode `env` — `env` in MCP config doesn't pass to child processes)
+- **obsidian-second-brain skill** — loaded on demand when vault operations are needed
+- **`/obsidian-*` commands** — 26 vault ops registered alongside ECC commands
+
+> The local `obsidian-brain` skill was removed in favor of the upstream `obsidian-second-brain` from the flake input. No more dual-maintenance.
+
+### OpenCode Continuous Learning
+
+The `apps/opencode/homunculus/` directory stores per-project and global instincts auto-extracted from sessions:
+- `instincts/personal/` — auto-learned patterns with confidence scoring
+- `projects/<hash>/` — project-scoped instincts (isolated per repo)
+- `evolved/` — generated skills, commands, agents from instinct clusters
+
+Machine-local paths and `project.json` metadata are `.gitignore`d. Instinct files and evolved artifacts are tracked for cross-machine portability.
+
 ## Maintenance
 
 ### CI Pipeline
@@ -166,6 +208,8 @@ Reference in other modules via `config.sops.secrets.my-key.path`.
 2. **nix flake check** — evaluation validation
 3. **shellcheck** — lint all `.sh` scripts (via `nix run nixpkgs#shellcheck` — macOS runners don't have it pre-installed)
 4. **Build** — Linux (home-manager) + macOS (nix-darwin) configurations
+
+CI ignores `.md` changes, overlay-only changes, and `flake.lock` changes.
 
 `.github/workflows/update-check.yml` runs daily:
 1. `nix flake update` + overlay version checks via `scripts/check-updates.py`
