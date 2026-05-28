@@ -1,128 +1,65 @@
-# Dotfiles — Home Manager + nix-darwin
+# Dotfiles
 
-Cross-platform Nix config for Linux (home-manager) and macOS (nix-darwin). Opinionated setup with Hyprland, dev tooling, opencode/ECC, and Obsidian vault management.
+Cross-platform Nix config: Linux (home-manager) + macOS (nix-darwin).
 
-## Quick Reference
+## Activation
+
+For evaluation to succeed, any new `.nix` file referenced by a module MUST be `git add`ed first — `nix flake check` silently rejects untracked files.
+
+Always activate from the repo root (`~/.dotfiles`):
 
 ```bash
-nix run home-manager -- switch --flake .#hani   # Linux activation
-nix run nix-darwin -- switch --flake .#Mac       # macOS activation
-nix flake check                                    # Validate (after git add)
-nix fmt                                            # Format all Nix files
-nix run nixpkgs#nixfmt -- --check flake.nix home.nix linux.nix darwin.nix $(find modules -name '*.nix') overlays/*.nix
-nix run nixpkgs#shellcheck -- scripts/*.sh        # ShellCheck
+nix run home-manager -- switch --flake .#hani   # Linux
+nix run nix-darwin -- switch --flake .#Mac       # macOS
+nix build .#homeConfigurations.hani.activationPackage --no-link   # verify build
 ```
 
-## Architecture
+## Module Rules
 
-### Module Structure
+- `imports` at the TOP of the module, never inside `config`/`options`/`lib.mkIf`
+- Enable option: `lib.mkEnableOption` in `modules/options.nix`
+- Content wraps: `lib.mkIf config.dotfiles.<group>.<module>.enable { ... }`
+- Platform guard: `pkgs.stdenv.isLinux` / `pkgs.stdenv.isDarwin`
+- nixGL GUI apps: guard both `enable` AND `package` with `pkgs.stdenv.isLinux`
+- `nix.package` in home-manager: `lib.mkIf pkgs.stdenv.isLinux pkgs.nix` (macOS propagates from nix-darwin; setting both errors)
+- `nix.gc` differs by platform: home-manager uses `dates = "weekly"`, nix-darwin uses `interval = { Weekday = 0; Hour = 0; Minute = 0; }`
+- Git `add` every new `.nix` file before `nix flake check`
 
-`imports` MUST be at the top level of a module, never inside `config`, `options`, or any `lib.mkIf` wrapper.
+## Format & CI
 
-- `modules/options.nix` — unified options with `lib.mkEnableOption`
-- `modules/dev/` — development tools, LSP, cloud, kubernetes, opencode/ECC
-- `modules/shell/` — zsh, git, GPG, shell utilities
-- `modules/desktop/` — Hyprland, kanshi, GUI packages
-- `modules/apps/` — Obsidian, editors, firefox, yazi, misc packages
-- `overlays/` — split by domain (helm, openstack-tui, etc.), composed via `default.nix`
-- `scripts/` — utility scripts (ecc-skills.sh, check-updates.py)
-
-### Module Pattern
-
-```nix
-{ lib, config, pkgs, ... }: {
-  imports = [ ./options.nix ];    # imports at top level only
-  config = lib.mkIf config.dotfiles.<group>.<module>.enable {
-    # module content
-  };
-}
+```bash
+nixfmt flake.nix home.nix linux.nix darwin.nix $(find modules -name '*.nix') overlays/*.nix
+nix flake check
 ```
 
-### Platform Guards
+CI (`.github/workflows/ci.yml`):
+- Ignores `.md` changes, overlay-only changes, and `flake.lock` changes
+- Uses `$(find modules -name '*.nix')` (not `**/*.nix`) — macOS bash 3.x compat
+- Cachix push on main, skip on PRs: `vomba.cachix.org`
+- ShellCheck: `nix run nixpkgs#shellcheck -- scripts/*.sh`
 
-- GUI apps wrapped with nixGL: guard both `enable` and `package` with `pkgs.stdenv.isLinux`
-- `nix.package` in home-manager: `lib.mkIf pkgs.stdenv.isLinux pkgs.nix` (macOS uses nix-darwin's)
-- macOS vs Linux: use `pkgs.stdenv.isLinux` / `pkgs.stdenv.isDarwin`
+Pre-commit: nixfmt (auto-fix), gitleaks, prettier (YAML excluding `secrets.yaml`). Run `pre-commit install` once after cloning.
 
-### Build Targets
+## Secrets
 
-- Linux: `.#homeConfigurations.hani.activationPackage`
-- macOS: `.#darwinConfigurations.Mac.system`
-
-## Secrets (sops-nix)
-
-- NEVER hardcode secrets in `.nix` files (no API keys, tokens, passwords, emails, project IDs)
-- ALWAYS use sops-nix with encrypted `secrets.yaml`
-- Before committing: check `rg '(sk-|-----BEGIN|GCP_PROJECT|api_key|password)' --include='*.nix' .`
+- NEVER hardcode secrets in `.nix` files — use sops-nix + `secrets.yaml`
+- `sops.secrets.<name> = {};` (not `neededForUsers` — that's NixOS only)
+- Exclude `secrets.yaml` from all YAML formatters (prettier corrupts encryption)
+- Before commit: `rg '(sk-|-----BEGIN|GCP_PROJECT|api_key|password)' --include='*.nix' .`
 - Password manager entries (rbw, pass) are sacred — never delete without asking
-- `.sops.yaml` at repo root documents key config
-- Exclude `secrets.yaml` from all YAML formatters
-
-### Adding a Secret
-
-```bash
-sops secrets.yaml
-```
-
-Then in a module:
-```nix
-sops.secrets.<name> = {};
-```
-
-Access via `config.sops.secrets.<name>.path`.
-
-## CI/CD
-
-- `.github/workflows/ci.yml` — builds Linux + macOS, runs nixfmt check, flake check, shellcheck
-- `.github/workflows/update-check.yml` — automated flake update PRs
-- Cachix push on main (skip on PRs): `vomba.cachix.org`
-- nixfmt with recursive globs: use `$(find modules -name '*.nix')` (macOS bash 3.x)
-
-## Pre-Commit
-
-```bash
-pre-commit install   # must be run once after cloning
-```
-
-Hooks: prettier (YAML, excluding secrets.yaml), trailing-whitespace, end-of-file-fixer, gitleaks, nixfmt (auto-fixes).
-
-## OpenCode / ECC Integration
-
-- Config in `modules/dev/ai.nix`
-- OpenCode declarative config at `programs.opencode.settings`
-- ECC tarball from npm: `ecc-universal-2.0.0-rc.1.tgz`
-- Agent model overrides: reviewers → deepseek-v4-pro, builders → deepseek-v4-flash
-- MCP servers: context7, codegraph, obsidian-mcp-server
-- Plugin hooks: ECC compiled hooks + observation plugin for continuous-learning
-- Skills: 43 loaded (tdd-workflow, golang-patterns, postgres-patterns, etc.) + obsidian-second-brain (on-demand)
-- Commands: 62 total (36 ECC + 26 obsidian vault ops)
-
-### MCP Gotchas
-
-- opencode.json `env` config does NOT pass env vars to child processes — bake env vars into wrapper scripts via `pkgs.writeShellScriptBin`
-- obsidian-mcp-server v3+ uses HTTPS (self-signed cert), test with `curl -sk`
-
-## Obsidian Vault
-
-- Path: `~/.vault`
-- MCP via `obsidian-mcp-server` (v3.2.2, 14 tools)
-- AI-first rules in `.vault/_CLAUDE.md`
-- Vault ops via obsidian-second-brain skill + 26 `/obsidian-*` commands
-
-## Git Conventions
-
-- Separate commits for separate changes — commit each logical change individually
-- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `perf:`
-- GPG-signed commits; if signing fails with "gpg-agent is older than us": `gpgconf --kill all`
 
 ## Overlays
 
-- Split by domain (helm, openstack-tui, etc.), not by target
-- Compose via set merge (`//`) in `overlays/default.nix`
-- One overlay file per domain
+Composed via `//` in `overlays/default.nix`, one file per domain. Never use semicolons for set merge.
 
-## Flake
+## OpenCode / ECC
 
-- `inputs`: nixpkgs (unstable), nixpkgs-stable (25.11), home-manager, nix-darwin, nixGL, nix-index-database, NUR, ecc-universal, obsidian-plugins, obsidian-second-brain (v0.8.0), sops-nix
-- `allowUnfree = true`
-- Dedicated `devShells` with nixfmt + pre-commit + shellcheck for Linux and macOS
+Config: `modules/dev/ai.nix` at `programs.opencode.settings`. MCP config:
+- `env` in opencode.json MCP servers does NOT pass env vars to child processes — bake into `pkgs.writeShellScriptBin` wrappers instead
+- obsidian-mcp-server uses HTTPS with self-signed cert; test with `curl -sk`
+
+## Git
+
+- Separate commits per logical change — commit before each unrelated edit
+- GPG-signed; if `gpg-agent is older than us`: `gpgconf --kill all`
+- Conventional commits: `feat|fix|refactor|docs|test|chore|perf`
