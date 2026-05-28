@@ -229,6 +229,11 @@ let
       base=$(basename "$f")
       sed '/^---$/,/^---$/ { /^agent:/d; }' "$f" > "$out/$base"
     done
+    # Include obsidian-second-brain commands (explicit vault ops only, not research)
+    for f in ${inputs.obsidian-second-brain}/commands/obsidian-*.md ${inputs.obsidian-second-brain}/commands/create-command.md; do
+      base=$(basename "$f")
+      cp "$f" "$out/$base"
+    done
   '';
 
   # Build the complete home.file attrset — all entries merged together

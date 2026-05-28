@@ -33,7 +33,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     obsidian-second-brain = {
-      url = "github:eugeniughelbur/obsidian-second-brain";
+      url = "github:eugeniughelbur/obsidian-second-brain/v0.8.0";
       flake = false;
     };
     sops-nix = {
