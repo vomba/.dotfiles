@@ -125,6 +125,12 @@ Actionable patterns extracted from session learnings. These fire automatically w
 ### When the Nix store makes a config file read-only
 - **Action**: Add Nix options for the config values in `modules/options.nix`, then generate the config in `modules/dev/ai.nix` via `home.file."<path>" = { text = builtins.toJSON { ... }; force = true; }`. Point any relevant env vars to the generated path.
 
+### When writing or updating AGENTS.md
+- **Action**: Apply the "would an agent miss this without help?" filter to every line. Remove churn-prone noise (counts, directory trees, input lists) that is better read from executable sources (flake.nix, ls, etc.). Tight files bootstrap faster than comprehensive ones.
+
+### When including command files from a flake input in a Nix build
+- **Action**: Use shell glob patterns (e.g. `obsidian-*.md`) instead of individual file lists. This prevents needing config updates when the upstream adds or removes files.
+
 ### When creating a new opencode skill from session learnings
 - **Action**: Save to the dotfiles repo for Nix management and cross-machine portability. Follow the 5-step recipe:
   1. Create `~/.dotfiles/apps/opencode/skills/<name>/SKILL.md`

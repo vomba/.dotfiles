@@ -314,6 +314,19 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - The `mcp-obsidian` npm package is outdated (MCP SDK 0.5.0, only 2 tools)
 - Replace with `obsidian-mcp-server` (modern SDK, 14 tools) for better vault access
 
+## AGENTS.md / Instruction Files
+
+### Tight vs Verbose
+- A good AGENTS.md answers only "would an agent miss this without help?"
+- First-pass drafts tend to include churn-prone noise (counts, directory trees, input lists) — trim aggressively
+- This repo's AGENTS.md went from 128 to 82 lines (63% trim) by removing: skill counts, MCP server list, flake input listing, directory tree, skill list, devShells info
+- The trimmed version bootstraps an agent faster because every line that remains is high-signal, repo-specific guidance
+
+### Glob Over Filter List
+- When including/excluding files by pattern in Nix build (`pkgs.runCommand`), prefer shell glob patterns over individual file lists
+- This avoids needing to update the config when upstream adds/removes files
+- Example: `for f in ${inputs.obsidian-second-brain}/commands/obsidian-*.md` instead of listing 32 files
+
 ## See Also
 
 Detailed session learnings:
