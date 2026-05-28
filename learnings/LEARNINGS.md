@@ -327,6 +327,12 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - This avoids needing to update the config when upstream adds/removes files
 - Example: `for f in ${inputs.obsidian-second-brain}/commands/obsidian-*.md` instead of listing 32 files
 
+### Context-Equivalent Knowledge Storage
+- `learnings/LEARNINGS.md` and `learnings/INSTINCTS.md` are read by opencode as instruction files (via `opencode.json` `instructions` array)
+- This means persistent patterns are auto-loaded into every session without needing a skill or command
+- When running `/learn`, write to these files — they are as available as AGENTS.md to the agent
+- The vault (Obsidian) is for human and future-Claude reference; learnings/ in the dotfiles repo is for current-agent context
+
 ## See Also
 
 Detailed session learnings:

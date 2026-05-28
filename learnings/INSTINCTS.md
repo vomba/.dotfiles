@@ -128,6 +128,9 @@ Actionable patterns extracted from session learnings. These fire automatically w
 ### When writing or updating AGENTS.md
 - **Action**: Apply the "would an agent miss this without help?" filter to every line. Remove churn-prone noise (counts, directory trees, input lists) that is better read from executable sources (flake.nix, ls, etc.). Tight files bootstrap faster than comprehensive ones.
 
+### When saving session knowledge
+- **Action**: Split by audience. Core repo-working patterns go in `learnings/LEARNINGS.md` (prose) and `learnings/INSTINCTS.md` (trigger→action). Obsidian vault notes are for future-Claude cross-session retrieval. Both paths are readable by opencode — the learnings/ files via `instructions` config, the vault via MCP.
+
 ### When including command files from a flake input in a Nix build
 - **Action**: Use shell glob patterns (e.g. `obsidian-*.md`) instead of individual file lists. This prevents needing config updates when the upstream adds or removes files.
 
