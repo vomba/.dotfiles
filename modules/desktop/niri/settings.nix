@@ -107,13 +107,6 @@
       spawn-at-startup = [
         {
           command = [
-            "${pkgs.swaybg}/bin/swaybg"
-            "--image"
-            "${config.home.homeDirectory}/Pictures/background.png"
-          ];
-        }
-        {
-          command = [
             "nm-applet"
             "--indicator"
           ];
@@ -130,13 +123,6 @@
       ];
 
       prefer-no-csd = true;
-
-      layer-rules = [
-        {
-          matches = [ { namespace = "^wallpaper$"; } ];
-          place-within-backdrop = true;
-        }
-      ];
 
       window-rules = [
         {

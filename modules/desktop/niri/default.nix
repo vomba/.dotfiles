@@ -87,6 +87,13 @@
 
     programs.dank-material-shell = {
       enable = true;
+      settings = {
+        currentThemeName = "blue";
+        currentThemeCategory = "generic";
+      };
+      session = {
+        wallpaperPath = "${config.home.homeDirectory}/Pictures/background.png";
+      };
       niri = {
         enableKeybinds = true;
         enableSpawn = true;

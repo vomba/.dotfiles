@@ -37,7 +37,6 @@
           pkgs.nautilus
           pkgs.grim
           pkgs.slurp
-          pkgs.swaybg
           pkgs.wdisplays
         ]
       else
