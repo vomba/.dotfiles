@@ -39,8 +39,6 @@
           pkgs.slurp
           pkgs.swaybg
           pkgs.wdisplays
-          pkgs.hyprland-qtutils
-          pkgs.hyprutils
         ]
       else
         [

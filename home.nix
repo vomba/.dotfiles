@@ -28,11 +28,13 @@
     substituters = [
       "https://vomba.cachix.org"
       "https://nix-community.cachix.org"
+      "https://niri.cachix.org"
       "https://cache.nixos.org"
     ];
     trusted-public-keys = [
       "vomba.cachix.org-1:Me8oTzj1jpd5kcE0Yz2pKzX2C9SGnT951OXSwsfv19I="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
   };

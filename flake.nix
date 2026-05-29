@@ -16,6 +16,14 @@
       url = "github:nix-community/nixGL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -116,6 +124,9 @@
         };
         modules = [
           inputs.nix-index-database.homeModules.nix-index
+          inputs.niri.homeModules.niri
+          inputs.dms.homeModules.dank-material-shell
+          inputs.dms.homeModules.niri
           ./home.nix
           ./linux.nix
         ];

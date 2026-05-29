@@ -8,7 +8,7 @@ Nix-based dotfiles managed via [home-manager](https://github.com/nix-community/h
 flake.nix              # Entry point — flake inputs, outputs, formatter
 AGENTS.md              # Agent-essential facts for opencode sessions
 home.nix               # Shared home-manager module imports
-linux.nix              # Linux-specific: Hyprland, kanshi
+linux.nix             # Linux-specific: niri WM, kanshi
 darwin.nix             # macOS-specific: nix-darwin system config
 modules/
 ├── options.nix        # Enable/disable toggles for every module group
@@ -16,10 +16,11 @@ modules/
 ├── desktop/
 │   ├── gui.nix        # Kitty, Chromium, font config
 │   ├── kanshi.nix     # Display profiles (dock/undock)
-│   └── hyprland/
-│       ├── default.nix # WM enable, theme, portal, hypridle, fuzzel
-│       ├── settings.nix # Env, keybinds, decoration, input, window rules
-│       └── waybar.nix  # Waybar style + modules
+│   ├── niri/
+│   │   ├── default.nix # WM enable, theme, portal, hypridle, fuzzel, DMS
+│   │   ├── settings.nix # Env, input, layout, window rules, spawn
+│   │   └── keybindings.nix # niri + DMS keybinds
+│   └── hyprland/       # [archived] previous WM config
 ├── dev/
 │   ├── dev.nix        # Go, pre-commit, skopeo, parallel
 │   ├── cloud.nix      # AWS, Azure, OpenStack, Terraform/OpenTofu
@@ -89,7 +90,8 @@ All flags default to `true`. Flags are grouped by domain:
 | Option | Controls |
 |--------|----------|
 | `dotfiles.desktop.enable` | Kitty, Chromium, font config, kanshi |
-| `dotfiles.desktop.hyprland.enable` | Hyprland WM, waybar, hypridle, fuzzel |
+| `dotfiles.desktop.hyprland.enable` | [archived] Hyprland WM — kept as backup |
+| `dotfiles.desktop.niri.enable` | niri WM + DankMaterialShell, hypridle, fuzzel |
 | `dotfiles.dev.enable` | Go, pre-commit, skopeo |
 | `dotfiles.dev.kubernetes.enable` | kubectl, helm, helmfile, kind, velero, krew |
 | `dotfiles.dev.cloud.enable` | AWS, Azure, OpenStack, Terraform/OpenTofu, OpenStack TUI |
@@ -149,7 +151,7 @@ All flags default to `true`. Flags are grouped by domain:
    ```
 3. `nix flake check` to verify.
 
-> **Note**: Overlays have been simplified. `python.nix` (OpenStack Python patches) and `languages.nix` (swift/dotnet/marksman version pins) were removed — those toolchains now come from the nixpkgs channel directly. Only CIDR, OpenStack TUI, Helm v4, and Helmfile remain as local overrides. Similarly, `pkgs-stable` usage was reduced: `packages.nix`, `cloud.nix`, and `lsp.nix` now use `pkgs` (nixpkgs unstable). The `nixpkgs-stable` input still exists for kubernetes and hyprland modules.
+> **Note**: Overlays have been simplified. `python.nix` (OpenStack Python patches) and `languages.nix` (swift/dotnet/marksman version pins) were removed — those toolchains now come from the nixpkgs channel directly. Only CIDR, OpenStack TUI, Helm v4, and Helmfile remain as local overrides. Similarly, `pkgs-stable` usage was reduced: `packages.nix`, `cloud.nix`, and `lsp.nix` now use `pkgs` (nixpkgs unstable). The `nixpkgs-stable` input still exists for kubernetes (legacy).
 
 ## Secrets
 

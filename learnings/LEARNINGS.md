@@ -197,37 +197,48 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 
 ## Module Refactoring
 
-### Hyprland Sub-Module Split Pattern
-- Extract self-contained sections (keybindings, env, window rules) into separate `.nix` files
+### Sub-Module Split Pattern
+- Extract self-contained sections into separate `.nix` files
 - Parent module imports them via `imports = [ ./submodule.nix ]; `
-- Both modules merge into the same `wayland.windowManager.hyprland.settings` attrset
+- Both modules merge into the same target attrset — works for both `wayland.windowManager.hyprland.settings` and `programs.niri.settings`
 - Nix merges duplicate attribute paths from multiple modules automatically
 
 ### Brace Matching After Section Removal
 - Removing a large block from a Nix attrset can accidentally consume closing `};`
 - After edits, verify each level's braces are balanced — especially when sections above and below the removed block both end with `};`
 
-## Hyprland
+## niri
 
-### direct_scanout on Modern NVIDIA
-- `render.direct_scanout = false` was a workaround for older NVIDIA drivers (pre-555)
-- With NVIDIA 555+ and current Hyprland, explicit sync is properly supported
-- Default (`true`) provides lower latency without issues
-- Test by removing and observing for tearing
+### Config Module Structure
+- `programs.niri.settings` is provided by the niri-flake's home-manager module
+- Both `settings.nix` and `keybindings.nix` write to `programs.niri.settings` — Nix merges them
+- Config is validated at build time by niri-flake
 
-### Deprecated Dispatchers
-- `togglesplit` and `swapsplit` dispatchers removed in Hyprland 0.44+
-- Replace with `layoutmsg togglesplit` / `layoutmsg swapsplit` (pass old name as string arg)
-- In home-manager hyprlang bind: `"${modifier}, T, layoutmsg, togglesplit"` (no trailing comma — it takes an arg)
+### niri + non-NixOS
+- `programs.niri.package` must be wrapped with `config.lib.nixGL.wrap pkgs.niri` for GPU driver compat
+- Desktop file must use `niri-session` (not `niri --session`) — it re-execs through login shell to import nix env vars
+- `systemd.user.services.niri` is needed for systemd integration
+- `blueman-applet` fails silently if not installed — safe to ignore
 
-### Removed Config Options
-- `dwindle.pseudotile` is gone entirely — no replacement config option
-- Use the `pseudo` dispatcher (e.g. bound to a keybind) to toggle pseudotile per-window instead
+### Kanshi + niri
+- Use `graphical-session.target` as systemd target (not `hyprland-session.target`)
+- Commands: `niri msg action move-workspace-to-monitor <output>` (not `move-workspace-to-output`)
+- Monitor positions in kanshi must use logical (post-scale) coordinates matching `niri msg outputs`
 
-### Hyprlang Deprecation
-- Since Hyprland 0.55, hyprlang is deprecated in favor of lua
-- `configType = "hyprlang"` in home-manager still works for pre-0.55
-- lua syntax: `hl.dsp.layout("togglesplit")` instead of `layoutmsg` dispatcher
+### DMS Integration
+- `programs.dank-material-shell.niri.enableSpawn = true` auto-starts DMS with niri
+- `programs.dank-material-shell.niri.enableKeybinds = true` adds DMS binds (Mod+Space=spotlight, Mod+N=notifications, etc.)
+- `programs.dank-material-shell.niri.includes.enable = false` to manage niri config via `programs.niri.settings` directly
+- DMS replaces: waybar, mako, fuzzel (as primary), volume/brightness controls
+
+### niri Keybinding Patterns
+- `Mod` = Super on TTY, Alt when nested (niri default)
+- Window-level monitor movement: `move-window-to-monitor-*`
+- Column-level monitor movement: `move-column-to-monitor-*`
+- Workspace-level monitor movement: `move-workspace-to-monitor-*`
+- Tabs: `toggle-column-tabbed-display` (replaces Hyprland groups)
+- Floating: `toggle-window-floating` + `switch-focus-between-floating-and-tiling`
+- Built-in screenshot: `screenshot`, `screenshot-screen`, `screenshot-window`
 
 ## Git
 
@@ -241,11 +252,11 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - Fix: `gpgconf --kill all` to restart agent
 - Happens after system upgrades where gpg is updated but agent process lingers
 
-### systemd.enable with Display Managers
-- `hyprland.systemd.enable = true` is safe when using a display manager (SDDM, GDM)
-- Display managers initialize the user systemd session before Hyprland starts
-- On TTY-start without a DM, systemd may not be initialized — then `enable = false` is safer
-- Benefits of `true`: proper env propagation, session lifecycle, clean shutdown
+### systemd with Display Managers (niri)
+- niri's `systemd.user.services.niri` uses `graphical-session.target` via `BindsTo`
+- niri-session re-execs through login shell to import nix env before starting niri
+- GDM provides systemd user session automatically
+- Benefits: proper env propagation, session lifecycle, clean shutdown
 
 ## Go / Helmfile
 

@@ -7,7 +7,7 @@
   config = lib.mkIf config.dotfiles.desktop.enable {
     services.kanshi = {
       enable = true;
-      systemdTarget = "hyprland-session.target";
+      systemdTarget = "graphical-session.target";
       settings = [
         {
           profile.name = "undocked";
@@ -34,8 +34,8 @@
             }
           ];
           profile.exec = [
-            "hyprctl dispatch moveworkspacetomonitor 2 'desc:AOC G2490W1G4 QSHNCHA000279'"
-            "hyprctl dispatch moveworkspacetomonitor 3 'desc:GIGA-BYTE TECHNOLOGY CO. LTD. M27Q 0x01010101'"
+            "niri msg action focus-workspace 2; niri msg action move-workspace-to-monitor 'AOC G2490W1G4 QSHNCHA000279'"
+            "niri msg action focus-workspace 3; niri msg action move-workspace-to-monitor 'GIGA-BYTE TECHNOLOGY CO. LTD. M27Q'"
           ];
         }
         {
@@ -47,18 +47,16 @@
             }
             {
               criteria = "Dell Inc. DELL P2721Q HQ53HF3";
-              position = "1920,0";
+              position = "1536,480";
             }
-
             {
               criteria = "Dell Inc. DELL P2723QE 9FLG904";
-              position = "5760,0";
+              position = "4096,480";
             }
           ];
           profile.exec = [
-            "hyprctl dispatch moveworkspacetomonitor 2 'desc:Dell Inc. DELL P2721Q HQ53HF3'"
-            "hyprctl dispatch moveworkspacetomonitor 3 'desc:Dell Inc. DELL P2723QE 9FLG904'"
-
+            "niri msg action focus-workspace 2; niri msg action move-workspace-to-monitor 'Dell Inc. DELL P2721Q HQ53HF3'"
+            "niri msg action focus-workspace 3; niri msg action move-workspace-to-monitor 'Dell Inc. DELL P2723QE 9FLG904'"
           ];
         }
       ];

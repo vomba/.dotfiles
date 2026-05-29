@@ -2,11 +2,16 @@
 {
   options.dotfiles = {
     desktop = {
-      enable = lib.mkEnableOption "desktop environment (Hyprland, kanshi, GUI apps)" // {
+      enable = lib.mkEnableOption "desktop environment (niri, kanshi, GUI apps)" // {
         default = true;
       };
       hyprland = {
         enable = lib.mkEnableOption "Hyprland WM" // {
+          default = false;
+        };
+      };
+      niri = {
+        enable = lib.mkEnableOption "niri WM" // {
           default = true;
         };
       };

@@ -5,7 +5,7 @@
 }:
 {
   imports = [
-    ./modules/desktop/hyprland/default.nix
+    ./modules/desktop/niri/default.nix
     ./modules/desktop/kanshi.nix
   ];
 

@@ -78,22 +78,22 @@ Actionable patterns extracted from session learnings. These fire automatically w
 - **Action**: Don't symlink the `.opencode/` directory from the npm package. Define agents and commands solely in the main `opencode.json`. Keep `plugin = []` in the OpenCode config.
 
 ### When splitting a Nix module that exceeds 200 lines
-- **Action**: Extract self-contained sections into sub-module files. Parent uses `imports = [ ./submodule.nix ];`. Nix merges duplicate attr paths from multiple modules, so they can all write to the same `wayland.windowManager.hyprland.settings` target.
+- **Action**: Extract self-contained sections into sub-module files. Parent uses `imports = [ ./submodule.nix ];`. Nix merges duplicate attr paths from multiple modules, so they can all write to the same target attrset.
 
 ### When adding a new .nix file to a flake module
 - **Action**: Run `git add <file>` before `nix flake check` — flakes refuse to evaluate untracked files.
 
-### When setting up Hyprland on a system with a display manager
-- **Action**: Set `hyprland.systemd.enable = true` — safe with DM (SDDM/GDM), provides env propagation and clean shutdown. Only keep `false` for TTY-start without DM.
+### When setting up programs.niri.settings on non-NixOS
+- **Action**: Set `programs.niri.package = config.lib.nixGL.wrap pkgs.niri` for GPU driver compatibility. Use `niri-session` in the desktop file (not `niri --session`) — it re-execs through login shell to import nix env vars.
 
-### When removing deprecated Hyprland workarounds
-- **Action**: Check upstream changelogs first. `render.direct_scanout = false` is no longer needed with NVIDIA 555+ drivers. Remove and observe before committing.
+### When configuring kanshi for niri
+- **Action**: Use `systemdTarget = "graphical-session.target"`. Use `niri msg action move-workspace-to-monitor <output>` instead of hyprctl equivalents. Monitor positions must use logical (post-scale) coordinates.
 
-### When Hyprland errors on removed dispatchers (togglesplit/swapsplit)
-- **Action**: Replace with `layoutmsg` — e.g. `togglesplit,` → `layoutmsg, togglesplit` (no trailing comma, the old name becomes the arg). These dispatchers were removed in 0.44+.
+### When porting Hyprland window rules to niri
+- **Action**: Map `match:class <name>` to `match app-id="<name>"`. Map `float on` to `open-floating true`. Map `size WxH` to `default-column-width { fixed = W; }` + `default-window-height { fixed = H; }`. Idle inhibit is not supported in niri — drop those rules.
 
-### When Hyprland errors on removed config option (dwindle:pseudotile)
-- **Action**: Remove the `pseudotile = true/false;` line entirely. There is no replacement config option — use the `pseudo` dispatcher per-window instead.
+### When building niri keybindings
+- **Action**: Use `programs.niri.settings.binds` attrset format. DMS handles volume/brightness keys via `dms ipc` — don't add wpctl/brightnessctl binds. Use `Mod` not `Super` (niri's Mod equals Super on TTY).
 
 ## Git
 
