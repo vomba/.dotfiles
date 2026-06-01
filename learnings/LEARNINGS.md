@@ -344,6 +344,35 @@ Auto-extracted patterns and insights from dotfiles sessions. Updated after each 
 - When running `/learn`, write to these files — they are as available as AGENTS.md to the agent
 - The vault (Obsidian) is for human and future-Claude reference; learnings/ in the dotfiles repo is for current-agent context
 
+## MCP Debugging
+
+### structuredContent Stripping Breaks Modern MCP Clients
+- The `@cyanheads/mcp-ts-core` SDK v0.9.19 emits both `content` (text) and `structuredContent` (parsed JSON) in every tool result
+- The SDK also declares `structuredContent` in each tool's `outputSchema` (from `tools/list`)
+- Historically, old MCP clients rejected `structuredContent` as an unknown field, so wrappers stripped it: `delete msg.result.structuredContent`
+- Modern clients (OpenCode, DeepSeek) validate tool results against declared `outputSchema` — if schema declares `structuredContent` but result is missing it → `-32600: Tool <name> has an output schema but did not return structured content`
+- **Fix**: Remove the stripping entirely. Modern clients accept `structuredContent` natively.
+
+### @cyanheads SDK outputSchema Bug for Section-Targeted Tools
+- The SDK v0.9.19 has strict output schema declarations that don't match the `structuredContent` for section-targeted operations
+- Affected tools: `patch_note`, `write_note` with `section`, `append_to_note` with `section`
+- Error: `-32602: Structured content does not match the tool's output schema: data must NOT have additional properties`
+- The `additionalProperties: false` in the schema rejects the server's actual response which has extra/different fields
+- **Workaround**: Use `replace_in_note` (string-level search/replace) or section-less `append_to_note` (appends to end of file) — these don't trigger the schema mismatch
+- This is an upstream SDK bug, not fixable at the wrapper level
+
+### Debugging MCP Servers — Test Raw JSON-RPC First
+- When an MCP server isn't working, bypass all wrappers and test raw JSON-RPC over stdio
+- Pattern: pipe `initialize` + `tools/call` JSON messages to the binary directly
+- Set the same env vars the wrapper would set, but invoke the underlying `npx`/binary directly
+- `echo '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"<tool>","arguments":{}}}' | OBSIDIAN_BASE_URL=... npx -y <server> 2>/dev/null`
+- This isolates: server binary bug vs wrapper transform bug vs client validation bug
+
+### Killing Piped Node MCP Processes
+- `pgrep`/`pkill` hang when targeting Node processes that are piped through stdin/stdout chains from wrapper scripts
+- Use `kill -9 <pid>` with the specific PID from `ps aux | grep <process>`
+- MCP server wrappers (`writeShellScriptBin` → `spawn()` with `pipe` stdio) create multiple child processes — kill all of them
+
 ## See Also
 
 Detailed session learnings:

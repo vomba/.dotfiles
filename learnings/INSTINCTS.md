@@ -134,6 +134,18 @@ Actionable patterns extracted from session learnings. These fire automatically w
 ### When including command files from a flake input in a Nix build
 - **Action**: Use shell glob patterns (e.g. `obsidian-*.md`) instead of individual file lists. This prevents needing config updates when the upstream adds or removes files.
 
+### When obsidian MCP tools return -32600 "has an output schema but did not return structured content"
+- **Action**: Check the wrapper script that pipes data between the MCP client and server. If it strips `msg.result.structuredContent` from tool results, the tool `outputSchema` (from `tools/list`) still declares `structuredContent` — the client validates results against the schema and rejects them. Either remove the stripping (preferred — modern clients accept `structuredContent`) or strip the output schemas from `tools/list` too.
+
+### When obsidian MCP section-targeted tools fail with -32602 schema validation
+- **Action**: The `@cyanheads/mcp-ts-core` SDK v0.9.19 has mismatched `outputSchema` declarations for section-targeted tools (`patch_note`, `write_note` with section, `append_to_note` with section). The `structuredContent` it returns has different required fields than the schema declares. Workaround: use `replace_in_note` (search/replace) or section-less `append_to_note` instead.
+
+### When debugging MCP servers that aren't working
+- **Action**: Test the server directly with raw JSON-RPC over stdio (bypass all wrappers): `echo '{"jsonrpc":"2.0","id":1,"method":"initialize",...}' | npx -y <server> 2>/dev/null`. Set the same env vars the wrapper sets. This isolates whether the bug is in the server binary, the wrapper's transform logic, or the MCP client.
+
+### When killing stale MCP child processes after a wrapper change
+- **Action**: Use `kill -9 <pid>` with specific PIDs. `pgrep`/`pkill` hang on Node processes that are piped through a stdin/stdout chain from a wrapper. Get PIDs from `ps aux | grep <server>` and target them directly.
+
 ### When creating a new opencode skill from session learnings
 - **Action**: Save to the dotfiles repo for Nix management and cross-machine portability. Follow the 5-step recipe:
   1. Create `~/.dotfiles/apps/opencode/skills/<name>/SKILL.md`
