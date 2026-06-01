@@ -363,11 +363,14 @@ let
     exec npx -y "@colbymchenry/codegraph@latest" "$@"
   '';
 
-  # MCP server for Obsidian vault access via Local REST API plugin
-  # Uses obsidian-mcp-server (v3+) which supports the HTTPS-based REST API
+  # MCP server for Obsidian vault access via obsidian-mcp-server@latest.
+  # Uses a Node.js wrapper that strips structuredContent from tool responses
+  # (the @cyanheads/mcp-ts-core SDK adds this extra field, breaking schema validation
+  # in the official MCP client). Requires OBSIDIAN_BASE_URL=https + OBSIDIAN_VERIFY_SSL=false
+  # because the Obsidian REST API plugin serves HTTPS on 27124 with a self-signed cert.
   obsidianMCPWrapper = pkgs.writeShellScriptBin "obsidian-mcp" ''
-    export OBSIDIAN_API_KEY="obsidian-local-rest-api-key"
-    exec npx -y obsidian-mcp-server
+    export PATH="${codegraphNode}/bin:$PATH"
+    exec node "${../../apps/opencode/mcp/obsidian-mcp-wrapper.mjs}"
   '';
 
   # Patched observer-loop.sh — upstream uses relative paths (.observer-tmp/filename)
