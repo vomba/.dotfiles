@@ -65,6 +65,20 @@ def prefetch_url(url):
         pass
     return None
 
+def _is_ignored(content, pos):
+    """Check if the line immediately before `pos` contains '# check-updates: ignore'."""
+    prev_newline = content.rfind('\n', 0, pos)
+    if prev_newline == -1:
+        return False
+    line_start = content.rfind('\n', 0, prev_newline - 1) if prev_newline > 0 else -1
+    if line_start == -1:
+        line_start = 0
+    else:
+        line_start += 1
+    prev_line = content[line_start:prev_newline].strip()
+    return '# check-updates: ignore' in prev_line
+
+
 def _nearest_unclaimed(matches, pos, claimed):
     best = None
     best_d = float('inf')
@@ -91,6 +105,8 @@ def parse_overlay_metadata(content):
     for m in re.finditer(r'owner = "(.*?)";\s+repo = "(.*?)";', content):
         owner, repo = m.group(1), m.group(2)
         if (owner, repo) in seen:
+            continue
+        if _is_ignored(content, m.start()):
             continue
         seen.add((owner, repo))
 
@@ -119,6 +135,8 @@ def parse_overlay_metadata(content):
     for m in url_matches:
         owner, repo = m.group(1), m.group(2)
         if (owner, repo) in seen:
+            continue
+        if _is_ignored(content, m.start()):
             continue
         seen.add((owner, repo))
 

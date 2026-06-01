@@ -2,6 +2,7 @@
 super.sops.overrideAttrs (oldAttrs: rec {
   version = "3.10.0";
   src = super.fetchFromGitHub {
+    # check-updates: ignore
     owner = "getsops";
     repo = "sops";
     rev = "v${version}";
