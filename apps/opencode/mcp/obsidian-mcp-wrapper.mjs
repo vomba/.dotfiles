@@ -21,12 +21,6 @@ const rl = createInterface({ input: server.stdout });
 for await (const line of rl) {
   try {
     const msg = JSON.parse(line);
-    // Strip structuredContent from tool call results — the custom
-    // @cyanheads/mcp-ts-core SDK emits this extra field which the
-    // official MCP client rejects with schema validation errors.
-    if (msg.result?.structuredContent) {
-      delete msg.result.structuredContent;
-    }
     process.stdout.write(JSON.stringify(msg) + "\n");
   } catch {
     process.stdout.write(line + "\n");
