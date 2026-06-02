@@ -7,6 +7,8 @@
 {
   config = lib.mkIf config.dotfiles.apps.enable {
     home.packages = [
+
+      pkgs.golazo
       # Utilities
       pkgs.gh
       pkgs.yq-go
