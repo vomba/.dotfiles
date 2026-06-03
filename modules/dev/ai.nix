@@ -373,6 +373,13 @@ let
     exec node "${../../apps/opencode/mcp/obsidian-mcp-wrapper.mjs}"
   '';
 
+  # MCP server for GitHub API operations via @modelcontextprotocol/server-github.
+  # Injects GITHUB_TOKEN from gh auth token at runtime so secrets stay out of the Nix store.
+  githubMCPWrapper = pkgs.writeShellScriptBin "github-mcp" ''
+    GITHUB_TOKEN="$(gh auth token)" exec \
+      npx -y "@modelcontextprotocol/server-github@latest" "$@"
+  '';
+
   # Patched observer-loop.sh — upstream uses relative paths (.observer-tmp/filename)
   # for Windows compat, but opencode run resolves relative paths from PROJECT_ROOT
   # (git root) instead of PROJECT_DIR (homunculus project dir). Patching to absolute
@@ -440,6 +447,21 @@ in
           "mcp__codegraph__codegraph_node" = "allow";
           "mcp__codegraph__codegraph_status" = "allow";
           "mcp__codegraph__codegraph_files" = "allow";
+          # GitHub MCP — read-only tools auto-allowed, write tools default to "ask"
+          "mcp__github__search_repositories" = "allow";
+          "mcp__github__search_code" = "allow";
+          "mcp__github__search_issues" = "allow";
+          "mcp__github__search_users" = "allow";
+          "mcp__github__get_file_contents" = "allow";
+          "mcp__github__list_commits" = "allow";
+          "mcp__github__list_issues" = "allow";
+          "mcp__github__get_issue" = "allow";
+          "mcp__github__get_pull_request" = "allow";
+          "mcp__github__list_pull_requests" = "allow";
+          "mcp__github__get_pull_request_files" = "allow";
+          "mcp__github__get_pull_request_status" = "allow";
+          "mcp__github__get_pull_request_comments" = "allow";
+          "mcp__github__get_pull_request_reviews" = "allow";
         };
         mcp = {
           context7 = {
@@ -453,6 +475,10 @@ in
           obsidian = {
             type = "local";
             command = [ "${obsidianMCPWrapper}/bin/obsidian-mcp" ];
+          };
+          github = {
+            type = "local";
+            command = [ "${githubMCPWrapper}/bin/github-mcp" ];
           };
         };
         lsp = {
@@ -551,6 +577,7 @@ in
       codegraphCLIWrapper
       instinctWrapper
       claudeWrapper
+      githubMCPWrapper
     ];
   };
 }
