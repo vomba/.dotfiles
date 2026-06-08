@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (config.sops.secrets) context7_api_key;
+  inherit (config.sops.secrets) context7_api_key github_token;
   codegraphNode = pkgs.nodejs_22;
 
   context7-mcp = pkgs.writeShellScriptBin "context7-mcp" ''
@@ -29,7 +29,7 @@ let
   '';
 
   github-mcp = pkgs.writeShellScriptBin "github-mcp" ''
-    GITHUB_TOKEN="$(gh auth token)" exec \
+    GITHUB_TOKEN="$(cat ${github_token.path})" exec \
       npx -y "@modelcontextprotocol/server-github@latest" "$@"
   '';
 in

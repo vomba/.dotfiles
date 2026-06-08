@@ -81,4 +81,19 @@
 
   # home.file.".gitconfig".source = ./.gitconfig;
 
+  # Inject GitHub token from sops into nix.conf for authenticated flake fetches.
+  # nix.conf is a store symlink — remove it and write a regular file in its place.
+  home.activation.injectGithubToken = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -f "${config.sops.secrets.github_token.path}" ]; then
+      token=$(cat "${config.sops.secrets.github_token.path}")
+      nix_conf="${config.xdg.configHome}/nix/nix.conf"
+      if [ -f "$nix_conf" ] || [ -L "$nix_conf" ]; then
+        existing=$(cat "$nix_conf" 2>/dev/null || echo "")
+        rm -f "$nix_conf"
+        printf '%s\n' "$existing" | grep -v "^access-tokens" > "$nix_conf.tmp" || true
+        echo "access-tokens = github.com=$token" >> "$nix_conf.tmp"
+        mv "$nix_conf.tmp" "$nix_conf"
+      fi
+    fi
+  '';
 }
