@@ -64,6 +64,13 @@ in
             };
           };
         };
+        agent_servers = {
+          OpenCode = {
+            inheritCommand = false;
+            command = "opencode";
+            args = [ "acp" ];
+          };
+        };
       };
 
       extraPackages = with pkgs; [
