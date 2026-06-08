@@ -15,6 +15,7 @@
       gcp_project = { };
       context7_api_key = { };
       git_crypt_key = { };
+      opencode_api_key = { };
     };
   };
 

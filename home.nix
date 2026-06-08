@@ -63,8 +63,10 @@
     ./modules/apps/packages.nix
     ./modules/dev/cloud.nix
     ./modules/dev/lsp.nix
+    ./modules/dev/mcp.nix
     ./modules/dev/ai.nix
     ./modules/apps/obsidian/default.nix
+    ./modules/apps/zed.nix
     ./modules/sops.nix
   ];
 

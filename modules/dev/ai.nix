@@ -208,15 +208,6 @@ let
     "${configDir}/skills/crossplane-e2e/SKILL.md"
   ];
 
-  # Path to the context7 API key from sops (known at build time)
-  context7KeyPath = config.sops.secrets.context7_api_key.path;
-
-  # Wrapper script for context7 MCP that reads the API key from sops
-  context7Wrapper = pkgs.writeShellScriptBin "context7-mcp" ''
-    CONTEXT7_API_KEY="$(cat ${context7KeyPath})" exec \
-      npx -y "@upstash/context7-mcp@latest" "$@"
-  '';
-
   # Commands with namespaced agent frontmatter stripped.
   # Upstream ECC command .md files declare agent: "everything-claude-code:<name>"
   # in YAML frontmatter. If loaded, this overrides the non-namespaced agent
@@ -347,39 +338,6 @@ let
     sed -i '/"changed-files": changedFilesTool/d' $out/ecc-hooks.js
   '';
 
-  # CodeGraph needs Node.js 22 LTS — newer versions (25+) have a V8 WASM JIT bug
-  # that causes OOM crashes during tree-sitter grammar compilation.
-  codegraphNode = pkgs.nodejs_22;
-
-  # Wrapper for codegraph MCP server
-  codegraphMCPWrapper = pkgs.writeShellScriptBin "codegraph-mcp" ''
-    export PATH="${codegraphNode}/bin:$PATH"
-    exec npx -y "@colbymchenry/codegraph@latest" serve --mcp "$@"
-  '';
-
-  # Wrapper for codegraph CLI (init, status, sync, etc.)
-  codegraphCLIWrapper = pkgs.writeShellScriptBin "codegraph" ''
-    export PATH="${codegraphNode}/bin:$PATH"
-    exec npx -y "@colbymchenry/codegraph@latest" "$@"
-  '';
-
-  # MCP server for Obsidian vault access via obsidian-mcp-server@latest.
-  # Uses a Node.js wrapper that strips structuredContent from tool responses
-  # (the @cyanheads/mcp-ts-core SDK adds this extra field, breaking schema validation
-  # in the official MCP client). Requires OBSIDIAN_BASE_URL=https + OBSIDIAN_VERIFY_SSL=false
-  # because the Obsidian REST API plugin serves HTTPS on 27124 with a self-signed cert.
-  obsidianMCPWrapper = pkgs.writeShellScriptBin "obsidian-mcp" ''
-    export PATH="${codegraphNode}/bin:$PATH"
-    exec node "${../../apps/opencode/mcp/obsidian-mcp-wrapper.mjs}"
-  '';
-
-  # MCP server for GitHub API operations via @modelcontextprotocol/server-github.
-  # Injects GITHUB_TOKEN from gh auth token at runtime so secrets stay out of the Nix store.
-  githubMCPWrapper = pkgs.writeShellScriptBin "github-mcp" ''
-    GITHUB_TOKEN="$(gh auth token)" exec \
-      npx -y "@modelcontextprotocol/server-github@latest" "$@"
-  '';
-
   # Patched observer-loop.sh — upstream uses relative paths (.observer-tmp/filename)
   # for Windows compat, but opencode run resolves relative paths from PROJECT_ROOT
   # (git root) instead of PROJECT_DIR (homunculus project dir). Patching to absolute
@@ -466,19 +424,19 @@ in
         mcp = {
           context7 = {
             type = "local";
-            command = [ "${context7Wrapper}/bin/context7-mcp" ];
+            command = [ "context7-mcp" ];
           };
           codegraph = {
             type = "local";
-            command = [ "${codegraphMCPWrapper}/bin/codegraph-mcp" ];
+            command = [ "codegraph-mcp" ];
           };
           obsidian = {
             type = "local";
-            command = [ "${obsidianMCPWrapper}/bin/obsidian-mcp" ];
+            command = [ "obsidian-mcp" ];
           };
           github = {
             type = "local";
-            command = [ "${githubMCPWrapper}/bin/github-mcp" ];
+            command = [ "github-mcp" ];
           };
         };
         lsp = {
@@ -573,11 +531,8 @@ in
 
     # ── Packages ─────────────────────────────────────────────────────
     home.packages = [
-      context7Wrapper
-      codegraphCLIWrapper
       instinctWrapper
       claudeWrapper
-      githubMCPWrapper
     ];
   };
 }

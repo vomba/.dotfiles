@@ -92,6 +92,11 @@
           default = true;
         };
       };
+      zed = {
+        enable = lib.mkEnableOption "Zed editor" // {
+          default = true;
+        };
+      };
       yazi = {
         enable = lib.mkEnableOption "Yazi file manager" // {
           default = true;
