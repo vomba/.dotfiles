@@ -38,6 +38,7 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
   };
+  # Nix reads GITHUB_TOKEN from the environment as fallback for access-tokens.
 
   nix.gc = {
     automatic = true;
@@ -70,30 +71,27 @@
     ./modules/sops.nix
   ];
 
-  programs.gemini-cli = {
-    enable = true;
-    # settings = {
-    #   tools = {
-    #     sandbox = "docker";
-    #   };
-    # };
-  };
+  # programs.gemini-cli = {
+  #   enable = true;
+  #   # settings = {
+  #   #   tools = {
+  #   #     sandbox = "docker";
+  #   #   };
+  #   # };
+  # };
 
   # home.file.".gitconfig".source = ./.gitconfig;
 
-  # Inject GitHub token from sops into nix.conf for authenticated flake fetches.
-  # nix.conf is a store symlink — remove it and write a regular file in its place.
+  # Inject GitHub token into systemd environment.d for GUI apps and into the
+  # shell environment. Nix reads GITHUB_TOKEN from the environment as fallback
+  # for the access-tokens setting, so this avoids fighting HM's nix.conf symlink.
   home.activation.injectGithubToken = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -f "${config.sops.secrets.github_token.path}" ]; then
-      token=$(cat "${config.sops.secrets.github_token.path}")
-      nix_conf="${config.xdg.configHome}/nix/nix.conf"
-      if [ -f "$nix_conf" ] || [ -L "$nix_conf" ]; then
-        existing=$(cat "$nix_conf" 2>/dev/null || echo "")
-        rm -f "$nix_conf"
-        printf '%s\n' "$existing" | grep -v "^access-tokens" > "$nix_conf.tmp" || true
-        echo "access-tokens = github.com=$token" >> "$nix_conf.tmp"
-        mv "$nix_conf.tmp" "$nix_conf"
-      fi
-    fi
+        if [ -f "${config.sops.secrets.github_token.path}" ]; then
+          token=$(cat "${config.sops.secrets.github_token.path}")
+          mkdir -p "${config.xdg.configHome}/environment.d"
+          cat > "${config.xdg.configHome}/environment.d/github.conf" << EOF
+    GITHUB_TOKEN=$token
+    EOF
+        fi
   '';
 }
