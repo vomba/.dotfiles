@@ -52,13 +52,11 @@ def prefetch_url(url):
         return None
     try:
         result = subprocess.run(
-            ['nix-prefetch-url', '--print-hash', '--type', 'sha256', url],
-            capture_output=True, text=True, timeout=60
+            ['nix', 'store', 'prefetch-file', '--json', url],
+            capture_output=True, text=True, timeout=120
         )
         if result.returncode == 0:
-            for line in result.stdout.split('\n'):
-                if line.startswith('hash:'):
-                    return line.replace('hash:', '').strip()
+            return json.loads(result.stdout).get('hash')
     except subprocess.TimeoutExpired:
         print(f"Timeout while prefetching {url}")
     except Exception:

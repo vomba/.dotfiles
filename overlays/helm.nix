@@ -84,7 +84,7 @@ let
       version = "4.7.7";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-getter-${version}.tgz";
-        hash = "sha256-hzFceXUlVQmU4nVhm86KbnlzjQhpJXC54+ar0i9u4Oc=";
+        hash = "sha256-GE4cF6KkJvheHI96ajIeyyzpx5f/3q7f22mXDRLEoNI=";
       };
     };
 
