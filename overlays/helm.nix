@@ -72,7 +72,7 @@ let
     # Override helm-secrets to use the latest version split into 3 plugins for helm 4
     helm-secrets = buildHelmPlugin rec {
       pluginName = "helm-secrets";
-      version = "4.7.6";
+      version = "4.7.7";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-${version}.tgz";
         hash = "sha256-lUOn04ZpA3G+afvA5dZNpag5a6uztEzTdUb7/scQ9T4=";
@@ -81,7 +81,7 @@ let
 
     helm-secrets-getter = buildHelmPlugin rec {
       pluginName = "helm-secrets-getter";
-      version = "4.7.6";
+      version = "4.7.7";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-getter-${version}.tgz";
         hash = "sha256-hzFceXUlVQmU4nVhm86KbnlzjQhpJXC54+ar0i9u4Oc=";
@@ -90,7 +90,7 @@ let
 
     helm-secrets-post-renderer = buildHelmPlugin rec {
       pluginName = "helm-secrets-post-renderer";
-      version = "4.7.6";
+      version = "4.7.7";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-post-renderer-${version}.tgz";
         hash = "sha256-Jyx73Cuibp/qgtRsMG8DwifKfPwrcvQSQgcuMzQAbKY=";

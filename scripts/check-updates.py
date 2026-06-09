@@ -212,11 +212,7 @@ def update_multihash_template(file_path, content, metadata, latest_version, dry_
             url_prefix = old_url_match.group(1)
             url_filename = old_url_match.group(2)
 
-            new_line = line.replace(
-                f"v${{version}}/{url_filename}",
-                f"v{latest_version}/{url_filename}"
-            )
-            new_lines.append(new_line)
+            new_lines.append(line)
 
             i += 1
             if i < len(lines):

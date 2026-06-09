@@ -5,7 +5,7 @@
 }:
 
 let
-  version = "0.13.5";
+  version = "0.13.7";
 
   # Map Nix system names to release artifact system names
   systemMap = {
