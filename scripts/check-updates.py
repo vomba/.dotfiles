@@ -294,7 +294,7 @@ def update_version_with_url_template(file_path, content, metadata, latest_versio
                 i += 1
                 if i < len(lines):
                     next_line = lines[i]
-                    hash_match = re.search(r'(sha256 = ")([^"]+)(")', next_line)
+                    hash_match = re.search(r'^(.*?")([^"]+)(".*)$', next_line)
                     if hash_match:
                         print(f"[{filename}] Updating hash for {url_filename}: {hash_match.group(2)} -> {new_hash}")
                         next_line = f'{hash_match.group(1)}{new_hash}{hash_match.group(3)}'
