@@ -75,7 +75,7 @@ let
       version = "4.7.7";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-${version}.tgz";
-        hash = "sha256-lUOn04ZpA3G+afvA5dZNpag5a6uztEzTdUb7/scQ9T4=";
+        hash = "sha256-qi/nMXoLY7s3gWjFCtq50uU5dvcFI0odDtz40MtSJY4=";
       };
     };
 
@@ -93,7 +93,7 @@ let
       version = "4.7.7";
       src = super.fetchurl {
         url = "https://github.com/jkroepke/helm-secrets/releases/download/v${version}/secrets-post-renderer-${version}.tgz";
-        hash = "sha256-Jyx73Cuibp/qgtRsMG8DwifKfPwrcvQSQgcuMzQAbKY=";
+        hash = "sha256-1OgHPgh0Ix4nd6vLSq/TpkuIgn3FDYy0zQ+4t8wd7Gg=";
       };
     };
 
