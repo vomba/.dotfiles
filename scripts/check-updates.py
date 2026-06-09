@@ -289,16 +289,12 @@ def update_version_with_url_template(file_path, content, metadata, latest_versio
         if old_url_match:
             url_prefix = old_url_match.group(1)
             url_filename = old_url_match.group(2)
-            new_url = f"{url_prefix}v{latest_version}/{url_filename}"
+            new_url = f"{url_prefix}v{latest_version}/{url_filename}".replace('${version}', latest_version)
 
             print(f"[{filename}] Prefetching hash for {url_filename}...")
             new_hash = prefetch_url(new_url)
 
-            new_line = line.replace(
-                f"v${{version}}/{url_filename}",
-                f"v{latest_version}/{url_filename}"
-            )
-            new_lines.append(new_line)
+            new_lines.append(line)
 
             if new_hash:
                 i += 1
@@ -311,8 +307,6 @@ def update_version_with_url_template(file_path, content, metadata, latest_versio
                     new_lines.append(next_line)
                 else:
                     new_lines.append(lines[i])
-            else:
-                new_lines.append(lines[i])
         else:
             new_lines.append(line)
         i += 1
