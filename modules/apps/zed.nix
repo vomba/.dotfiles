@@ -41,6 +41,9 @@ in
         soft_wrap = "editor_width";
         format_on_save = "on";
         vim_mode = false;
+        git = {
+          builtin = false;
+        };
         features = {
           copilot = false;
           inline_completion_provider = "none";
