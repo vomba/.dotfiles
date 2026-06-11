@@ -85,6 +85,7 @@ in
         terraform-ls
         helm-ls
         bash-language-server
+        openssh
       ];
 
       defaultEditor = false;
